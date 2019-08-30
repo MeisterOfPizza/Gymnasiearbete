@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camera: {fileID: 6072214545333096784}
   target: {fileID: 0}
-  offset: {x: 10, y: 10, z: 10}
+  offset: {x: 0, y: 20, z: -7.5}
   followSpeed: 2.5
   followType: 1
 --- !u!1 &6072214545333096787
@@ -62,7 +62,7 @@ GameObject:
   - component: {fileID: 6072214545333096785}
   m_Layer: 0
   m_Name: Camera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

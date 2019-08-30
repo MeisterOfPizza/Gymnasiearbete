@@ -23,6 +23,18 @@ namespace ArenaShooter.Extensions.Components
 
         #endregion
 
+        #region Public properties
+
+        public Camera Camera
+        {
+            get
+            {
+                return camera;
+            }
+        }
+
+        #endregion
+
         #region Enums
 
         private enum CameraFollowType

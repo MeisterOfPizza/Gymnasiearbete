@@ -1,4 +1,5 @@
 ﻿using ArenaShooter.Extensions.Components;
+using Bolt;
 using UnityEngine;
 
 #pragma warning disable 0649
@@ -6,9 +7,8 @@ using UnityEngine;
 namespace ArenaShooter.Player
 {
 
-    /*
     [RequireComponent(typeof(CharacterController))]
-    class PlayerMovementController : NetworkBehaviour
+    class PlayerMovementController : EntityBehaviour<IPlayerState>
     {
 
         #region Editor
@@ -21,85 +21,90 @@ namespace ArenaShooter.Player
         [SerializeField] private GameObject cameraFollowPrefab;
 
         [Header("Values")]
-        [SerializeField] private float moveSpeed             = 300f;
-        [SerializeField] private float maxTurnSpeed          = 90f;
-        [SerializeField] private float turnSpeedAcceleration = 30f;
-        [SerializeField] private float turnSpeedDeceleration = 30f;
+        [SerializeField] private float moveSpeed = 10f;
+
+        [Space]
+        [SerializeField] private LayerMask lookRayLayerMask;
+
+        [Space]
+        public bool canMove = true;
+        public bool canLook = true;
 
         #endregion
 
         #region Private variables
 
         private CameraFollow cameraFollow;
-
-        [SyncVar(hook = nameof(SetColor))]
+        
         private Color playerColor = Color.black;
 
         private Material materialClone;
 
-        private float horizontal = 0f;
-        private float vertical   = 0f;
-        private float turn       = 0f;
-
         #endregion
 
-        public override void OnStartServer()
+        // Start
+        public override void Attached()
         {
-            base.OnStartServer();
+            state.SetTransforms(state.Transform, transform);
 
-            playerColor = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
-        }
-
-        public override void OnStartLocalPlayer()
-        {
-            base.OnStartLocalPlayer();
-
-            // Deactivate the scene's main camera if it's active (and exists):
-            Camera.main?.gameObject.SetActive(false);
-
-            cameraFollow = Instantiate(cameraFollowPrefab).GetComponent<CameraFollow>();
-            cameraFollow.Initialize(transform);
-        }
-
-        private void Update()
-        {
-            if (isLocalPlayer)
+            if (entity.IsOwner)
             {
-                horizontal = Input.GetAxis("Horizontal");
-                vertical = Input.GetAxis("Vertical");
+                playerColor = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
 
-                if (Input.GetKey(KeyCode.Q) && (turn > -maxTurnSpeed))
-                {
-                    turn -= turnSpeedAcceleration;
-                }
-                else if (Input.GetKey(KeyCode.E) && (turn < maxTurnSpeed))
-                {
-                    turn += turnSpeedAcceleration;
-                }
-                else
-                {
-                    if (turn > turnSpeedDeceleration)
-                    {
-                        turn -= turnSpeedDeceleration;
-                    }
-                    else if (turn < -turnSpeedDeceleration)
-                    {
-                        turn += turnSpeedDeceleration;
-                    }
-                    else
-                    {
-                        turn = 0f;
-                    }
-                }
+                // Deactivate the scene's main camera if it's active (and exists):
+                Camera.main?.gameObject.SetActive(false);
 
-                if (characterController != null)
-                {
-                    transform.Rotate(0f, turn * Time.deltaTime, 0f);
+                cameraFollow = Instantiate(cameraFollowPrefab).GetComponent<CameraFollow>();
+                cameraFollow.Initialize(transform);
+            }
+        }
 
-                    Vector3 direction = new Vector3(horizontal, 0f, vertical) * moveSpeed;
-                    direction = transform.TransformDirection(direction);
-                    characterController.SimpleMove(direction * Time.deltaTime);
+        // Update
+        public override void SimulateOwner()
+        {
+            Look();
+        }
+
+        private void FixedUpdate()
+        {
+            if (entity.IsOwner)
+            {
+                Move();
+            }
+        }
+
+        private void Look()
+        {
+            if (canLook)
+            {
+#if UNITY_STANDALONE
+                Vector3 direction = transform.forward;
+                Ray ray = cameraFollow.Camera.ScreenPointToRay(Input.mousePosition);
+
+                if (Physics.Raycast(ray, out RaycastHit hit, 100f, lookRayLayerMask, QueryTriggerInteraction.Ignore))
+                {
+                    direction = hit.point - transform.position;
+                    direction.y = 0;
                 }
+#elif UNITY_IOS || UNITY_ANDROID
+                Vector3 direction = MobileLookController.Singleton.GetLookDirection();
+#endif
+
+                transform.forward = direction;
+            }
+        }
+
+        private void Move()
+        {
+            if (canMove)
+            {
+#if UNITY_STANDALONE
+                Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+#elif UNITY_IOS || UNITY_ANDROID
+                Vector3 movement = MobileMovementController.Singleton.GetMovement();
+#endif
+
+                characterController.Move(movement * moveSpeed * BoltNetwork.FrameDeltaTime);
             }
         }
 
@@ -123,6 +128,5 @@ namespace ArenaShooter.Player
         #endregion
 
     }
-    */
 
 }
