@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace ArenaShooter.Player
 {
-    
+
     class PlayerController : Entity<IPlayerState>
     {
 
@@ -51,7 +51,7 @@ namespace ArenaShooter.Player
 
             if (BoltNetwork.IsServer && entity.IsOwner)
             {
-                EntitySpawnController.Singleton.SpawnEntityOnServer<Assets.Scripts.Entities.Enemy>(enemyPrefab, null, new Vector3(Random.Range(-2f, 2f), 0, Random.Range(-2f, 2f)), Quaternion.identity);
+                EntitySpawnController.Singleton.SpawnEntityOnServer<Enemy>(enemyPrefab, null, new Vector3(Random.Range(-2f, 2f), 0, Random.Range(-2f, 2f)), Quaternion.identity);
             }
         }
 

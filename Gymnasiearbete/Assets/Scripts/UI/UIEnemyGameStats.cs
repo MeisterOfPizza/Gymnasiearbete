@@ -1,4 +1,4 @@
-﻿using ArenaShooter.Assets.Scripts.Entities;
+﻿using ArenaShooter.Entities;
 using TMPro;
 using UnityEngine;
 

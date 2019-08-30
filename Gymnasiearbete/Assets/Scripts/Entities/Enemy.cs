@@ -1,5 +1,4 @@
 ﻿using ArenaShooter.Controllers;
-using ArenaShooter.Entities;
 using ArenaShooter.Extensions;
 using ArenaShooter.UI;
 using Bolt;
@@ -7,7 +6,7 @@ using UnityEngine;
 
 #pragma warning disable 0649
 
-namespace ArenaShooter.Assets.Scripts.Entities
+namespace ArenaShooter.Entities
 {
 
     /// <summary>
