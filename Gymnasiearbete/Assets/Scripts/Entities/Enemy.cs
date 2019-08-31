@@ -61,7 +61,7 @@ namespace ArenaShooter.Entities
 
                     if (hitbox.gameObject != gameObject && playerHitLayerMask.HasLayer(hitbox.gameObject.layer) && hitbox.GetComponent<IDamagable>() is IDamagable damagable)
                     {
-                        var takeDamageEvent = TakeDamageEvent.Create(GlobalTargets.OnlyServer, ReliabilityModes.ReliableOrdered);
+                        var takeDamageEvent = TakeDamageEvent.Create(GlobalTargets.Everyone, ReliabilityModes.ReliableOrdered);
                         takeDamageEvent.Target = hitbox.GetComponent<IEntity>().entity;
                         takeDamageEvent.DamageTaken = 10;
                         takeDamageEvent.Send();
