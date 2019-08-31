@@ -1,6 +1,6 @@
-﻿using ArenaShooter.Controllers;
+﻿using ArenaShooter.Combat;
+using ArenaShooter.Controllers;
 using ArenaShooter.Entities;
-using ArenaShooter.Extensions;
 using ArenaShooter.UI;
 using Bolt;
 using UnityEngine;
@@ -10,18 +10,13 @@ using UnityEngine;
 namespace ArenaShooter.Player
 {
 
-    class PlayerController : Entity<IPlayerState>
+    class PlayerController : Entity<IPlayerState>, IWeaponHolder
     {
 
         #region Editor
 
-        [Header("References")]
-        [SerializeField] private ParticleSystem explosionEffect;
-
         [Header("Values")]
-        [SerializeField] private int   startHealth = 100;  // TEST DATA
-        [SerializeField] private int   startDamage = 10;   // TEST DATA
-        [SerializeField] private float damageRange = 100f; // TEST DATA
+        [SerializeField] private int startHealth = 100;  // TEST DATA
 
         [Space]
         [SerializeField] private LayerMask hitLayerMask;
@@ -30,16 +25,64 @@ namespace ArenaShooter.Player
 
         #region Private variables
 
+        private Weapon weapon;
+
         private UIPlayerGameStats uiPlayerGameStats;
 
         #endregion
+
+        #region IWeaponHolder
+
+        public Vector3 WeaponFirePosition
+        {
+            get
+            {
+                return transform.position + Vector3.up;
+            }
+        }
+
+        public Vector3 WeaponForward
+        {
+            get
+            {
+                return transform.forward;
+            }
+        }
+
+        public LayerMask WeaponHitLayerMask
+        {
+            get
+            {
+                return hitLayerMask;
+            }
+        }
+
+        public GlobalTargets WeaponTargets
+        {
+            get
+            {
+                return GlobalTargets.OnlyServer;
+            }
+        }
+
+        #endregion
+
+        public RaycastWeapon raycastWeapon;
+        public ProjectileWeapon projectileWeapon;
+
+        private void Awake()
+        {
+            raycastWeapon = Instantiate(raycastWeapon.gameObject, transform).GetComponent<RaycastWeapon>();
+            raycastWeapon.EquipWeapon(this);
+            projectileWeapon = Instantiate(projectileWeapon.gameObject, transform).GetComponent<ProjectileWeapon>();
+            projectileWeapon.EquipWeapon(this);
+        }
 
         public override void Attached()
         {
             if (entity.IsOwner)
             {
                 state.Health = startHealth;
-                state.Weapon.WeaponAmmo = 100;
 
                 uiPlayerGameStats = UIPlayerGameStatsController.Singleton.UIPlayerGameStats;
                 uiPlayerGameStats.Initialize(this);
@@ -56,76 +99,36 @@ namespace ArenaShooter.Player
 
         public GameObject enemyPrefab;
 
+        float cooldown = 0;
         private void Update()
         {
-            if (entity.IsControllerOrOwner && Input.GetMouseButtonDown(0))
+            cooldown -= Time.deltaTime;
+            if (Input.GetKey(KeyCode.Alpha1) && entity.IsControllerOrOwner && cooldown <= 0f)
             {
-                leftMouseBtnPressedLastFrame = true;
+                raycastWeapon.Fire();
+                cooldown = 0.1f;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha2) && entity.IsControllerOrOwner)
+            {
+                projectileWeapon.Fire();
             }
         }
-
-        bool leftMouseBtnPressedLastFrame;
-
-        public override void SimulateController()
-        {
-            if (leftMouseBtnPressedLastFrame)
-            {
-                var cmd = PrimaryShootCommand.Create();
-                cmd.Shooter  = entity;
-                cmd.Position = transform.position + Vector3.up;
-                cmd.Normal   = transform.forward;
-
-                entity.QueueInput(cmd);
-
-                leftMouseBtnPressedLastFrame = false;
-            }
-        }
-
-        public override void ExecuteCommand(Command command, bool resetState)
-        {
-            if (command is PrimaryShootCommand primaryShootCmd)
-            {
-                Shoot(primaryShootCmd);
-            }
-        }
-
-        private void Shoot(PrimaryShootCommand cmd)
-        {
-            // TODO: Get action (or ray) from weapon.
-            
-            Ray ray  = new Ray(cmd.Input.Position, cmd.Input.Normal);
-            var hit = Utils.Raycast<Enemy>(ray, damageRange, hitLayerMask, gameObject, QueryTriggerInteraction.Ignore);
-            if (hit.HitAnything)
-            {
-                if (hit.NetworkHit)
-                {
-                    var takeDamageEvent = TakeDamageEvent.Create(GlobalTargets.OnlyServer, ReliabilityModes.ReliableOrdered);
-                    takeDamageEvent.Target      = hit.Hitbox.GetComponent<IEntity>().entity;
-                    takeDamageEvent.DamageTaken = startDamage;
-                    takeDamageEvent.Send();
-                }
-
-                var fireEvent = WeaponRaycastFireEffectEvent.Create(entity);
-                fireEvent.Shooter = entity;
-                fireEvent.Point   = hit.HitPoint;
-                fireEvent.Up      = hit.HitNormal;
-                fireEvent.Send();
-            }
-        }
-
+        
         public override void OnEvent(WeaponRaycastFireEffectEvent evnt)
         {
             if (evnt.Shooter == entity)
             {
-                VFXExplosion(evnt.Point, evnt.Up);
+                raycastWeapon.PlayHitEffect(evnt.Point, evnt.Up);
             }
         }
 
-        private void VFXExplosion(Vector3 position, Vector3 up)
+        public override void OnEvent(WeaponProjectileFireEvent evnt)
         {
-            explosionEffect.transform.position = position;
-            explosionEffect.transform.up       = up;
-            explosionEffect.Play(true);
+            if (evnt.Shooter == entity)
+            {
+                projectileWeapon.FireProjectileEffect(evnt);
+            }
         }
 
     }

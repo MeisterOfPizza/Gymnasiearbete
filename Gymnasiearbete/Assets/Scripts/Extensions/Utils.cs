@@ -8,7 +8,7 @@ namespace ArenaShooter.Extensions
     static class Utils
     {
 
-        #region Classes
+        #region Structs
 
         internal struct UtilRaycastHit
         {
@@ -126,7 +126,7 @@ namespace ArenaShooter.Extensions
         /// <returns>Returns a <see cref="UtilRaycastHit"/> that contains information about the raycast operation.</returns>
         public static UtilRaycastHit Raycast(Ray ray, float maxDistance, LayerMask hitLayerMask, GameObject self, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
         {
-            using (var hits = BoltNetwork.RaycastAll(new Ray(ray.origin, ray.direction * maxDistance)))
+            using (var hits = BoltNetwork.RaycastAll(new Ray(ray.origin, ray.direction * maxDistance), BoltNetwork.ServerFrame))
             {
                 // Search network hitboxes for hits:
                 for (int i = 0; i < hits.count; i++)
@@ -162,7 +162,7 @@ namespace ArenaShooter.Extensions
         /// <returns>Returns a <see cref="UtilRaycastHit"/> that contains information about the raycast operation.</returns>
         public static UtilRaycastHit Raycast<T>(Ray ray, float maxDistance, LayerMask hitLayerMask, GameObject self, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal) where T : IEntity
         {
-            using (var hits = BoltNetwork.RaycastAll(new Ray(ray.origin, ray.direction * maxDistance)))
+            using (var hits = BoltNetwork.RaycastAll(new Ray(ray.origin, ray.direction * maxDistance), BoltNetwork.ServerFrame))
             {
                 // Search network hitboxes for hits:
                 for (int i = 0; i < hits.count; i++)
