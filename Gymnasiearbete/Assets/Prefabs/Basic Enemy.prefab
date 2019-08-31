@@ -156,14 +156,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b173483dc55be84685b1187bbd75d21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  explosionEffect: {fileID: 5600522854259672611}
   uiEnemyGameStatsPrefab: {fileID: 547309706915499341, guid: 2bafda0c6c45fa54ebea8ecfa36b43f1,
     type: 3}
-  explosionEffect: {fileID: 5600522854259672611}
   startHealth: 100
-  playerHitLayerMask:
-    serializedVersion: 2
-    m_Bits: 33554432
-  weaponHitLayerMask:
+  hitLayerMask:
     serializedVersion: 2
     m_Bits: 33554433
 --- !u!114 &9168198077660110743

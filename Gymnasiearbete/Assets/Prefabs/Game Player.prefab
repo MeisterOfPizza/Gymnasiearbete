@@ -94,10 +94,7 @@ MonoBehaviour:
   startHealth: 100
   startDamage: 10
   damageRange: 100
-  enemyHitLayerMask:
-    serializedVersion: 2
-    m_Bits: 67108864
-  weaponHitLayerMask:
+  hitLayerMask:
     serializedVersion: 2
     m_Bits: 67108865
   enemyPrefab: {fileID: 9168198077660110737, guid: 9ee4e87c607b728418f76216ab474197,

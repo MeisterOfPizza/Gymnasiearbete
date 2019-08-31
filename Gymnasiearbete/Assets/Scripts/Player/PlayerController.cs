@@ -24,8 +24,7 @@ namespace ArenaShooter.Player
         [SerializeField] private float damageRange = 100f; // TEST DATA
 
         [Space]
-        [SerializeField] private LayerMask enemyHitLayerMask;
-        [SerializeField] private LayerMask weaponHitLayerMask;
+        [SerializeField] private LayerMask hitLayerMask;
 
         #endregion
 
@@ -94,78 +93,38 @@ namespace ArenaShooter.Player
         {
             // TODO: Get action (or ray) from weapon.
             
-            Ray ray  = new Ray(cmd.Input.Position, cmd.Input.Normal * damageRange);
-            using (var hits = BoltNetwork.RaycastAll(ray))
+            Ray ray  = new Ray(cmd.Input.Position, cmd.Input.Normal);
+            var hit = Utils.Raycast<Enemy>(ray, damageRange, hitLayerMask, gameObject, QueryTriggerInteraction.Ignore);
+            if (hit.HitAnything)
             {
-                bool networkHit = false;
-
-                // Search network hitboxes for hits:
-                for (int i = 0; i < hits.count; i++)
+                if (hit.NetworkHit)
                 {
-                    var hitbox = hits.GetHit(i).hitbox;
-
-                    if (hitbox.gameObject != gameObject && enemyHitLayerMask.HasLayer(hitbox.gameObject.layer) && hitbox.GetComponent<IDamagable>() is IDamagable damagable)
-                    {
-                        var takeDamageEvent = TakeDamageEvent.Create(GlobalTargets.OnlyServer, ReliabilityModes.ReliableOrdered);
-                        takeDamageEvent.Target = hitbox.GetComponent<IEntity>().entity;
-                        takeDamageEvent.DamageTaken = startDamage;
-                        takeDamageEvent.Send();
-                        
-                        var weaponFireEvent = WeaponFireEvent.Create(entity);
-                        weaponFireEvent.Shooter = entity;
-                        weaponFireEvent.Send();
-
-                        networkHit = true;
-
-                        break;
-                    }
+                    var takeDamageEvent = TakeDamageEvent.Create(GlobalTargets.OnlyServer, ReliabilityModes.ReliableOrdered);
+                    takeDamageEvent.Target      = hit.Hitbox.GetComponent<IEntity>().entity;
+                    takeDamageEvent.DamageTaken = startDamage;
+                    takeDamageEvent.Send();
                 }
 
-                // None were found, search geometry hitboxes for hits:
-                if (!networkHit)
-                {
-                    if (Physics.Raycast(ray, out RaycastHit hit, damageRange, weaponHitLayerMask, QueryTriggerInteraction.Ignore))
-                    {
-                        var weaponFireEvent = WeaponFireEvent.Create(entity);
-                        weaponFireEvent.Shooter = entity;
-                        weaponFireEvent.Send();
-                    }
-                }
+                var fireEvent = WeaponRaycastFireEffectEvent.Create(entity);
+                fireEvent.Shooter = entity;
+                fireEvent.Point   = hit.HitPoint;
+                fireEvent.Up      = hit.HitNormal;
+                fireEvent.Send();
             }
         }
 
-        public override void OnEvent(WeaponFireEvent evnt)
+        public override void OnEvent(WeaponRaycastFireEffectEvent evnt)
         {
-            Ray ray = new Ray(transform.position + Vector3.up, transform.forward * damageRange);
-            using (var hits = BoltNetwork.RaycastAll(ray))
+            if (evnt.Shooter == entity)
             {
-                bool networkHit = false;
-
-                // Search network hitboxes for hits:
-                for (int i = 0; i < hits.count; i++)
-                {
-                    var hitbox = hits.GetHit(i).hitbox;
-
-                    if (hitbox.gameObject != gameObject && enemyHitLayerMask.HasLayer(hitbox.gameObject.layer) && hitbox.GetComponent<IDamagable>() is IDamagable damagable)
-                    {
-                        VFXExplosion(ray.origin + ray.direction * hits.GetHit(i).distance);
-                    }
-                }
-
-                // None were found, search geometry hitboxes for hits:
-                if (!networkHit)
-                {
-                    if (Physics.Raycast(ray, out RaycastHit hit, damageRange, weaponHitLayerMask, QueryTriggerInteraction.Ignore))
-                    {
-                        VFXExplosion(hit.point);
-                    }
-                }
+                VFXExplosion(evnt.Point, evnt.Up);
             }
         }
 
-        private void VFXExplosion(Vector3 position)
+        private void VFXExplosion(Vector3 position, Vector3 up)
         {
             explosionEffect.transform.position = position;
+            explosionEffect.transform.up       = up;
             explosionEffect.Play(true);
         }
 
