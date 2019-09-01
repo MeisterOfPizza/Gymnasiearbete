@@ -1,4 +1,5 @@
 ﻿using ArenaShooter.Entities;
+using ArenaShooter.Templates.Weapons;
 using UnityEngine;
 
 namespace ArenaShooter.Combat
@@ -40,10 +41,21 @@ namespace ArenaShooter.Combat
 
         #region Private variables
 
+        private BodyTemplate   bodyTemplate;
+        private StockTemplate  stockTemplate;
+        private BarrelTemplate barrelTemplate;
+
         private bool firedWeaponThisFrame;
         private bool firedWeaponLastFrame;
 
         #endregion
+
+        public void Initialize(BodyTemplate bodyTemplate, StockTemplate stockTemplate, BarrelTemplate barrelTemplate)
+        {
+            this.bodyTemplate   = bodyTemplate;
+            this.stockTemplate  = stockTemplate;
+            this.barrelTemplate = barrelTemplate;
+        }
 
         private void Update()
         {
