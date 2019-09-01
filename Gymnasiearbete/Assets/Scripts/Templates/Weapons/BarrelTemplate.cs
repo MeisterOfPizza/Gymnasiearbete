@@ -8,8 +8,9 @@ namespace ArenaShooter.Templates.Weapons
     {
 
         [Header("Stats")]
-        [SerializeField] private ushort range;
-        [SerializeField] private ushort accuracy;
+        [SerializeField] private float range;
+        [SerializeField] private float maxDistance;
+        [SerializeField] private float damageMulitplier;
 
         public override WeaponTemplateType type
         {
@@ -19,7 +20,8 @@ namespace ArenaShooter.Templates.Weapons
             }
         }
 
-        public ushort Range
+        #region getters
+        public float Range
         {
             get
             {
@@ -27,13 +29,26 @@ namespace ArenaShooter.Templates.Weapons
             }
         }
 
-        public ushort Accuracy
+        public float MaxDistance
         {
             get
             {
-                return accuracy;
+                return maxDistance;
+            }
+               
+        }
+        
+        public float DamageMultiplier
+        {
+            get
+            {
+                return damageMulitplier;
             }
         }
+
+
+        #endregion
+
 
     }
 

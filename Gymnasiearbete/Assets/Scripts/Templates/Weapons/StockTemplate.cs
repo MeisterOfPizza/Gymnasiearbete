@@ -8,8 +8,8 @@ namespace ArenaShooter.Templates.Weapons
     {
 
         [Header("Stats")]
-        [SerializeField] private ushort movementSpeed;
-        [SerializeField] private ushort stability;
+        [SerializeField] private float  mobility;
+        [SerializeField] private float  accuracy;
 
         public override WeaponTemplateType type
         {
@@ -19,21 +19,24 @@ namespace ArenaShooter.Templates.Weapons
             }
         }
 
-        public ushort MovmentSpeed
+        #region getters
+        public float Mobility
         {
             get
             {
-                return movementSpeed;
+                return mobility;
             }
         }
 
-        public ushort Stability
+        public float Accuracy
         {
             get
             {
-                return stability;
+                return accuracy;
             }
         }
+        #endregion
+
 
     }
 
