@@ -17,12 +17,12 @@ namespace ArenaShooter.Templates.Enemies
     {
         #region inputs
         [Header("Inputs")]
-        [SerializeField] private ushort id;
+        [SerializeField] private ushort     id;
         [SerializeField] private new string name;
         [SerializeField] private GameObject prefab;
-        [SerializeField] private int health;
-        [SerializeField] private float movmentSpeed;
-        [SerializeField] private float engageRange;
+        [SerializeField] private int        health;
+        [SerializeField] private float      movmentSpeed;
+        [SerializeField] private float      engageRange;
         #endregion
 
         #region getters
