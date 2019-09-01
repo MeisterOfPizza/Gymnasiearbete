@@ -8,9 +8,21 @@ namespace ArenaShooter.Entities
     abstract class Entity<T> : EntityEventListener<T>, IEntity where T : IState
     {
 
+        #region Public properties
+
+        public abstract EntityTeam EntityTeam { get; }
+
+        #endregion
+
         #region Protected variables
 
         protected GlobalEntityCallbacks entityCallbacks;
+
+        #endregion
+
+        #region IHealable
+
+        public abstract HealableBy HealableBy { get; }
 
         #endregion
 
@@ -22,6 +34,7 @@ namespace ArenaShooter.Entities
             entity.AddEventListener(entityCallbacks);
 
             entityCallbacks.OnTakeDamage += TakeDamage;
+            entityCallbacks.OnHeal       += Heal;
 
             OnEntityCallbacksReady();
         }
@@ -49,6 +62,15 @@ namespace ArenaShooter.Entities
         public virtual void Die()
         {
             BoltNetwork.Destroy(gameObject);
+        }
+
+        #endregion
+
+        #region IHealable
+
+        public void Heal(HealEvent healEvent)
+        {
+            state.SetDynamic("Health", (int)state.GetDynamic("Health") + healEvent.Heal);
         }
 
         #endregion

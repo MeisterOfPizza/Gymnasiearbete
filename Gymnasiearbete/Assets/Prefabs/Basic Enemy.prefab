@@ -161,6 +161,7 @@ MonoBehaviour:
   uiEnemyGameStatsPrefab: {fileID: 547309706915499341, guid: 2bafda0c6c45fa54ebea8ecfa36b43f1,
     type: 3}
   startHealth: 100
+  healableBy: 2
   hitLayerMask:
     serializedVersion: 2
     m_Bits: 33554433

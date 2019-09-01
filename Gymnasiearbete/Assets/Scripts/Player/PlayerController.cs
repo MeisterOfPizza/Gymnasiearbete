@@ -31,6 +31,26 @@ namespace ArenaShooter.Player
 
         #endregion
 
+        #region IEntity
+
+        public override EntityTeam EntityTeam
+        {
+            get
+            {
+                return EntityTeam.Player;
+            }
+        }
+
+        public override HealableBy HealableBy
+        {
+            get
+            {
+                return HealableBy.Player;
+            }
+        }
+
+        #endregion
+
         #region IWeaponHolder
 
         public Vector3 WeaponFirePosition
@@ -69,6 +89,7 @@ namespace ArenaShooter.Player
 
         public RaycastWeapon raycastWeapon;
         public ProjectileWeapon projectileWeapon;
+        public SupportWeapon supportWeapon;
 
         private void Awake()
         {
@@ -76,6 +97,10 @@ namespace ArenaShooter.Player
             raycastWeapon.EquipWeapon(this);
             projectileWeapon = Instantiate(projectileWeapon.gameObject, transform).GetComponent<ProjectileWeapon>();
             projectileWeapon.EquipWeapon(this);
+            supportWeapon = Instantiate(supportWeapon.gameObject, transform).GetComponent<SupportWeapon>();
+            supportWeapon.EquipWeapon(this);
+
+            PlayerEntityController.Singleton.AddPlayerController(this);
         }
 
         public override void Attached()
@@ -98,20 +123,22 @@ namespace ArenaShooter.Player
         }
 
         public GameObject enemyPrefab;
-
-        float cooldown = 0;
+        
         private void Update()
         {
-            cooldown -= Time.deltaTime;
-            if (Input.GetKey(KeyCode.Alpha1) && entity.IsControllerOrOwner && cooldown <= 0f)
+            if (Input.GetKey(KeyCode.Alpha1) && entity.IsControllerOrOwner)
             {
                 raycastWeapon.Fire();
-                cooldown = 0.1f;
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha2) && entity.IsControllerOrOwner)
             {
                 projectileWeapon.Fire();
+            }
+
+            if (Input.GetKey(KeyCode.Alpha3) && entity.IsControllerOrOwner)
+            {
+                supportWeapon.Fire();
             }
         }
         
@@ -129,6 +156,11 @@ namespace ArenaShooter.Player
             {
                 projectileWeapon.FireProjectileEffect(evnt);
             }
+        }
+
+        private void OnDestroy()
+        {
+            PlayerEntityController.Singleton.RemovePlayerController(this);
         }
 
     }

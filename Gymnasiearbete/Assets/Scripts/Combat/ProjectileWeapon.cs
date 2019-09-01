@@ -33,7 +33,7 @@ namespace ArenaShooter.Combat
             }
         }
 
-        public override void Fire()
+        protected override void OnFire()
         {
             var fireEvent = WeaponProjectileFireEvent.Create(WeaponHolder.entity);
             fireEvent.Shooter  = WeaponHolder.entity;

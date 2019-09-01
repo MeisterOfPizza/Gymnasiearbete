@@ -1,8 +1,16 @@
 ﻿namespace ArenaShooter.Entities
 {
 
-    interface IEntity : IDamagable
+    enum EntityTeam
     {
+        Player,
+        Enemy
+    }
+
+    interface IEntity : IDamagable, IHealable
+    {
+
+        EntityTeam EntityTeam { get; }
 
         BoltEntity entity { get; set; }
 

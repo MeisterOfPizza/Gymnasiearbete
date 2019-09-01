@@ -97,6 +97,8 @@ MonoBehaviour:
     type: 3}
   projectileWeapon: {fileID: 7032479905945180403, guid: 3637ff1944c0207479531df9c85185a9,
     type: 3}
+  supportWeapon: {fileID: 4321664865519068643, guid: f2eba56a058abc8488bffb214206caf8,
+    type: 3}
   enemyPrefab: {fileID: 9168198077660110737, guid: 9ee4e87c607b728418f76216ab474197,
     type: 3}
 --- !u!114 &7176543191556274727

@@ -27,6 +27,29 @@ namespace ArenaShooter.Entities
         [Header("Values")]
         [SerializeField] private int startHealth = 100; // TEST DATA
 
+        [Space]
+        [SerializeField] private HealableBy healableBy = HealableBy.Enemy;
+
+        #endregion
+
+        #region IEntity
+
+        public override EntityTeam EntityTeam
+        {
+            get
+            {
+                return EntityTeam.Enemy;
+            }
+        }
+
+        public override HealableBy HealableBy
+        {
+            get
+            {
+                return healableBy;
+            }
+        }
+
         #endregion
 
         #region Private variables

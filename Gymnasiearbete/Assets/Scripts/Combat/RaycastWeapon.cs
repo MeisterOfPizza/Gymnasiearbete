@@ -18,7 +18,7 @@ namespace ArenaShooter.Combat
 
         #endregion
 
-        public override void Fire()
+        protected override void OnFire()
         {
             var hit = Utils.Raycast(new Ray(WeaponHolder.WeaponFirePosition, WeaponHolder.WeaponForward), Range, WeaponHolder.WeaponHitLayerMask, WeaponHolder.gameObject, QueryTriggerInteraction.Ignore);
 
