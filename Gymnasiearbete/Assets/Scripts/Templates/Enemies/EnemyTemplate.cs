@@ -18,7 +18,7 @@ namespace ArenaShooter.Templates.Enemies
         #region inputs
         [Header("Inputs")]
         [SerializeField] private ushort id;
-        [SerializeField] private string nameEnemy;
+        [SerializeField] private new string name;
         [SerializeField] private GameObject prefab;
         [SerializeField] private int health;
         [SerializeField] private float movmentSpeed;
@@ -34,11 +34,11 @@ namespace ArenaShooter.Templates.Enemies
             }
         }
 
-        public string NameEnemy
+        public string Name
         {
             get
             {
-                return nameEnemy;
+                return name;
             }
         }
 
