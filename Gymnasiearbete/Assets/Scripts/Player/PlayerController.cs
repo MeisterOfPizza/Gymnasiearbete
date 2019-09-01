@@ -1,6 +1,7 @@
 ﻿using ArenaShooter.Combat;
 using ArenaShooter.Controllers;
 using ArenaShooter.Entities;
+using ArenaShooter.Templates.Weapons;
 using ArenaShooter.UI;
 using Bolt;
 using UnityEngine;
@@ -10,7 +11,7 @@ using UnityEngine;
 namespace ArenaShooter.Player
 {
 
-    class PlayerController : Entity<IPlayerState>, IWeaponHolder
+    sealed class PlayerController : Entity<IPlayerState>, IWeaponHolder
     {
 
         #region Editor
@@ -20,6 +21,11 @@ namespace ArenaShooter.Player
 
         [Space]
         [SerializeField] private LayerMask hitLayerMask;
+
+        // TEST: Test data
+        public StockTemplate stockTemplate;
+        public BodyTemplate bodyTemplate;
+        public BarrelTemplate barrelTemplate;
 
         #endregion
 
@@ -87,18 +93,19 @@ namespace ArenaShooter.Player
 
         #endregion
 
-        public RaycastWeapon raycastWeapon;
-        public ProjectileWeapon projectileWeapon;
-        public SupportWeapon supportWeapon;
-
-        private void Awake()
+        protected override void Start()
         {
-            raycastWeapon = Instantiate(raycastWeapon.gameObject, transform).GetComponent<RaycastWeapon>();
-            raycastWeapon.EquipWeapon(this);
-            projectileWeapon = Instantiate(projectileWeapon.gameObject, transform).GetComponent<ProjectileWeapon>();
-            projectileWeapon.EquipWeapon(this);
-            supportWeapon = Instantiate(supportWeapon.gameObject, transform).GetComponent<SupportWeapon>();
-            supportWeapon.EquipWeapon(this);
+            base.Start();
+
+            weapon = WeaponController.Singleton.CreateWeapon(stockTemplate, bodyTemplate, barrelTemplate, transform);
+
+            if (entity.IsOwner)
+            {
+                // Adding callbacks to the UI:
+                weapon.OnAmmoChangedCallback += uiPlayerGameStats.UpdateAmmoUI;
+            }
+
+            weapon.EquipWeapon(this);
 
             PlayerEntityController.Singleton.AddPlayerController(this);
         }
@@ -111,7 +118,9 @@ namespace ArenaShooter.Player
 
                 uiPlayerGameStats = UIPlayerGameStatsController.Singleton.UIPlayerGameStats;
                 uiPlayerGameStats.Initialize(this);
-                state.AddCallback("Health", uiPlayerGameStats.UpdateUI);
+
+                // Adding callbacks to the UI:
+                state.AddCallback("Health", uiPlayerGameStats.UpdateHealthUI);
 
                 entity.TakeControl();
             }
@@ -126,37 +135,39 @@ namespace ArenaShooter.Player
         
         private void Update()
         {
-            if (Input.GetKey(KeyCode.Alpha1) && entity.IsControllerOrOwner)
+            if (entity.IsControllerOrOwner)
             {
-                raycastWeapon.Fire();
-            }
-
-            if (Input.GetKeyDown(KeyCode.Alpha2) && entity.IsControllerOrOwner)
-            {
-                projectileWeapon.Fire();
-            }
-
-            if (Input.GetKey(KeyCode.Alpha3) && entity.IsControllerOrOwner)
-            {
-                supportWeapon.Fire();
+                weapon.CheckForInput();
             }
         }
-        
+
+        #region OnEvents
+
         public override void OnEvent(WeaponRaycastFireEffectEvent evnt)
         {
-            if (evnt.Shooter == entity)
+            if (evnt.Shooter == entity && weapon.OutputType == WeaponPartTemplateOutputType.Raycasting)
             {
-                raycastWeapon.PlayHitEffect(evnt.Point, evnt.Up);
+                ((RaycastWeapon)weapon).PlayHitEffect(evnt.Point, evnt.Up);
             }
         }
 
         public override void OnEvent(WeaponProjectileFireEvent evnt)
         {
-            if (evnt.Shooter == entity)
+            if (evnt.Shooter == entity && weapon.OutputType == WeaponPartTemplateOutputType.Projectile)
             {
-                projectileWeapon.FireProjectileEffect(evnt);
+                ((ProjectileWeapon)weapon).FireProjectileEffect(evnt);
             }
         }
+
+        public override void OnEvent(WeaponSupportBeginFireEffectEvent evnt)
+        {
+            if (evnt.Shooter == entity && weapon.OutputType == WeaponPartTemplateOutputType.Support)
+            {
+                ((SupportWeapon)weapon).BeginFiring(evnt);
+            }
+        }
+
+        #endregion
 
         private void OnDestroy()
         {

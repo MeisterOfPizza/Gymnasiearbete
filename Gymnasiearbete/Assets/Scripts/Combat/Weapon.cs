@@ -1,5 +1,7 @@
 ﻿using ArenaShooter.Entities;
 using ArenaShooter.Templates.Weapons;
+using System;
+using System.Collections;
 using UnityEngine;
 
 namespace ArenaShooter.Combat
@@ -13,64 +15,132 @@ namespace ArenaShooter.Combat
 
         #region Public properties
 
-        public int   Damage       { get; private set; } = 10; // TEST: Test data.
-        public float Range        { get; private set; } = 10f; // TEST: Test data.
-        public float MaxDistance  { get; private set; } = 100f; // TEST: Test data.
-        public float Accuracy     { get; private set; }
-        public float Mobility     { get; private set; }
-        public float FireCooldown { get; private set; } = 0.1f; // TEST: Test data.
-        public int   MaxAmmoStock { get; private set; } = 30; // TEST: Test data.
-        public int   MaxAmmoClip  { get; private set; } = 5; // TEST: Test data.
-        public int   AmmoPerFire  { get; private set; }
+        // Callbacks //
 
-        public int   AmmoLeftInStock     { get; private set; } = 2;
-        public int   AmmoLeftInClip      { get; private set; } = 2;
+        public Action<string> OnAmmoChangedCallback    { get; set; }
+        public Action         OnReloadBegunCallback    { get; set; }
+        public Action         OnReloadFinishedCallback { get; set; }
+        public Action         OnReloadCanceledCallback { get; set; }
+
+        // Pre-use calculations done to increase execution times //
+
+        public int Damage { get; private set; }
+
+        // Temporary properties //
+
+        public int   AmmoLeftInStock     { get; private set; }
+        public int   AmmoLeftInClip      { get; private set; }
         public float CurrentFireCooldown { get; private set; }
+
+        // Helpers //
 
         public IWeaponHolder WeaponHolder { get; private set; }
 
-        public bool IsPlayerHoldingFire
+        public float Range
         {
             get
             {
-                return firedWeaponLastFrame;
+                return barrelTemplate.Range;
+            }
+        }
+
+        public float MaxDistance
+        {
+            get
+            {
+                return barrelTemplate.MaxDistance;
+            }
+        }
+
+        public WeaponPartTemplateOutputType OutputType
+        {
+            get
+            {
+                return stockTemplate.OutputType;
             }
         }
 
         #endregion
 
-        #region Private variables
+        #region Protected properties
 
-        private BodyTemplate   bodyTemplate;
-        private StockTemplate  stockTemplate;
-        private BarrelTemplate barrelTemplate;
-
-        private bool firedWeaponThisFrame;
-        private bool firedWeaponLastFrame;
+        /// <summary>
+        /// This virtual property can be used to check some statements to see if the weapon really can fire.
+        /// </summary>
+        protected virtual bool WeaponCanFire
+        {
+            get
+            {
+                return true;
+            }
+        }
 
         #endregion
 
-        public void Initialize(BodyTemplate bodyTemplate, StockTemplate stockTemplate, BarrelTemplate barrelTemplate)
+        #region Protected variables
+
+        protected StockTemplate  stockTemplate;
+        protected BodyTemplate   bodyTemplate;
+        protected BarrelTemplate barrelTemplate;
+
+        #endregion
+
+        #region Private variables
+
+        private bool weaponIsFiring;
+        private bool isReloading;
+
+        #endregion
+
+        #region Initializing
+
+        public void Initialize(StockTemplate stockTemplate, BodyTemplate bodyTemplate, BarrelTemplate barrelTemplate)
         {
-            this.bodyTemplate   = bodyTemplate;
             this.stockTemplate  = stockTemplate;
+            this.bodyTemplate   = bodyTemplate;
             this.barrelTemplate = barrelTemplate;
+
+            this.Damage = (int)(bodyTemplate.Damage * barrelTemplate.DamageMultiplier);
+
+            this.AmmoLeftInStock = bodyTemplate.MaxAmmoStock;
+            this.AmmoLeftInClip  = bodyTemplate.MaxAmmoPerClip;
         }
+
+        #endregion
+
+        #region Updating
 
         private void Update()
         {
             CurrentFireCooldown -= Time.deltaTime;
+
+            WeaponUpdate();
         }
 
         private void LateUpdate()
         {
-            firedWeaponLastFrame = firedWeaponThisFrame;
-            firedWeaponThisFrame = false;
+            WeaponLateUpdate();
         }
+
+        protected virtual void WeaponUpdate()
+        {
+            // Leave blank.
+        }
+
+        protected virtual void WeaponLateUpdate()
+        {
+            // Leave blank.
+        }
+
+        #endregion
+
+        #region Equipping
 
         public virtual void EquipWeapon(IWeaponHolder weaponHolder)
         {
             this.WeaponHolder = weaponHolder;
+
+            OnAmmoChangedCallback?.Invoke(FormatAmmoLeft());
         }
 
         public virtual void UnequipWeapon()
@@ -78,75 +148,218 @@ namespace ArenaShooter.Combat
 
         }
 
+        #endregion
+
         #region Calculations
 
         public virtual int CalculateDamage(float range)
         {
-            return (int)(Damage * (1 - Mathf.Clamp01(range / Range)));
+            return (int)(Damage * (1 - Mathf.Clamp01(range / barrelTemplate.Range)));
         }
 
         #endregion
 
         #region Reloading
 
+        /// <summary>
+        /// Begins the reload action and starts the reload animation.
+        /// </summary>
         public void Reload()
         {
-            int unsedAmmo = AmmoLeftInClip;
-            AmmoLeftInClip = Mathf.Min(MaxAmmoClip, AmmoLeftInStock);
-            AmmoLeftInStock = Mathf.Clamp(AmmoLeftInStock - MaxAmmoClip - unsedAmmo, 0, MaxAmmoStock);
+            if (!isReloading)
+            {
+                isReloading = true;
+
+                StopFiring();
+
+                StartCoroutine("ReloadAction");
+            }
+        }
+
+        /// <summary>
+        /// Cancels the reload and reload animation.
+        /// </summary>
+        public void CancelReload()
+        {
+            if (isReloading)
+            {
+                isReloading = false;
+
+                // TODO: Reset reload animation:
+                StopCoroutine("ReloadAction");
+
+                OnReloadCanceledCallback?.Invoke();
+            }
+        }
+
+        /// <summary>
+        /// Contains logic for reloading.
+        /// Do NOT calls this to reload, call <see cref="Reload"/> instead.
+        /// Do NOT stop this coroutine to cancel a reload, call <see cref="CancelReload"/> instead.
+        /// </summary>
+        private IEnumerator ReloadAction()
+        {
+            OnReloadBegunCallback?.Invoke();
+
+            float reloadTimeLeft = AmmoLeftInClip == 0 ? bodyTemplate.FullReloadTime : bodyTemplate.ReloadTime;
+
+            while (reloadTimeLeft > 0f && isReloading)
+            {
+                yield return new WaitForEndOfFrame();
+
+                reloadTimeLeft -= Time.deltaTime;
+            }
+
+            if (isReloading)
+            {
+                int unsedAmmo   = AmmoLeftInClip;
+                AmmoLeftInClip  = Mathf.Min(bodyTemplate.MaxAmmoPerClip, AmmoLeftInStock);
+                AmmoLeftInStock = Mathf.Clamp(AmmoLeftInStock - bodyTemplate.MaxAmmoPerClip - unsedAmmo, 0, bodyTemplate.MaxAmmoStock);
+
+                isReloading = false;
+
+                OnAmmoChangedCallback?.Invoke(FormatAmmoLeft());
+                OnReloadFinishedCallback?.Invoke();
+            }
         }
 
         #endregion
 
         #region Firing
 
-        public void Fire()
+        public void CheckForInput()
         {
-            if (!firedWeaponLastFrame)
+            if (!isReloading)
             {
-                OnBeforeFireFirstTime();
+                bool shouldFire = false;
+
+                // TODO: Check for mobile input:
+#if UNITY_STANDALONE
+                switch (bodyTemplate.FiringMode)
+                {
+                    case FiringMode.Single:
+                    case FiringMode.Burst:
+                        shouldFire = Input.GetMouseButtonDown(0);
+                        break;
+                    case FiringMode.Automatic:
+                        shouldFire = Input.GetMouseButton(0);
+                        break;
+                }
+#elif UNITY_IOS || UNITY_ANDROID
+
+#endif
+
+                if (shouldFire)
+                {
+                    if (!weaponIsFiring)
+                    {
+                        OnBeginFire();
+                    }
+
+                    TryFiring();
+
+                    OnFireFrame();
+                }
+                else if (weaponIsFiring)
+                {
+                    StopFiring();
+                }
+            }
+        }
+
+        public void StopFiring()
+        {
+            if (weaponIsFiring)
+            {
+                OnEndFire();
             }
 
-            if (AmmoLeftInClip - AmmoPerFire > 0)
+            weaponIsFiring = false;
+        }
+
+        private void TryFiring()
+        {
+            if (AmmoLeftInClip - bodyTemplate.AmmoPerFire >= 0 && WeaponCanFire)
             {
                 if (CurrentFireCooldown <= 0f)
                 {
-                    AmmoLeftInClip -= AmmoPerFire;
+                    // Remove used ammo:
+                    AmmoLeftInClip -= bodyTemplate.AmmoPerFire;
 
-                    CurrentFireCooldown = 0;
+                    // Invoke ammo spent callback for UI:
+                    OnAmmoChangedCallback?.Invoke(FormatAmmoLeft());
 
-                    firedWeaponThisFrame = true;
+                    // Reset the cooldown:
+                    CurrentFireCooldown = bodyTemplate.FireCooldown;
 
+                    weaponIsFiring = true;
+
+                    // Make the weapon actually fire:
                     OnFire();
-                }
-                else
-                {
-                    OnFireIsOnCooldown();
                 }
             }
             else
             {
-                Reload();
+                StopFiring();
+                OnFailedToFire();
+
+                if (AmmoLeftInClip <= 0)
+                {
+                    // Auto reload:
+                    Reload();
+                }
             }
         }
 
         /// <summary>
-        /// Is called whenever the weapon holder fires the weapon for the first time since they stopped firing.
+        /// Is called the same frame that the weapon holder fires and succeeds.
         /// </summary>
-        protected virtual void OnBeforeFireFirstTime()
+        protected abstract void OnFire();
+
+        /// <summary>
+        /// Is called whenever the weapon holder stars firing.
+        /// This method is called before <see cref="OnFire"/> is called.
+        /// </summary>
+        protected virtual void OnBeginFire()
         {
             // Leave blank.
         }
 
         /// <summary>
-        /// Is called whenever the weapon holder tries to fire the weapon while it's still in cooldown.
+        /// Is called every frame that the weapon holder is trying to fire.
+        /// This method is called right after <see cref="OnFire"/> is called.
         /// </summary>
-        protected virtual void OnFireIsOnCooldown()
+        protected virtual void OnFireFrame()
         {
             // Leave blank.
         }
 
-        protected abstract void OnFire();
+        /// <summary>
+        /// Is called whenever the weapon holder stops firing.
+        /// This method is called after <see cref="OnFire"/> is called.
+        /// </summary>
+        protected virtual void OnEndFire()
+        {
+            // Leave blank.
+        }
+
+        /// <summary>
+        /// Is called whenever the weapon holder tries to fire but cannot.
+        /// This method is called after <see cref="OnEndFire"/> is called.
+        /// </summary>
+        protected virtual void OnFailedToFire()
+        {
+            // Leave blank.
+        }
+
+        #endregion
+
+        #region Helpers
+
+        protected virtual string FormatAmmoLeft()
+        {
+            return string.Format("{0}/{1} | {2}", AmmoLeftInClip, bodyTemplate.MaxAmmoPerClip, AmmoLeftInStock);
+        }
 
         #endregion
 

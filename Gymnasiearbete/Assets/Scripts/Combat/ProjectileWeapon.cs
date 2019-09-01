@@ -1,5 +1,5 @@
-﻿using ArenaShooter.Extensions;
-using UnityEngine;
+﻿using ArenaShooter.Controllers;
+using ArenaShooter.Extensions;
 
 #pragma warning disable 0649
 
@@ -9,23 +9,15 @@ namespace ArenaShooter.Combat
     sealed class ProjectileWeapon : Weapon
     {
 
-        #region Editor
-
-        [Header("References")]
-        [SerializeField] private GameObject projectile; // TODO: Replace with template's firePrefab.
-
-        #endregion
-
         #region Private variables
 
         private GameObjectPool<Projectile> projectiles;
 
         #endregion
 
-        private void Awake()
+        private void Start()
         {
-            // TODO: Create projectiles.
-            projectiles = new GameObjectPool<Projectile>(null, projectile, MaxAmmoStock + MaxAmmoClip);
+            projectiles = new GameObjectPool<Projectile>(WeaponController.Singleton.ProjectileContainer, bodyTemplate.FirePrefab, bodyTemplate.MaxAmmoStock + bodyTemplate.MaxAmmoPerClip);
 
             foreach (var projectile in projectiles.PooledItems)
             {

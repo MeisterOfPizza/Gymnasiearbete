@@ -24,33 +24,21 @@ namespace ArenaShooter.Controllers
             playerControllers.Remove(playerController);
         }
 
-        public PlayerController GetClosestPlayer(Vector3 position, float maxDistance)
+        public PlayerController GetClosestPlayer(PlayerController skip, Vector3 position, float maxDistance)
         {
-            PlayerController closest  = playerControllers[0];
+            PlayerController closest  = null;
             float            distance = float.MaxValue;
 
             for (int i = 1; i < playerControllers.Count; i++)
             {
-                float pcDist = Vector3.Distance(playerControllers[i].transform.position, closest.transform.position);
+                float pcDist = Vector3.Distance(playerControllers[i].transform.position, position);
 
-                if (pcDist < distance && pcDist <= maxDistance)
+                if (pcDist < distance && pcDist <= maxDistance && playerControllers[i] != skip)
                 {
                     closest  = playerControllers[i];
                     distance = pcDist;
                 }
             }
-            /*
-            foreach (var pc in playerControllers)
-            {
-                float pcDist = Vector3.Distance(pc.transform.position, closest.transform.position);
-
-                if (pcDist < distance && pcDist <= maxDistance)
-                {
-                    closest  = pc;
-                    distance = pcDist;
-                }
-            }
-            */
 
             return closest;
         }

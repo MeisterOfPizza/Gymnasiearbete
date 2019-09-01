@@ -26,7 +26,7 @@ namespace ArenaShooter.Entities
 
         #endregion
 
-        private void Start()
+        protected virtual void Start()
         {
             entityCallbacks = gameObject.AddComponent<GlobalEntityCallbacks>();
             entityCallbacks.Initialize(this);

@@ -11,12 +11,16 @@ namespace ArenaShooter.Combat
     sealed class RaycastWeapon : Weapon
     {
 
-        #region Editor
+        #region Private variables
 
-        [Header("References")]
-        [SerializeField] private ParticleSystem hitEffect; // TODO: Replace with template's firePrefab.
+        private ParticleSystem hitEffect;
 
         #endregion
+
+        private void Start()
+        {
+            hitEffect = Instantiate(bodyTemplate.FirePrefab, transform).GetComponent<ParticleSystem>();
+        }
 
         protected override void OnFire()
         {
@@ -32,11 +36,13 @@ namespace ArenaShooter.Combat
                     takeDamageEvent.Send();
                 }
 
-                var fireEvent = WeaponRaycastFireEffectEvent.Create(WeaponHolder.entity);
+                var fireEvent = WeaponRaycastFireEffectEvent.Create(WeaponHolder.entity, EntityTargets.EveryoneExceptOwner);
                 fireEvent.Shooter = WeaponHolder.entity;
                 fireEvent.Point   = hit.HitPoint;
                 fireEvent.Up      = hit.HitNormal;
                 fireEvent.Send();
+
+                PlayHitEffect(hit.HitPoint, hit.HitNormal);
             }
         }
 

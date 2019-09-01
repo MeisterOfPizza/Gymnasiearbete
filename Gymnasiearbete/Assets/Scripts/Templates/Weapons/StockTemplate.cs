@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+#pragma warning disable 0649
+
 namespace ArenaShooter.Templates.Weapons
 {
 
@@ -8,18 +10,19 @@ namespace ArenaShooter.Templates.Weapons
     {
 
         [Header("Stats")]
-        [SerializeField] private float  mobility;
-        [SerializeField] private float  accuracy;
+        [SerializeField] private float mobility;
+        [SerializeField] private float accuracy;
 
-        public override WeaponTemplateType type
+        #region Getters
+
+        public override WeaponPartTemplateType Type
         {
             get
             {
-                return WeaponTemplateType.Stock;
+                return WeaponPartTemplateType.Stock;
             }
         }
 
-        #region getters
         public float Mobility
         {
             get
@@ -35,8 +38,8 @@ namespace ArenaShooter.Templates.Weapons
                 return accuracy;
             }
         }
-        #endregion
 
+        #endregion
 
     }
 

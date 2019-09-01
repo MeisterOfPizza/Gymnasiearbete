@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+#pragma warning disable 0649
+
 namespace ArenaShooter.Templates.Weapons
 {
 
@@ -8,19 +10,20 @@ namespace ArenaShooter.Templates.Weapons
     {
 
         [Header("Stats")]
-        [SerializeField] private float range;
-        [SerializeField] private float maxDistance;
-        [SerializeField] private float damageMulitplier;
+        [SerializeField] private float range            = 10f;
+        [SerializeField] private float maxDistance      = 50f;
+        [SerializeField] private float damageMulitplier = 1f;
 
-        public override WeaponTemplateType type
+        #region Getters
+
+        public override WeaponPartTemplateType Type
         {
             get
             {
-                return WeaponTemplateType.Barrel;
+                return WeaponPartTemplateType.Barrel;
             }
         }
 
-        #region getters
         public float Range
         {
             get
@@ -46,9 +49,7 @@ namespace ArenaShooter.Templates.Weapons
             }
         }
 
-
         #endregion
-
 
     }
 
