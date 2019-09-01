@@ -20,7 +20,7 @@ namespace ArenaShooter.Templates.Enemies
         [SerializeField] private ushort id;
         [SerializeField] private string nameEnemy;
         [SerializeField] private GameObject prefab;
-        [SerializeField] private short health;
+        [SerializeField] private int health;
         [SerializeField] private float movmentSpeed;
         [SerializeField] private float engageRange;
         #endregion
@@ -50,7 +50,7 @@ namespace ArenaShooter.Templates.Enemies
             }
         }
 
-        public short Health
+        public int Health
         {
             get
             {
