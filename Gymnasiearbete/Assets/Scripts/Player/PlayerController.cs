@@ -127,7 +127,10 @@ namespace ArenaShooter.Player
 
             if (BoltNetwork.IsServer && entity.IsOwner)
             {
-                EntitySpawnController.Singleton.SpawnEntityOnServer<Enemy>(enemyPrefab, null, new Vector3(Random.Range(-2f, 2f), 0, Random.Range(-2f, 2f)), Quaternion.identity);
+                for (int i = 0; i < 10; i++)
+                {
+                    EntitySpawnController.Singleton.SpawnEntityOnServer<Enemy>(enemyPrefab, null, new Vector3(Random.Range(-2f, 2f), 0, Random.Range(-2f, 2f)), Quaternion.identity);
+                }
             }
         }
 
@@ -143,27 +146,19 @@ namespace ArenaShooter.Player
 
         #region OnEvents
 
-        public override void OnEvent(WeaponRaycastFireEffectEvent evnt)
+        public override void OnEvent(WeaponFireEffectEvent evnt)
         {
-            if (evnt.Shooter == entity && weapon.OutputType == WeaponPartTemplateOutputType.Raycasting)
+            if (evnt.Shooter == entity)
             {
-                ((RaycastWeapon)weapon).PlayHitEffect(evnt.Point, evnt.Up);
-            }
-        }
-
-        public override void OnEvent(WeaponProjectileFireEvent evnt)
-        {
-            if (evnt.Shooter == entity && weapon.OutputType == WeaponPartTemplateOutputType.Projectile)
-            {
-                ((ProjectileWeapon)weapon).FireProjectileEffect(evnt);
+                weapon.OnEvent(evnt);
             }
         }
 
         public override void OnEvent(WeaponSupportBeginFireEffectEvent evnt)
         {
-            if (evnt.Shooter == entity && weapon.OutputType == WeaponPartTemplateOutputType.Support)
+            if (evnt.Shooter == entity)
             {
-                ((SupportWeapon)weapon).BeginFiring(evnt);
+                weapon.OnEvent(evnt);
             }
         }
 

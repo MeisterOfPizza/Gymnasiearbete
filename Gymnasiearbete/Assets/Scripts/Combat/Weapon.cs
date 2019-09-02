@@ -36,27 +36,35 @@ namespace ArenaShooter.Combat
 
         public IWeaponHolder WeaponHolder { get; private set; }
 
-        public float Range
-        {
-            get
-            {
-                return barrelTemplate.Range;
-            }
-        }
-
-        public float MaxDistance
-        {
-            get
-            {
-                return barrelTemplate.MaxDistance;
-            }
-        }
-
         public WeaponPartTemplateOutputType OutputType
         {
             get
             {
                 return stockTemplate.OutputType;
+            }
+        }
+
+        public StockTemplate StockTemplate
+        {
+            get
+            {
+                return stockTemplate;
+            }
+        }
+
+        public BodyTemplate BodyTemplate
+        {
+            get
+            {
+                return bodyTemplate;
+            }
+        }
+
+        public BarrelTemplate BarrelTemplate
+        {
+            get
+            {
+                return barrelTemplate;
             }
         }
 
@@ -77,15 +85,11 @@ namespace ArenaShooter.Combat
 
         #endregion
 
-        #region Protected variables
-
-        protected StockTemplate  stockTemplate;
-        protected BodyTemplate   bodyTemplate;
-        protected BarrelTemplate barrelTemplate;
-
-        #endregion
-
         #region Private variables
+
+        private StockTemplate  stockTemplate;
+        private BodyTemplate   bodyTemplate;
+        private BarrelTemplate barrelTemplate;
 
         private bool weaponIsFiring;
         private bool isReloading;
@@ -104,7 +108,11 @@ namespace ArenaShooter.Combat
 
             this.AmmoLeftInStock = bodyTemplate.MaxAmmoStock;
             this.AmmoLeftInClip  = bodyTemplate.MaxAmmoPerClip;
+
+            OnInitialized();
         }
+
+        protected abstract void OnInitialized();
 
         #endregion
 
@@ -160,6 +168,16 @@ namespace ArenaShooter.Combat
         #endregion
 
         #region Reloading
+
+        public void DepleteAmmo(int ammo)
+        {
+            AmmoLeftInClip = Mathf.Clamp(AmmoLeftInClip - ammo, 0, bodyTemplate.MaxAmmoPerClip);
+
+            if (AmmoLeftInClip <= 0)
+            {
+                Reload();
+            }
+        }
 
         /// <summary>
         /// Begins the reload action and starts the reload animation.
@@ -251,11 +269,6 @@ namespace ArenaShooter.Combat
 
                 if (shouldFire)
                 {
-                    if (!weaponIsFiring)
-                    {
-                        OnBeginFire();
-                    }
-
                     TryFiring();
 
                     OnFireFrame();
@@ -283,11 +296,16 @@ namespace ArenaShooter.Combat
             {
                 if (CurrentFireCooldown <= 0f)
                 {
-                    // Remove used ammo:
-                    AmmoLeftInClip -= bodyTemplate.AmmoPerFire;
+                    if (!weaponIsFiring)
+                    {
+                        OnBeginFire();
+                    }
 
-                    // Invoke ammo spent callback for UI:
-                    OnAmmoChangedCallback?.Invoke(FormatAmmoLeft());
+                    if (!bodyTemplate.ManualAmmoDepletion)
+                    {
+                        // Remove used ammo:
+                        AmmoLeftInClip -= bodyTemplate.AmmoPerFire;
+                    }
 
                     // Reset the cooldown:
                     CurrentFireCooldown = bodyTemplate.FireCooldown;
@@ -296,6 +314,14 @@ namespace ArenaShooter.Combat
 
                     // Make the weapon actually fire:
                     OnFire();
+
+                    // Invoke ammo spent callback for UI:
+                    OnAmmoChangedCallback?.Invoke(FormatAmmoLeft());
+                    
+                    if (AmmoLeftInClip <= 0)
+                    {
+                        Reload();
+                    }
                 }
             }
             else
@@ -348,6 +374,20 @@ namespace ArenaShooter.Combat
         /// This method is called after <see cref="OnEndFire"/> is called.
         /// </summary>
         protected virtual void OnFailedToFire()
+        {
+            // Leave blank.
+        }
+
+        #endregion
+
+        #region Events
+
+        public virtual void OnEvent(WeaponFireEffectEvent @event)
+        {
+            // Leave blank.
+        }
+
+        public virtual void OnEvent(WeaponSupportBeginFireEffectEvent @event)
         {
             // Leave blank.
         }

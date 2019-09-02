@@ -84,7 +84,7 @@ namespace ArenaShooter.Entities
                     takeDamageEvent.Send();
                 }
 
-                var fireEvent = WeaponRaycastFireEffectEvent.Create(entity);
+                var fireEvent     = WeaponFireEffectEvent.Create(entity);
                 fireEvent.Shooter = entity;
                 fireEvent.Point   = hit.HitPoint;
                 fireEvent.Up      = hit.HitNormal;
@@ -92,7 +92,7 @@ namespace ArenaShooter.Entities
             }
         }
 
-        public override void OnEvent(WeaponRaycastFireEffectEvent evnt)
+        public override void OnEvent(WeaponFireEffectEvent evnt)
         {
             if (evnt.Shooter == entity)
             {

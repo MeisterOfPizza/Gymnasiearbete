@@ -5,7 +5,7 @@ using UnityEngine;
 namespace ArenaShooter.Extensions
 {
 
-    sealed class GameObjectPool<T> where T : MonoBehaviour
+    sealed class GameObjectPool<T> where T : Component
     {
 
         #region Public properties

@@ -1,4 +1,5 @@
-﻿using Bolt;
+﻿using ArenaShooter.Controllers;
+using Bolt;
 using UnityEngine;
 
 namespace ArenaShooter.Entities
@@ -11,6 +12,14 @@ namespace ArenaShooter.Entities
         #region Public properties
 
         public abstract EntityTeam EntityTeam { get; }
+
+        public virtual Vector3 BodyOriginPosition
+        {
+            get
+            {
+                return transform.position + Vector3.up;
+            }
+        }
 
         #endregion
 
@@ -47,11 +56,21 @@ namespace ArenaShooter.Entities
             // Leave blank.
         }
 
+        private void OnEnable()
+        {
+            EntityController.Singleton.AddEntity(this);
+        }
+
+        private void OnDisable()
+        {
+            EntityController.Singleton.RemoveEntity(this);
+        }
+
         #region IDamagable
 
         public virtual void TakeDamage(TakeDamageEvent takeDamageEvent)
         {
-            state.SetDynamic("Health", (int)state.GetDynamic("Health") - takeDamageEvent.DamageTaken);
+            state.SetDynamic("Health", Mathf.Clamp((int)state.GetDynamic("Health") - takeDamageEvent.DamageTaken, 0, int.MaxValue));
 
             if ((int)state.GetDynamic("Health") <= 0)
             {

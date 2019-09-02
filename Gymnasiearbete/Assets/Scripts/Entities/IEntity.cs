@@ -1,4 +1,6 @@
-﻿namespace ArenaShooter.Entities
+﻿using UnityEngine;
+
+namespace ArenaShooter.Entities
 {
 
     enum EntityTeam
@@ -13,6 +15,8 @@
         EntityTeam EntityTeam { get; }
 
         BoltEntity entity { get; set; }
+
+        Vector3 BodyOriginPosition { get; }
 
     }
 

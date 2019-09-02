@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d0f5d6a032eb64943a4318e39d372399, type: 3}
-  m_Name: Default Ak
+  m_Name: Default RPG
   m_EditorClassIdentifier: 
-  templateId: 2000
-  name: Default Ak
+  templateId: 2100
+  name: Default RPG
   description: 
-  outputType: 0
+  outputType: 1
   weaponPartPrefab: {fileID: 0}
   range: 10
   maxDistance: 50

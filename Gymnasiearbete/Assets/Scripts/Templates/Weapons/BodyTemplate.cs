@@ -15,7 +15,9 @@ namespace ArenaShooter.Templates.Weapons
     [CreateAssetMenu(menuName = "Templates/Weapons/Body")]
     class BodyTemplate : WeaponPartTemplate
     {
-        
+
+        #region Editor
+
         [Header("Stats")]
         [SerializeField] private ushort damage         = 10;
         [SerializeField] private short  maxAmmoPerClip = 30;
@@ -25,11 +27,14 @@ namespace ArenaShooter.Templates.Weapons
         [SerializeField] private float  reloadTime     = 1f;
         [SerializeField] private float  fullReloadTime = 1.5f;
 
-        [Space]
-        [SerializeField] private FiringMode firingMode = FiringMode.Automatic;
+        [Header("Logic")]
+        [SerializeField] private FiringMode firingMode          = FiringMode.Automatic;
+        [SerializeField] private bool       manualAmmoDepletion = false;
 
         [Header("Prefabs")]
         [SerializeField] private GameObject firePrefab;
+
+        #endregion
 
         #region Getters
 
@@ -110,6 +115,14 @@ namespace ArenaShooter.Templates.Weapons
             get
             {
                 return firingMode;
+            }
+        }
+
+        public bool ManualAmmoDepletion
+        {
+            get
+            {
+                return manualAmmoDepletion;
             }
         }
 

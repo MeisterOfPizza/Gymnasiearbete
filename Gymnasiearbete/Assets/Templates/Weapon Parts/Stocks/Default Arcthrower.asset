@@ -9,14 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0f5d6a032eb64943a4318e39d372399, type: 3}
-  m_Name: Default Ak
+  m_Script: {fileID: 11500000, guid: 1c92466991548ef44801f3ff909995a6, type: 3}
+  m_Name: Default Arcthrower
   m_EditorClassIdentifier: 
-  templateId: 2000
-  name: Default Ak
+  templateId: 200
+  name: Default Arcthrower
   description: 
-  outputType: 0
+  outputType: 2
   weaponPartPrefab: {fileID: 0}
-  range: 10
-  maxDistance: 50
-  damageMulitplier: 1
+  mobility: 0
+  accuracy: 0

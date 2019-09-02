@@ -1,7 +1,4 @@
-﻿using ArenaShooter.Controllers;
-using ArenaShooter.Player;
-using Bolt;
-using UnityEngine;
+﻿using ArenaShooter.Combat.Utils;
 
 #pragma warning disable 0649
 
@@ -12,125 +9,68 @@ namespace ArenaShooter.Combat
     {
 
         #region Private variables
-
-        private LineRenderer effectLineRenderer;
+        
+        private SupportShot supportShot;
 
         #endregion
 
         #region Protected properties
 
-        protected bool HasValidTarget
-        {
-            get
-            {
-                return target != null && target != WeaponHolder.entity;
-            }
-        }
-
         protected override bool WeaponCanFire
         {
             get
             {
-                var _pcController = PlayerEntityController.Singleton.GetClosestPlayer((PlayerController)WeaponHolder, WeaponHolder.WeaponFirePosition, barrelTemplate.Range);
-                var _target = _pcController == null ? null : _pcController.entity;
-
-                return _target != null && _target != WeaponHolder.entity;
+                return supportShot.WeaponCanFire;
             }
         }
 
         #endregion
 
-        #region Protected variables
-
-        protected BoltEntity target;
-
-        #endregion
-
-        private void Start()
+        protected override void OnInitialized()
         {
-            effectLineRenderer = Instantiate(bodyTemplate.FirePrefab, transform).GetComponent<LineRenderer>();
-            effectLineRenderer.useWorldSpace = true;
+            supportShot = Instantiate(BodyTemplate.FirePrefab, transform).GetComponent<SupportShot>();
+            supportShot.Initialize(this);
         }
 
         protected override void WeaponUpdate()
         {
             // Check if the weapon does not belong to the local client, and if the weapon has received a target:
-            if (!WeaponHolder.entity.IsControllerOrOwner && HasValidTarget)
+            if (!WeaponHolder.entity.IsControllerOrOwner && supportShot.HasValidTargets)
             {
                 // If so: update the graphics of the effect.
-                UpdateGraphics();
+                supportShot.UpdateSupportShot();
             }
         }
 
         protected override void OnBeginFire()
         {
-            var pcController = PlayerEntityController.Singleton.GetClosestPlayer((PlayerController)WeaponHolder, WeaponHolder.WeaponFirePosition, barrelTemplate.Range);
-            target = pcController == null ? null : pcController.entity;
-
-            if (HasValidTarget)
-            {
-                var beginFiring     = WeaponSupportBeginFireEffectEvent.Create(WeaponHolder.entity, EntityTargets.EveryoneExceptOwner);
-                beginFiring.Begin   = true;
-                beginFiring.Shooter = WeaponHolder.entity;
-                beginFiring.Target  = target;
-                beginFiring.Send();
-
-                effectLineRenderer.gameObject.SetActive(true);
-            }
-            else
-            {
-                target = null;
-            }
+            supportShot.OnBeginSupport();
         }
 
         protected override void OnFireFrame()
         {
-            if (HasValidTarget)
+            if (supportShot.HasValidTargets)
             {
-                UpdateGraphics();
+                supportShot.UpdateSupportShot();
             }
         }
 
         protected override void OnEndFire()
         {
-            var beginFiring     = WeaponSupportBeginFireEffectEvent.Create(WeaponHolder.entity, EntityTargets.EveryoneExceptOwner);
-            beginFiring.Begin   = false;
-            beginFiring.Shooter = WeaponHolder.entity;
-            beginFiring.Send();
-
-            target = null;
-            effectLineRenderer.gameObject.SetActive(false);
+            supportShot.OnEndSupport();
         }
 
         protected override void OnFire()
         {
-            if (HasValidTarget)
+            if (supportShot.HasValidTargets)
             {
-                float distance = Vector3.Distance(WeaponHolder.WeaponFirePosition, target.transform.position);
-                if (distance < Range)
-                {
-                    var healEvent    = HealEvent.Create(GlobalTargets.Everyone, ReliabilityModes.ReliableOrdered);
-                    healEvent.Target = target;
-                    healEvent.Heal   = Damage;
-                    healEvent.Send();
-                }
-                else
-                {
-                    StopFiring();
-                }
+                supportShot.SupportTargets();
             }
         }
 
-        private void UpdateGraphics()
+        public override void OnEvent(WeaponSupportBeginFireEffectEvent @event)
         {
-            effectLineRenderer.SetPosition(0, WeaponHolder.WeaponFirePosition);
-            effectLineRenderer.SetPosition(1, target.transform.position);
-        }
-
-        public void BeginFiring(WeaponSupportBeginFireEffectEvent weaponSupportBeginFireEffectEvent)
-        {
-            target = weaponSupportBeginFireEffectEvent.Target;
-            effectLineRenderer.gameObject.SetActive(weaponSupportBeginFireEffectEvent.Begin);
+            supportShot.OnEvent(@event);
         }
 
     }

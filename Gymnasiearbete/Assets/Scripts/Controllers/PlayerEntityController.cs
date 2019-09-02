@@ -29,7 +29,7 @@ namespace ArenaShooter.Controllers
             PlayerController closest  = null;
             float            distance = float.MaxValue;
 
-            for (int i = 1; i < playerControllers.Count; i++)
+            for (int i = 0; i < playerControllers.Count; i++)
             {
                 float pcDist = Vector3.Distance(playerControllers[i].transform.position, position);
 

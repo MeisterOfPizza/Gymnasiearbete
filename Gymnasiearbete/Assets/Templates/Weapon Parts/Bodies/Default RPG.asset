@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bef2973245ad10848853915d4a6ce695, type: 3}
-  m_Name: Default Ak
+  m_Name: Default RPG
   m_EditorClassIdentifier: 
-  templateId: 1000
-  name: Default Ak
+  templateId: 1100
+  name: Default RPG
   description: 
-  outputType: 0
+  outputType: 1
   weaponPartPrefab: {fileID: 0}
   damage: 10
   maxAmmoPerClip: 30
@@ -26,5 +26,5 @@ MonoBehaviour:
   fullReloadTime: 1.5
   firingMode: 2
   manualAmmoDepletion: 0
-  firePrefab: {fileID: 2666111351735457144, guid: 4e7646c61010c11458ac398ca936fc08,
+  firePrefab: {fileID: 3848188618349009631, guid: b3623cda8cdf7644e86a8d996e0d9ac3,
     type: 3}

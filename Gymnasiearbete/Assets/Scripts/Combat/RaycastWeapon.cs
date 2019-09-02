@@ -1,5 +1,4 @@
 ﻿using ArenaShooter.Entities;
-using ArenaShooter.Extensions;
 using Bolt;
 using UnityEngine;
 
@@ -17,14 +16,14 @@ namespace ArenaShooter.Combat
 
         #endregion
 
-        private void Start()
+        protected override void OnInitialized()
         {
-            hitEffect = Instantiate(bodyTemplate.FirePrefab, transform).GetComponent<ParticleSystem>();
+            hitEffect = Instantiate(BodyTemplate.FirePrefab, transform).GetComponent<ParticleSystem>();
         }
 
         protected override void OnFire()
         {
-            var hit = Utils.Raycast(new Ray(WeaponHolder.WeaponFirePosition, WeaponHolder.WeaponForward), Range, WeaponHolder.WeaponHitLayerMask, WeaponHolder.gameObject, QueryTriggerInteraction.Ignore);
+            var hit = Extensions.Utils.Raycast(new Ray(WeaponHolder.WeaponFirePosition, WeaponHolder.WeaponForward), BarrelTemplate.Range, WeaponHolder.WeaponHitLayerMask, WeaponHolder.gameObject, QueryTriggerInteraction.Ignore);
 
             if (hit.HitAnything)
             {
@@ -36,20 +35,20 @@ namespace ArenaShooter.Combat
                     takeDamageEvent.Send();
                 }
 
-                var fireEvent = WeaponRaycastFireEffectEvent.Create(WeaponHolder.entity, EntityTargets.EveryoneExceptOwner);
+                var fireEvent     = WeaponFireEffectEvent.Create(WeaponHolder.entity, EntityTargets.EveryoneExceptOwner);
                 fireEvent.Shooter = WeaponHolder.entity;
                 fireEvent.Point   = hit.HitPoint;
                 fireEvent.Up      = hit.HitNormal;
                 fireEvent.Send();
 
-                PlayHitEffect(hit.HitPoint, hit.HitNormal);
+                OnEvent(fireEvent);
             }
         }
 
-        public void PlayHitEffect(Vector3 position, Vector3 up)
+        public override void OnEvent(WeaponFireEffectEvent @event)
         {
-            hitEffect.transform.position = position;
-            hitEffect.transform.up       = up;
+            hitEffect.transform.position = @event.Point;
+            hitEffect.transform.up       = @event.Up;
             hitEffect.Play(true);
         }
 
