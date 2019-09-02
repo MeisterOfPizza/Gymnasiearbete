@@ -1042,7 +1042,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1928587501}
   - component: {fileID: 1928587502}
-  - component: {fileID: 1928587503}
   - component: {fileID: 1928587504}
   - component: {fileID: 1928587505}
   m_Layer: 0
@@ -1078,18 +1077,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f3b96f4dd48b1b4b88f90d64c222fcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1928587503
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1928587500}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e02de4c90952034887caac365878672, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1928587504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1106,14 +1093,17 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0fe2ec43b605de941b1c80577b4f2b47, type: 2}
   - {fileID: 11400000, guid: 28bbb2ed6d534ea4faebd45201650bb6, type: 2}
   - {fileID: 11400000, guid: 22acf60e8f44d374da45f04b88362bd8, type: 2}
+  - {fileID: 11400000, guid: 6ba8d1edd0a81ac438b67779da473431, type: 2}
   bodyTemplates:
   - {fileID: 11400000, guid: 0a65ac037dd240a41aa72bd2b29f61fc, type: 2}
   - {fileID: 11400000, guid: ba1a5a06ea5d6ff47a28625a84054ddf, type: 2}
   - {fileID: 11400000, guid: 67354888ad107714eb22cad3d1fe5718, type: 2}
+  - {fileID: 11400000, guid: 01690448ddc35e747908dc5e5342fa9f, type: 2}
   barrelTemplates:
   - {fileID: 11400000, guid: c88ea1effd6a5894cb5647721e5908a8, type: 2}
   - {fileID: 11400000, guid: 4d727e91e1965ba46b1bfb7927b19378, type: 2}
   - {fileID: 11400000, guid: 43337d03633dab849ae3dbbca75c59b2, type: 2}
+  - {fileID: 11400000, guid: 94dc7c8922d36b94ba50200b258b77ba, type: 2}
   projectileContainer: {fileID: 800477129}
 --- !u!114 &1928587505
 MonoBehaviour:

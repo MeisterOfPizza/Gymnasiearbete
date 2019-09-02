@@ -22,11 +22,6 @@ namespace ArenaShooter.Player
         [Space]
         [SerializeField] private LayerMask hitLayerMask;
 
-        // TEST: Test data
-        public StockTemplate stockTemplate;
-        public BodyTemplate bodyTemplate;
-        public BarrelTemplate barrelTemplate;
-
         #endregion
 
         #region Private variables
@@ -97,7 +92,17 @@ namespace ArenaShooter.Player
         {
             base.Start();
 
-            weapon = WeaponController.Singleton.CreateWeapon(stockTemplate, bodyTemplate, barrelTemplate, transform);
+            if (entity.IsOwner)
+            {
+                weapon = UILoadoutController.GetWeapon(transform);
+                state.Weapon.WeaponStockId  = weapon.StockTemplate.TemplateId;
+                state.Weapon.WeaponBodyId   = weapon.BodyTemplate.TemplateId;
+                state.Weapon.WeaponBarrelId = weapon.BarrelTemplate.TemplateId;
+            }
+            else
+            {
+                weapon = WeaponController.Singleton.CreateWeapon(WeaponController.Singleton.GetStockTemplate((ushort)state.Weapon.WeaponStockId), WeaponController.Singleton.GetBodyTemplate((ushort)state.Weapon.WeaponBodyId), WeaponController.Singleton.GetBarrelTemplate((ushort)state.Weapon.WeaponBarrelId), transform);
+            }
 
             if (entity.IsOwner)
             {
@@ -106,8 +111,6 @@ namespace ArenaShooter.Player
             }
 
             weapon.EquipWeapon(this);
-
-            PlayerEntityController.Singleton.AddPlayerController(this);
         }
 
         public override void Attached()
@@ -163,11 +166,6 @@ namespace ArenaShooter.Player
         }
 
         #endregion
-
-        private void OnDestroy()
-        {
-            PlayerEntityController.Singleton.RemovePlayerController(this);
-        }
 
     }
 
