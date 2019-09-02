@@ -11,6 +11,11 @@ namespace ArenaShooter.Controllers
             return Vector3.zero;
         }
 
+        public void UpdateMovement(Vector2 joystickDelta)
+        {
+
+        }
+
     }
 
 }
