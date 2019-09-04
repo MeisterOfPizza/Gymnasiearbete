@@ -1,7 +1,6 @@
 ﻿using ArenaShooter.Combat;
 using ArenaShooter.Controllers;
 using ArenaShooter.Entities;
-using ArenaShooter.Templates.Weapons;
 using ArenaShooter.UI;
 using Bolt;
 using UnityEngine;

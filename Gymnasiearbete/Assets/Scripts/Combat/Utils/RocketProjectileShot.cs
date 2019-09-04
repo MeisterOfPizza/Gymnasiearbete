@@ -1,16 +1,15 @@
 ﻿using ArenaShooter.Entities;
 using ArenaShooter.Extensions;
 using Bolt;
-using System;
 using System.Collections;
 using UnityEngine;
 
 #pragma warning disable 0649
 
-namespace ArenaShooter.Combat
+namespace ArenaShooter.Combat.Utils
 {
 
-    class Projectile : MonoBehaviour
+    class RocketProjectileShot : ProjectileShot
     {
 
         #region Editor
@@ -33,9 +32,6 @@ namespace ArenaShooter.Combat
 
         #region Private variables
 
-        private Weapon             weapon;
-        private Action<Projectile> onProjectileHit;
-
         private bool isAlive;
         private bool clientIsShooter;
 
@@ -43,13 +39,7 @@ namespace ArenaShooter.Combat
 
         #endregion
 
-        public void Initialize(Weapon weapon, Action<Projectile> onProjectileHit)
-        {
-            this.weapon          = weapon;
-            this.onProjectileHit = onProjectileHit;
-        }
-
-        public void FireProjectile(bool clientIsShooter)
+        public override void FireProjectile(bool clientIsShooter)
         {
             isAlive = true;
 
@@ -120,7 +110,7 @@ namespace ArenaShooter.Combat
             }
             else
             {
-                onProjectileHit?.Invoke(this);
+                weapon.ProjectileHit(this);
             }
 
             rigidbody.velocity = Vector3.zero;
@@ -153,7 +143,7 @@ namespace ArenaShooter.Combat
                 yield return new WaitForEndOfFrame();
             }
 
-            onProjectileHit?.Invoke(this);
+            weapon.ProjectileHit(this);
         }
 
     }

@@ -8,7 +8,7 @@ using UnityEngine;
 namespace ArenaShooter.Combat.Utils
 {
 
-    sealed class SingleHealShot : SupportShot
+    sealed class SingleHealSupportShot : SupportShot
     {
 
         #region Editor
