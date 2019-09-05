@@ -40,7 +40,22 @@ namespace ArenaShooter.Player
 
         private Material materialClone;
 
+        // Create a plane at 0,0,0 whose normal points to +Y to be used by the raycast look at for standalone builds.
+#if UNITY_STANDALONE
+        private Plane mouseLookAtPlane = new Plane(Vector3.up, Vector3.zero);
+#endif
+
         #endregion
+
+        private void Start()
+        {
+            if (!entity.IsOwner)
+            {
+                playerColor = state.Color;
+            }
+
+            SetColor(playerColor);
+        }
 
         // Start
         public override void Attached()
@@ -50,6 +65,7 @@ namespace ArenaShooter.Player
             if (entity.IsOwner)
             {
                 playerColor = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
+                state.Color = playerColor;
 
                 // Deactivate the scene's main camera if it's active (and exists):
                 Camera.main?.gameObject.SetActive(false);
@@ -78,19 +94,13 @@ namespace ArenaShooter.Player
             if (canLook)
             {
 #if UNITY_STANDALONE
-                Vector3 direction = transform.forward;
-                Ray ray = cameraFollow.Camera.ScreenPointToRay(Input.mousePosition);
-
-                if (Physics.Raycast(ray, out RaycastHit hit, 100f, lookRayLayerMask, QueryTriggerInteraction.Ignore))
-                {
-                    direction = hit.point - transform.position;
-                    direction.y = 0;
-                }
+                Vector3 lookAtPoint = GetMouseLookAtPoint();
+                lookAtPoint.y = transform.position.y;
+                
+                transform.forward = lookAtPoint - transform.position;
 #elif UNITY_IOS || UNITY_ANDROID
-                Vector3 direction = MobileLookController.Singleton.GetLookDirection();
+                transform.forward = MobileLookController.Singleton.GetLookDirection();
 #endif
-
-                transform.forward = direction;
             }
         }
 
@@ -109,6 +119,20 @@ namespace ArenaShooter.Player
         }
 
         #region Helper methods
+
+        private Vector3 GetMouseLookAtPoint()
+        {
+            Ray ray = cameraFollow.Camera.ScreenPointToRay(Input.mousePosition);
+
+            // If the ray hits the plane...
+            if (mouseLookAtPlane.Raycast(ray, out float distance))
+            {
+                // Get the hit point:
+                return ray.GetPoint(distance);
+            }
+
+            return Vector3.zero;
+        }
 
         private void SetColor(Color color)
         {
