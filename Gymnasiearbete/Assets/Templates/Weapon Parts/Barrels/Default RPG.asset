@@ -17,6 +17,6 @@ MonoBehaviour:
   description: 
   outputType: 1
   weaponPartPrefab: {fileID: 0}
-  range: 10
-  maxDistance: 50
+  range: 2.5
+  maxDistance: 25
   damageMulitplier: 1

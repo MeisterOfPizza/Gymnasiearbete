@@ -46,7 +46,7 @@ namespace ArenaShooter.Combat
             {
                 projectile.transform.position = @event.Point;
                 projectile.transform.forward  = @event.Forward;
-                projectile.FireProjectile(@event.FromSelf);
+                projectile.FireProjectile(@event.Shooter.NetworkId.Equals(WeaponHolder.entity.NetworkId)); // Check if the shooter is the local client.
             }
         }
 

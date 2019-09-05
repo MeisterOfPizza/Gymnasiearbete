@@ -93,6 +93,7 @@ namespace ArenaShooter.Combat
 
         private bool weaponIsFiring;
         private bool isReloading;
+        private bool isBurstFiring;
 
         #endregion
 
@@ -247,7 +248,7 @@ namespace ArenaShooter.Combat
 
         public void CheckForInput()
         {
-            if (!isReloading)
+            if (!isReloading && !isBurstFiring)
             {
                 bool shouldFire = false;
 
@@ -256,8 +257,10 @@ namespace ArenaShooter.Combat
                 switch (bodyTemplate.FiringMode)
                 {
                     case FiringMode.Single:
-                    case FiringMode.Burst:
                         shouldFire = Input.GetMouseButtonDown(0);
+                        break;
+                    case FiringMode.Burst:
+                        shouldFire = Input.GetMouseButtonDown(0) && CurrentFireCooldown <= 0f;
                         break;
                     case FiringMode.Automatic:
                         shouldFire = Input.GetMouseButton(0);
@@ -284,6 +287,10 @@ namespace ArenaShooter.Combat
         {
             if (weaponIsFiring)
             {
+                // Stop burst firing if the user is currently burst firing.
+                StopCoroutine("TryBurstFiring");
+                isBurstFiring = false;
+
                 OnEndFire();
             }
 
@@ -292,9 +299,21 @@ namespace ArenaShooter.Combat
 
         private void TryFiring()
         {
+            if (bodyTemplate.FiringMode == FiringMode.Burst)
+            {
+                StartCoroutine("TryBurstFiring");
+            }
+            else
+            {
+                TrySingleFiring();
+            }
+        }
+
+        private void TrySingleFiring()
+        {
             if (AmmoLeftInClip - bodyTemplate.AmmoPerFire >= 0 && WeaponCanFire)
             {
-                if (CurrentFireCooldown <= 0f)
+                if (CurrentFireCooldown <= 0f || isBurstFiring)
                 {
                     if (!weaponIsFiring)
                     {
@@ -335,6 +354,32 @@ namespace ArenaShooter.Combat
                     Reload();
                 }
             }
+        }
+
+        private IEnumerator TryBurstFiring()
+        {
+            sbyte shotsLeft     = bodyTemplate.BurstShots;
+            float burstCooldown = 0f;
+
+            isBurstFiring = true;
+
+            while (shotsLeft > 0)
+            {
+                burstCooldown -= Time.deltaTime;
+
+                if (burstCooldown <= 0f)
+                {
+                    shotsLeft--;
+                    TrySingleFiring();
+
+                    burstCooldown = bodyTemplate.BurstFireInterval;
+                }
+
+                yield return new WaitForEndOfFrame();
+            }
+
+            isBurstFiring       = false;
+            CurrentFireCooldown = bodyTemplate.FireCooldown;
         }
 
         /// <summary>

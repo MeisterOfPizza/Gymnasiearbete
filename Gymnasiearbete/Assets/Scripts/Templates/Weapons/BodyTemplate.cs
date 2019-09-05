@@ -23,9 +23,15 @@ namespace ArenaShooter.Templates.Weapons
         [SerializeField] private short  maxAmmoPerClip = 30;
         [SerializeField] private short  maxAmmoStock   = 150;
         [SerializeField] private short  ammoPerFire    = 1;
-        [SerializeField] private float  fireCooldown   = 0.1f;
-        [SerializeField] private float  reloadTime     = 1f;
-        [SerializeField] private float  fullReloadTime = 1.5f;
+
+        [Space]
+        [SerializeField] private float fireCooldown   = 0.1f;
+        [SerializeField] private float reloadTime     = 1f;
+        [SerializeField] private float fullReloadTime = 1.5f;
+
+        [Space]
+        [SerializeField] private float burstFireInterval = 0.05f;
+        [SerializeField] private sbyte burstShots        = 3;
 
         [Header("Logic")]
         [SerializeField] private FiringMode firingMode          = FiringMode.Automatic;
@@ -102,11 +108,19 @@ namespace ArenaShooter.Templates.Weapons
             }
         }
 
-        public GameObject FirePrefab
+        public float BurstFireInterval
         {
             get
             {
-                return firePrefab;
+                return burstFireInterval;
+            }
+        }
+
+        public sbyte BurstShots
+        {
+            get
+            {
+                return burstShots;
             }
         }
 
@@ -123,6 +137,14 @@ namespace ArenaShooter.Templates.Weapons
             get
             {
                 return manualAmmoDepletion;
+            }
+        }
+
+        public GameObject FirePrefab
+        {
+            get
+            {
+                return firePrefab;
             }
         }
 

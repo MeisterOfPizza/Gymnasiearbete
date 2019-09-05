@@ -24,7 +24,9 @@ MonoBehaviour:
   fireCooldown: 0.1
   reloadTime: 1
   fullReloadTime: 1.5
-  firingMode: 2
+  burstFireInterval: 0.05
+  burstShots: 3
+  firingMode: 1
   manualAmmoDepletion: 0
   firePrefab: {fileID: 2666111351735457144, guid: 4e7646c61010c11458ac398ca936fc08,
     type: 3}
