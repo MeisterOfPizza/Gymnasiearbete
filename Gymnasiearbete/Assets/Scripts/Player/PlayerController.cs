@@ -1,6 +1,6 @@
-﻿using ArenaShooter.Controllers;
+﻿using ArenaShooter.Combat;
+using ArenaShooter.Controllers;
 using ArenaShooter.Entities;
-using ArenaShooter.Extensions;
 using ArenaShooter.UI;
 using Bolt;
 using UnityEngine;
@@ -10,164 +10,161 @@ using UnityEngine;
 namespace ArenaShooter.Player
 {
 
-    class PlayerController : Entity<IPlayerState>
+    sealed class PlayerController : Entity<IPlayerState>, IWeaponHolder
     {
 
         #region Editor
 
-        [Header("References")]
-        [SerializeField] private ParticleSystem explosionEffect;
-
         [Header("Values")]
-        [SerializeField] private int   startHealth = 100;  // TEST DATA
-        [SerializeField] private int   startDamage = 10;   // TEST DATA
-        [SerializeField] private float damageRange = 100f; // TEST DATA
+        [SerializeField] private int startHealth = 100;  // TEST DATA
 
         [Space]
-        [SerializeField] private LayerMask enemyHitLayerMask;
-        [SerializeField] private LayerMask weaponHitLayerMask;
+        [SerializeField] private LayerMask hitLayerMask;
 
         #endregion
 
         #region Private variables
 
+        private Weapon weapon;
+
         private UIPlayerGameStats uiPlayerGameStats;
 
         #endregion
+
+        #region IEntity
+
+        public override EntityTeam EntityTeam
+        {
+            get
+            {
+                return EntityTeam.Player;
+            }
+        }
+
+        public override HealableBy HealableBy
+        {
+            get
+            {
+                return HealableBy.Player;
+            }
+        }
+
+        #endregion
+
+        #region IWeaponHolder
+
+        public Vector3 WeaponFirePosition
+        {
+            get
+            {
+                return transform.position + Vector3.up;
+            }
+        }
+
+        public Vector3 WeaponForward
+        {
+            get
+            {
+                return transform.forward;
+            }
+        }
+
+        public LayerMask WeaponHitLayerMask
+        {
+            get
+            {
+                return hitLayerMask;
+            }
+        }
+
+        public GlobalTargets WeaponTargets
+        {
+            get
+            {
+                return GlobalTargets.OnlyServer;
+            }
+        }
+
+        #endregion
+
+        protected override void Start()
+        {
+            base.Start();
+
+            if (entity.IsOwner)
+            {
+                weapon = UILoadoutController.GetWeapon(transform);
+                state.Weapon.WeaponStockId  = weapon.StockTemplate.TemplateId;
+                state.Weapon.WeaponBodyId   = weapon.BodyTemplate.TemplateId;
+                state.Weapon.WeaponBarrelId = weapon.BarrelTemplate.TemplateId;
+            }
+            else
+            {
+                weapon = WeaponController.Singleton.CreateWeapon(WeaponController.Singleton.GetStockTemplate((ushort)state.Weapon.WeaponStockId), WeaponController.Singleton.GetBodyTemplate((ushort)state.Weapon.WeaponBodyId), WeaponController.Singleton.GetBarrelTemplate((ushort)state.Weapon.WeaponBarrelId), transform);
+            }
+
+            if (entity.IsOwner)
+            {
+                // Adding callbacks to the UI:
+                weapon.OnAmmoChangedCallback += uiPlayerGameStats.UpdateAmmoUI;
+            }
+
+            weapon.EquipWeapon(this);
+        }
 
         public override void Attached()
         {
             if (entity.IsOwner)
             {
                 state.Health = startHealth;
-                state.Weapon.WeaponAmmo = 100;
 
                 uiPlayerGameStats = UIPlayerGameStatsController.Singleton.UIPlayerGameStats;
                 uiPlayerGameStats.Initialize(this);
-                state.AddCallback("Health", uiPlayerGameStats.UpdateUI);
+
+                // Adding callbacks to the UI:
+                state.AddCallback("Health", uiPlayerGameStats.UpdateHealthUI);
 
                 entity.TakeControl();
             }
 
             if (BoltNetwork.IsServer && entity.IsOwner)
             {
-                EntitySpawnController.Singleton.SpawnEntityOnServer<Enemy>(enemyPrefab, null, new Vector3(Random.Range(-2f, 2f), 0, Random.Range(-2f, 2f)), Quaternion.identity);
+                for (int i = 0; i < 10; i++)
+                {
+                    EntitySpawnController.Singleton.SpawnEntityOnServer<Enemy>(enemyPrefab, null, new Vector3(Random.Range(-2f, 2f), 0, Random.Range(-2f, 2f)), Quaternion.identity);
+                }
             }
         }
 
         public GameObject enemyPrefab;
-
+        
         private void Update()
         {
-            if (entity.IsControllerOrOwner && Input.GetMouseButtonDown(0))
+            if (entity.IsControllerOrOwner)
             {
-                leftMouseBtnPressedLastFrame = true;
+                weapon.CheckForInput();
             }
         }
 
-        bool leftMouseBtnPressedLastFrame;
+        #region OnEvents
 
-        public override void SimulateController()
+        public override void OnEvent(WeaponFireEffectEvent evnt)
         {
-            if (leftMouseBtnPressedLastFrame)
+            if (evnt.Shooter == entity)
             {
-                var cmd = PrimaryShootCommand.Create();
-                cmd.Shooter  = entity;
-                cmd.Position = transform.position + Vector3.up;
-                cmd.Normal   = transform.forward;
-
-                entity.QueueInput(cmd);
-
-                leftMouseBtnPressedLastFrame = false;
+                weapon.OnEvent(evnt);
             }
         }
 
-        public override void ExecuteCommand(Command command, bool resetState)
+        public override void OnEvent(WeaponSupportBeginFireEffectEvent evnt)
         {
-            if (command is PrimaryShootCommand primaryShootCmd)
+            if (evnt.Shooter == entity)
             {
-                Shoot(primaryShootCmd);
+                weapon.OnEvent(evnt);
             }
         }
 
-        private void Shoot(PrimaryShootCommand cmd)
-        {
-            // TODO: Get action (or ray) from weapon.
-            
-            Ray ray  = new Ray(cmd.Input.Position, cmd.Input.Normal * damageRange);
-            using (var hits = BoltNetwork.RaycastAll(ray))
-            {
-                bool networkHit = false;
-
-                // Search network hitboxes for hits:
-                for (int i = 0; i < hits.count; i++)
-                {
-                    var hitbox = hits.GetHit(i).hitbox;
-
-                    if (hitbox.gameObject != gameObject && enemyHitLayerMask.HasLayer(hitbox.gameObject.layer) && hitbox.GetComponent<IDamagable>() is IDamagable damagable)
-                    {
-                        var takeDamageEvent = TakeDamageEvent.Create(GlobalTargets.OnlyServer, ReliabilityModes.ReliableOrdered);
-                        takeDamageEvent.Target = hitbox.GetComponent<IEntity>().entity;
-                        takeDamageEvent.DamageTaken = startDamage;
-                        takeDamageEvent.Send();
-                        
-                        var weaponFireEvent = WeaponFireEvent.Create(entity);
-                        weaponFireEvent.Shooter = entity;
-                        weaponFireEvent.Send();
-
-                        networkHit = true;
-
-                        break;
-                    }
-                }
-
-                // None were found, search geometry hitboxes for hits:
-                if (!networkHit)
-                {
-                    if (Physics.Raycast(ray, out RaycastHit hit, damageRange, weaponHitLayerMask, QueryTriggerInteraction.Ignore))
-                    {
-                        var weaponFireEvent = WeaponFireEvent.Create(entity);
-                        weaponFireEvent.Shooter = entity;
-                        weaponFireEvent.Send();
-                    }
-                }
-            }
-        }
-
-        public override void OnEvent(WeaponFireEvent evnt)
-        {
-            Ray ray = new Ray(transform.position + Vector3.up, transform.forward * damageRange);
-            using (var hits = BoltNetwork.RaycastAll(ray))
-            {
-                bool networkHit = false;
-
-                // Search network hitboxes for hits:
-                for (int i = 0; i < hits.count; i++)
-                {
-                    var hitbox = hits.GetHit(i).hitbox;
-
-                    if (hitbox.gameObject != gameObject && enemyHitLayerMask.HasLayer(hitbox.gameObject.layer) && hitbox.GetComponent<IDamagable>() is IDamagable damagable)
-                    {
-                        VFXExplosion(ray.origin + ray.direction * hits.GetHit(i).distance);
-                    }
-                }
-
-                // None were found, search geometry hitboxes for hits:
-                if (!networkHit)
-                {
-                    if (Physics.Raycast(ray, out RaycastHit hit, damageRange, weaponHitLayerMask, QueryTriggerInteraction.Ignore))
-                    {
-                        VFXExplosion(hit.point);
-                    }
-                }
-            }
-        }
-
-        private void VFXExplosion(Vector3 position)
-        {
-            explosionEffect.transform.position = position;
-            explosionEffect.Play(true);
-        }
+        #endregion
 
     }
 
