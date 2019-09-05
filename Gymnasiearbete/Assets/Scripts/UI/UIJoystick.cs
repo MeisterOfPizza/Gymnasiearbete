@@ -7,15 +7,13 @@ using UnityEngine.EventSystems;
 namespace ArenaShooter.UI.Joystick
 {
 
-    class UIJoystick : MonoBehaviour, IPointerUpHandler
+    class UIJoystick : MonoBehaviour
     {
 
         #region Editor
 
         [SerializeField] private RectTransform        container;
         [SerializeField] private Image                joystick;
-        [SerializeField] private int                  joystickLocalMaxY = 40;
-        [SerializeField] private int                  joystickLocalMaxX = 40;
         [SerializeField] private JoystickDeltaUpdated joystickDeltaUpdated;
 
         #endregion
@@ -43,12 +41,14 @@ namespace ArenaShooter.UI.Joystick
             float distance        = Vector2.Distance(position, new Vector2(0, 0));
 
             Vector2 newPosition = position;
-
+            
             if(distance > containerRadius)
             {
                 newPosition *= containerRadius / distance;
                 return newPosition;
             }
+
+            
 
             return newPosition;
         }
@@ -63,7 +63,6 @@ namespace ArenaShooter.UI.Joystick
                 joystick.transform.localPosition = BorderChecker(transform.InverseTransformPoint(Input.GetTouch(0).position));
             }
 #endif
-
             joystickDeltaUpdated.Invoke((Vector2)joystick.transform.localPosition - joysticksLastPosition);
             joysticksLastPosition = joystick.transform.localPosition;
         }
@@ -73,13 +72,12 @@ namespace ArenaShooter.UI.Joystick
             container.position = new Vector2(container.sizeDelta.x,container.sizeDelta.y);
         }
 
-        public void OnPointerUp(PointerEventData eventData)
+        public void OnPointerUp()
         {
-            joystick.transform.localPosition = Vector2.zero;
-            Debug.Log("Mouse Up");
+            joystick.transform.localPosition = Vector3.zero;
         }
 
-#endregion
+        #endregion
 
     }
 
