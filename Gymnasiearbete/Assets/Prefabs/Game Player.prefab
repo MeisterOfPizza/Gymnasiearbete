@@ -93,9 +93,6 @@ MonoBehaviour:
   hitLayerMask:
     serializedVersion: 2
     m_Bits: 67108865
-  stockTemplate: {fileID: 11400000, guid: 28bbb2ed6d534ea4faebd45201650bb6, type: 2}
-  bodyTemplate: {fileID: 11400000, guid: ba1a5a06ea5d6ff47a28625a84054ddf, type: 2}
-  barrelTemplate: {fileID: 11400000, guid: 4d727e91e1965ba46b1bfb7927b19378, type: 2}
   enemyPrefab: {fileID: 9168198077660110737, guid: 9ee4e87c607b728418f76216ab474197,
     type: 3}
 --- !u!114 &7176543191556274727
