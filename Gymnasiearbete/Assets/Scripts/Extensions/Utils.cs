@@ -1,5 +1,6 @@
 ﻿using ArenaShooter.Entities;
 using Bolt.LagCompensation;
+using System.Linq;
 using UnityEngine;
 
 namespace ArenaShooter.Extensions
@@ -126,13 +127,22 @@ namespace ArenaShooter.Extensions
         /// <returns>Returns a <see cref="UtilRaycastHit"/> that contains information about the raycast operation.</returns>
         public static UtilRaycastHit Raycast(Ray ray, float maxDistance, LayerMask hitLayerMask, GameObject self, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
         {
-            using (var hits = BoltNetwork.RaycastAll(new Ray(ray.origin, ray.direction * maxDistance), BoltNetwork.ServerFrame))
+            using (var hitCollection = BoltNetwork.RaycastAll(new Ray(ray.origin, ray.direction * maxDistance), BoltNetwork.ServerFrame))
             {
-                // Search network hitboxes for hits:
-                for (int i = 0; i < hits.count; i++)
+                BoltPhysicsHit[] boltHits = new BoltPhysicsHit[hitCollection.count];
+
+                for (int i = 0; i < boltHits.Length; i++)
                 {
-                    var boltHit = hits.GetHit(i);
-                    var hitbox  = boltHit.hitbox;
+                    boltHits[i] = hitCollection[i];
+                }
+
+                // Order the hits by distance from ray.origin.
+                boltHits = boltHits.OrderBy(h => h.distance).ToArray();
+
+                // Search network hitboxes for hits:
+                foreach (var boltHit in boltHits)
+                {
+                    var hitbox = boltHit.hitbox;
 
                     if (hitbox.gameObject != self && hitLayerMask.HasLayer(hitbox.gameObject.layer))
                     {
@@ -162,13 +172,22 @@ namespace ArenaShooter.Extensions
         /// <returns>Returns a <see cref="UtilRaycastHit"/> that contains information about the raycast operation.</returns>
         public static UtilRaycastHit Raycast<T>(Ray ray, float maxDistance, LayerMask hitLayerMask, GameObject self, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal) where T : IEntity
         {
-            using (var hits = BoltNetwork.RaycastAll(new Ray(ray.origin, ray.direction * maxDistance), BoltNetwork.ServerFrame))
+            using (var hitCollection = BoltNetwork.RaycastAll(new Ray(ray.origin, ray.direction * maxDistance), BoltNetwork.ServerFrame))
             {
-                // Search network hitboxes for hits:
-                for (int i = 0; i < hits.count; i++)
+                BoltPhysicsHit[] boltHits = new BoltPhysicsHit[hitCollection.count];
+
+                for (int i = 0; i < boltHits.Length; i++)
                 {
-                    var boltHit = hits.GetHit(i);
-                    var hitbox  = boltHit.hitbox;
+                    boltHits[i] = hitCollection[i];
+                }
+
+                // Order the hits by distance from ray.origin.
+                boltHits = boltHits.OrderBy(h => h.distance).ToArray();
+
+                // Search network hitboxes for hits:
+                foreach (var boltHit in boltHits)
+                {
+                    var hitbox = boltHit.hitbox;
 
                     if (hitbox.gameObject != self && hitLayerMask.HasLayer(hitbox.gameObject.layer) && hitbox.GetComponent<T>() != null)
                     {
