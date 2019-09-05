@@ -1,26 +1,30 @@
-﻿using UnityEngine.Events;
+﻿using System;
 using UnityEngine;
-using UnityEngine.UI;
-using System;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 namespace ArenaShooter.UI.Joystick
 {
 
-    class UIJoystick : MonoBehaviour
+    class UIJoystick : MonoBehaviour, IDragHandler, IEndDragHandler
     {
 
         #region Editor
 
-        [SerializeField] private RectTransform        container;
-        [SerializeField] private Image                joystick;
+        [SerializeField] private RectTransform container;
+        [SerializeField] private RectTransform joystick;
+
+        [Space]
         [SerializeField] private JoystickDeltaUpdated joystickDeltaUpdated;
 
         #endregion
 
         #region Private variables
 
-        private Vector2 joysticksLastPosition = new Vector2(0,0);
+        private Vector2 joysticksLastPosition;
+
+        private float containerRadius;
+        private float knobRadius;
         
         #endregion
 
@@ -33,48 +37,58 @@ namespace ArenaShooter.UI.Joystick
 
         #region Methods
 
-        private Vector2 BorderChecker(Vector2 position)
-        {
-            float radius          = joystick.rectTransform.sizeDelta.x/2;
-            float containerRadius = container.sizeDelta.x / 2;
-
-            float distance        = Vector2.Distance(position, new Vector2(0, 0));
-
-            Vector2 newPosition = position;
-            
-            if(distance > containerRadius)
-            {
-                newPosition *= containerRadius / distance;
-                return newPosition;
-            }
-
-            
-
-            return newPosition;
-        }
-
-        public void OnDrag()
+        private void Awake()
         {
 #if UNITY_STANDALONE
-            joystick.transform.localPosition = BorderChecker(transform.InverseTransformPoint(Input.mousePosition));
-#elif UNITY_IOS || UNITY_ANDROID
-            if(Input.touchCount > 0)
-            {
-                joystick.transform.localPosition = BorderChecker(transform.InverseTransformPoint(Input.GetTouch(0).position));
-            }
+            gameObject.SetActive(false);
 #endif
-            joystickDeltaUpdated.Invoke((Vector2)joystick.transform.localPosition - joysticksLastPosition);
-            joysticksLastPosition = joystick.transform.localPosition;
+
+            containerRadius = container.sizeDelta.x / 2f;
+            knobRadius      = joystick.sizeDelta.x / 2f;
         }
 
-        private void Start()
+        private Vector2 BorderChecker(Vector2 position)
         {
-            container.position = new Vector2(container.sizeDelta.x,container.sizeDelta.y);
+            float distance = position.magnitude;
+            
+            if (distance > containerRadius - knobRadius)
+            {
+                return position * (containerRadius - knobRadius) / distance;
+            }
+
+            return position;
         }
 
-        public void OnPointerUp()
+        public void DragPointer(Vector2 touchPoint)
         {
-            joystick.transform.localPosition = Vector3.zero;
+#if UNITY_STANDALONE
+            joystick.localPosition = BorderChecker(transform.InverseTransformPoint(Input.mousePosition));
+#elif UNITY_IOS || UNITY_ANDROID
+            joystick.localPosition = BorderChecker(transform.InverseTransformPoint(touchPoint));
+#endif
+
+            float speed = joystick.localPosition.magnitude / containerRadius;
+            joystickDeltaUpdated.Invoke(joystick.localPosition.normalized * speed);
+        }
+
+        public void ResetPosition()
+        {
+            joystick.localPosition = Vector3.zero;
+            joystickDeltaUpdated.Invoke(Vector2.zero);
+        }
+
+        #endregion
+
+        #region Event handler systems
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            DragPointer(eventData.pressPosition);
+        }
+
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            ResetPosition();
         }
 
         #endregion

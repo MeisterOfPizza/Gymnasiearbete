@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 239291528}
   - component: {fileID: 239291527}
   m_Layer: 5
-  m_Name: BackgroundJoystick
+  m_Name: UI Move Joystick
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -172,23 +172,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   container: {fileID: 239291526}
-  joystick: {fileID: 282682215}
+  joystick: {fileID: 282682214}
   joystickDeltaUpdated:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1928587504}
-        m_MethodName: UpdateMovement
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1928587503}
-        m_MethodName: Move
+        m_MethodName: set_MovementDelta
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -249,7 +238,6 @@ GameObject:
   - component: {fileID: 282682214}
   - component: {fileID: 282682216}
   - component: {fileID: 282682215}
-  - component: {fileID: 282682217}
   m_Layer: 5
   m_Name: Joystick
   m_TagString: Untagged
@@ -290,7 +278,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -314,53 +302,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 282682213}
   m_CullTransparentMesh: 0
---- !u!114 &282682217
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 282682213}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 5
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 239291527}
-          m_MethodName: OnDrag
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
-        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  - eventID: 3
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 239291527}
-          m_MethodName: OnPointerUp
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
-        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!1 &357148984
 GameObject:
   m_ObjectHideFlags: 0
@@ -1096,8 +1037,6 @@ GameObject:
   - component: {fileID: 1928587501}
   - component: {fileID: 1928587502}
   - component: {fileID: 1928587504}
-  - component: {fileID: 1928587505}
-  - component: {fileID: 1928587503}
   m_Layer: 0
   m_Name: Controllers
   m_TagString: Untagged
@@ -1131,27 +1070,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f3b96f4dd48b1b4b88f90d64c222fcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1928587503
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1928587500}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1c492e84a58c4b47ad7a33b280d5ce3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  characterController: {fileID: 0}
-  meshRenderer: {fileID: 0}
-  cameraFollowPrefab: {fileID: 0}
-  moveSpeed: 10
-  lookRayLayerMask:
-    serializedVersion: 2
-    m_Bits: 0
-  canMove: 1
-  canLook: 1
 --- !u!114 &1928587504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1164,26 +1082,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a553a9bcae19fd548b5fb98a17b1c394, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
-  player: {fileID: 0}
---- !u!143 &1928587505
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1928587500}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1934098098
 GameObject:
   m_ObjectHideFlags: 0

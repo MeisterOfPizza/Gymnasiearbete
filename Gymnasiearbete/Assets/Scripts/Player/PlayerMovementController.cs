@@ -87,7 +87,7 @@ namespace ArenaShooter.Player
                     direction.y = 0;
                 }
 #elif UNITY_IOS || UNITY_ANDROID
-                Vector3 direction = MobileLookController.Singleton.GetLookDirection();
+                Vector3 direction = Controllers.MobileLookController.Singleton.GetLookDirection();
 #endif
 
                 transform.forward = direction;
@@ -101,7 +101,7 @@ namespace ArenaShooter.Player
 #if UNITY_STANDALONE
                 Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
 #elif UNITY_IOS || UNITY_ANDROID
-                Vector3 movement = MobileMovementController.Singleton.GetMovement();
+                Vector3 movement = Controllers.MobileMovementController.Singleton.GetMovement();
 #endif
 
                 characterController.Move(movement * moveSpeed * BoltNetwork.FrameDeltaTime);
