@@ -75,7 +75,7 @@ namespace ArenaShooter.Combat.Utils
         {
             if (clientIsShooter)
             {
-                using (var hits = BoltNetwork.OverlapSphereAll(transform.position, weapon.BarrelTemplate.Range, BoltNetwork.ServerFrame))
+                using (var hits = BoltNetwork.OverlapSphereAll(transform.position, weapon.Stats.Range, BoltNetwork.ServerFrame))
                 {
                     for (int i = 0; i < hits.count; i++)
                     {
@@ -118,7 +118,7 @@ namespace ArenaShooter.Combat.Utils
 
         private void FixedUpdate()
         {
-            if (Vector3.Distance(origin, transform.position) > weapon.BarrelTemplate.MaxDistance && isAlive)
+            if (Vector3.Distance(origin, transform.position) > weapon.Stats.MaxDistance && isAlive)
             {
                 Hit();
             }

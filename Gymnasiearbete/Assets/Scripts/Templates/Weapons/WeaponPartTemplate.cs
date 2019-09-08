@@ -12,7 +12,7 @@ namespace ArenaShooter.Templates.Weapons
         Barrel
     }
 
-    enum WeaponPartTemplateOutputType
+    enum WeaponOutputType
     {
         Raycasting,
         Projectile,
@@ -33,7 +33,7 @@ namespace ArenaShooter.Templates.Weapons
         [SerializeField] private string description;
 
         [Space]
-        [SerializeField] private WeaponPartTemplateOutputType outputType;
+        [SerializeField] private WeaponOutputType outputType;
         
         [Header("Graphics")]
         [SerializeField] private GameObject weaponPartPrefab;
@@ -68,7 +68,7 @@ namespace ArenaShooter.Templates.Weapons
             }
         }
 
-        public WeaponPartTemplateOutputType OutputType
+        public WeaponOutputType OutputType
         {
             get
             {

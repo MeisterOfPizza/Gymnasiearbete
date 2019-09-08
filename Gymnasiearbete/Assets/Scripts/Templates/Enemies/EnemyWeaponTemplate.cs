@@ -1,41 +1,57 @@
-﻿using UnityEngine;
+﻿using ArenaShooter.Templates.Weapons;
+using UnityEngine;
 
 #pragma warning disable 0649
 
-namespace ArenaShooter.Templates.Weapons
+namespace ArenaShooter.Templates.Enemies
 {
 
-    enum FiringMode : byte
-    {
-        Single,
-        Burst,
-        Automatic
-    }
-
-    [CreateAssetMenu(menuName = "Templates/Weapons/Body")]
-    class BodyTemplate : WeaponPartTemplate
+    [CreateAssetMenu(menuName = "Templates/Enemies/Enemy Weapon")]
+    sealed class EnemyWeaponTemplate : ScriptableObject
     {
 
         #region Editor
 
+        [Header("Values")]
+        [SerializeField] private ushort templateId;
+
         [Header("Stats")]
+        [SerializeField]                private float mobility;
+        [SerializeField, Range(0f, 1f)] private float accuracy = 0.75f;
+
+        [Space]
         [SerializeField] private ushort damage         = 10;
         [SerializeField] private short  maxAmmoPerClip = 30;
-        [SerializeField] private short  maxAmmoStock   = 150;
         [SerializeField] private short  ammoPerFire    = 1;
 
         [Space]
-        [SerializeField] private float fireCooldown   = 0.1f;
-        [SerializeField] private float reloadTime     = 1f;
-        [SerializeField] private float fullReloadTime = 1.5f;
+        [SerializeField] private float fireCooldown = 0.1f;
+        [SerializeField] private float reloadTime   = 1f;
 
         [Space]
         [SerializeField] private float burstFireInterval = 0.05f;
         [SerializeField] private sbyte burstShots        = 3;
 
+        [Space]
+        [Help(@"range and maxDistance has different uses depending on what type of weapon the enemy is using:
+
+* If it's using a raycast weapon, only the range is used.
+* Projectile weapons can shoot projectiles up to maxDistance but the explosion radius is only as wide as range.
+* Electric weapons can hit its first target at the distance of maxDistance but only jump from target to target that are within range.
+* Support weapons can only support targets that are within range.
+
+NOTE: The enemy will only try to engage players that are within range (the variable)."
+)]
+
+        [SerializeField] private float range       = 10f;
+        [SerializeField] private float maxDistance = 50f;
+
         [Header("Logic")]
         [SerializeField] private FiringMode firingMode          = FiringMode.Automatic;
         [SerializeField] private bool       manualAmmoDepletion = false;
+
+        [Space]
+        [SerializeField] private WeaponOutputType outputType;
 
         [Header("Prefabs")]
         [Help(@"The prefab to be saved as firePrefab depends on what type of OutputType the weapon has:
@@ -47,15 +63,34 @@ namespace ArenaShooter.Templates.Weapons
 )]
         [SerializeField] private GameObject firePrefab;
 
+        [Space]
+        [SerializeField] private GameObject modelPrefab;
+
         #endregion
 
         #region Getters
 
-        public override WeaponPartTemplateType Type
+        public ushort TemplateId
         {
             get
             {
-                return WeaponPartTemplateType.Body;
+                return templateId;
+            }
+        }
+
+        public float Mobility
+        {
+            get
+            {
+                return mobility;
+            }
+        }
+
+        public float Accuracy
+        {
+            get
+            {
+                return accuracy;
             }
         }
 
@@ -72,14 +107,6 @@ namespace ArenaShooter.Templates.Weapons
             get
             {
                 return maxAmmoPerClip;
-            }
-        }
-
-        public short MaxAmmoStock
-        {
-            get
-            {
-                return maxAmmoStock;
             }
         }
 
@@ -107,14 +134,6 @@ namespace ArenaShooter.Templates.Weapons
             }
         }
 
-        public float FullReloadTime
-        {
-            get
-            {
-                return fullReloadTime;
-            }
-        }
-
         public float BurstFireInterval
         {
             get
@@ -129,6 +148,23 @@ namespace ArenaShooter.Templates.Weapons
             {
                 return burstShots;
             }
+        }
+
+        public float Range
+        {
+            get
+            {
+                return range;
+            }
+        }
+
+        public float MaxDistance
+        {
+            get
+            {
+                return maxDistance;
+            }
+
         }
 
         public FiringMode FiringMode
@@ -147,11 +183,27 @@ namespace ArenaShooter.Templates.Weapons
             }
         }
 
+        public WeaponOutputType OutputType
+        {
+            get
+            {
+                return outputType;
+            }
+        }
+
         public GameObject FirePrefab
         {
             get
             {
                 return firePrefab;
+            }
+        }
+
+        public GameObject ModelPrefab
+        {
+            get
+            {
+                return modelPrefab;
             }
         }
 

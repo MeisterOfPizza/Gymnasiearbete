@@ -1,36 +1,39 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
+#pragma warning disable 0649
 
 namespace ArenaShooter.Templates.Enemies
 {
-    enum AttackType
-    {
-        Raycast,
-        Projectile,
-        Electric,
-        Support,
-        Melee
-    }
+
     [CreateAssetMenu(menuName = "Templates/Enemies/Enemy")]
-    class EnemyTemplate : ScriptableObject
+    sealed class EnemyTemplate : ScriptableObject
     {
-        #region inputs
-        [Header("Inputs")]
-        [SerializeField] private ushort     id;
-        [SerializeField] private new string name;
-        [SerializeField] private GameObject prefab;
-        [SerializeField] private int        health;
-        [SerializeField] private float      movmentSpeed;
-        [SerializeField] private float      engageRange;
+
+        #region Editor
+
+        [Header("Values")]
+        [SerializeField] private     ushort templateId;
+        [SerializeField] private new string name = "Enemy";
+
+        [Header("Stats")]
+        [SerializeField] private int   health       = 100;
+        [SerializeField] private float movmentSpeed = 2f;
+
+        [Header("References")]
+        [SerializeField] private EnemyWeaponTemplate[] possibleWeaponTemplates;
+
+        [Header("Prefabs")]
+        [SerializeField] private GameObject enemyPrefab;
+
         #endregion
 
-        #region getters
-        public ushort Id
+        #region Getters
+
+        public ushort TemplateId
         {
             get
             {
-                return id;
+                return templateId;
             }
         }
 
@@ -39,14 +42,6 @@ namespace ArenaShooter.Templates.Enemies
             get
             {
                 return name;
-            }
-        }
-
-        public GameObject Prefab
-        {
-            get
-            {
-                return prefab;
             }
         }
 
@@ -66,16 +61,33 @@ namespace ArenaShooter.Templates.Enemies
             }
         }
 
-        public float EngageRange
+        public GameObject EnemyPrefab
         {
             get
             {
-                return engageRange;
+                return enemyPrefab;
             }
         }
+
         #endregion
+
+        #region Helper methods
+
+        public EnemyWeaponTemplate GetEnemyWeaponTemplate()
+        {
+            return possibleWeaponTemplates[Random.Range(0, possibleWeaponTemplates.Length)];
+        }
+
+        private void OnValidate()
+        {
+            if (possibleWeaponTemplates.Length == 0 || (possibleWeaponTemplates.Length == 1 && possibleWeaponTemplates[0] == null))
+            {
+                Debug.LogError(string.Format(@"EnemyTemplate ""{0}"" (custom name ""{1}"") does not have a valid EnemyWeaponTemplate. This will cause errors during runtime.", base.name, this.name));
+            }
+        }
+
+        #endregion
+
     }
+
 }
-    
-
-

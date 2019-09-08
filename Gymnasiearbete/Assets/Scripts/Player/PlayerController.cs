@@ -94,9 +94,11 @@ namespace ArenaShooter.Player
             if (entity.IsOwner)
             {
                 weapon = UILoadoutController.GetWeapon(transform);
-                state.Weapon.WeaponStockId  = weapon.StockTemplate.TemplateId;
-                state.Weapon.WeaponBodyId   = weapon.BodyTemplate.TemplateId;
-                state.Weapon.WeaponBarrelId = weapon.BarrelTemplate.TemplateId;
+
+                weapon.Stats.GetWeaponPartTemplateIds(out ushort stockId, out ushort bodyId, out ushort barrelId);
+                state.Weapon.WeaponStockId  = stockId;
+                state.Weapon.WeaponBodyId   = bodyId;
+                state.Weapon.WeaponBarrelId = barrelId;
             }
             else
             {
@@ -125,14 +127,6 @@ namespace ArenaShooter.Player
                 state.AddCallback("Health", uiPlayerGameStats.UpdateHealthUI);
 
                 entity.TakeControl();
-            }
-
-            if (BoltNetwork.IsServer && entity.IsOwner)
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    EntitySpawnController.Singleton.SpawnEntityOnServer<Enemy>(enemyPrefab, null, new Vector3(Random.Range(-2f, 2f), 0, Random.Range(-2f, 2f)), Quaternion.identity);
-                }
             }
         }
 

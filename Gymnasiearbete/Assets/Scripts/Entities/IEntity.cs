@@ -3,7 +3,7 @@
 namespace ArenaShooter.Entities
 {
 
-    enum EntityTeam
+    enum EntityTeam : byte
     {
         Player,
         Enemy

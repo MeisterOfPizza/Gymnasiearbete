@@ -18,4 +18,4 @@ MonoBehaviour:
   outputType: 0
   weaponPartPrefab: {fileID: 0}
   mobility: 0
-  accuracy: 0
+  accuracy: 0.7

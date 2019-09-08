@@ -36,35 +36,11 @@ namespace ArenaShooter.Combat
 
         public IWeaponHolder WeaponHolder { get; private set; }
 
-        public WeaponPartTemplateOutputType OutputType
+        public WeaponStats Stats
         {
             get
             {
-                return stockTemplate.OutputType;
-            }
-        }
-
-        public StockTemplate StockTemplate
-        {
-            get
-            {
-                return stockTemplate;
-            }
-        }
-
-        public BodyTemplate BodyTemplate
-        {
-            get
-            {
-                return bodyTemplate;
-            }
-        }
-
-        public BarrelTemplate BarrelTemplate
-        {
-            get
-            {
-                return barrelTemplate;
+                return weaponStats;
             }
         }
 
@@ -86,10 +62,8 @@ namespace ArenaShooter.Combat
         #endregion
 
         #region Private variables
-
-        private StockTemplate  stockTemplate;
-        private BodyTemplate   bodyTemplate;
-        private BarrelTemplate barrelTemplate;
+        
+        private WeaponStats weaponStats;
 
         private bool weaponIsFiring;
         private bool isReloading;
@@ -99,16 +73,14 @@ namespace ArenaShooter.Combat
 
         #region Initializing
 
-        public void Initialize(StockTemplate stockTemplate, BodyTemplate bodyTemplate, BarrelTemplate barrelTemplate)
+        public void Initialize(WeaponStats weaponStats)
         {
-            this.stockTemplate  = stockTemplate;
-            this.bodyTemplate   = bodyTemplate;
-            this.barrelTemplate = barrelTemplate;
+            this.weaponStats = weaponStats;
 
-            this.Damage = (int)(bodyTemplate.Damage * barrelTemplate.DamageMultiplier);
+            this.Damage = (int)(weaponStats.Damage * weaponStats.DamageMultiplier);
 
-            this.AmmoLeftInStock = bodyTemplate.MaxAmmoStock;
-            this.AmmoLeftInClip  = bodyTemplate.MaxAmmoPerClip;
+            this.AmmoLeftInStock = weaponStats.MaxAmmoStock;
+            this.AmmoLeftInClip  = weaponStats.MaxAmmoPerClip;
 
             OnInitialized();
         }
@@ -163,7 +135,7 @@ namespace ArenaShooter.Combat
 
         public virtual int CalculateDamage(float range)
         {
-            return (int)(Damage * (1 - Mathf.Clamp01(range / barrelTemplate.Range)));
+            return (int)(Damage * (1 - Mathf.Clamp01(range / weaponStats.Range)));
         }
 
         #endregion
@@ -172,7 +144,7 @@ namespace ArenaShooter.Combat
 
         public void DepleteAmmo(int ammo)
         {
-            AmmoLeftInClip = Mathf.Clamp(AmmoLeftInClip - ammo, 0, bodyTemplate.MaxAmmoPerClip);
+            AmmoLeftInClip = Mathf.Clamp(AmmoLeftInClip - ammo, 0, weaponStats.MaxAmmoPerClip);
 
             if (AmmoLeftInClip <= 0)
             {
@@ -220,7 +192,7 @@ namespace ArenaShooter.Combat
         {
             OnReloadBegunCallback?.Invoke();
 
-            float reloadTimeLeft = AmmoLeftInClip == 0 ? bodyTemplate.FullReloadTime : bodyTemplate.ReloadTime;
+            float reloadTimeLeft = AmmoLeftInClip == 0 ? weaponStats.FullReloadTime : weaponStats.ReloadTime;
 
             while (reloadTimeLeft > 0f && isReloading)
             {
@@ -232,8 +204,8 @@ namespace ArenaShooter.Combat
             if (isReloading)
             {
                 int unsedAmmo   = AmmoLeftInClip;
-                AmmoLeftInClip  = Mathf.Min(bodyTemplate.MaxAmmoPerClip, AmmoLeftInStock);
-                AmmoLeftInStock = Mathf.Clamp(AmmoLeftInStock - bodyTemplate.MaxAmmoPerClip - unsedAmmo, 0, bodyTemplate.MaxAmmoStock);
+                AmmoLeftInClip  = Mathf.Min(weaponStats.MaxAmmoPerClip, AmmoLeftInStock);
+                AmmoLeftInStock = Mathf.Clamp(AmmoLeftInStock - weaponStats.MaxAmmoPerClip - unsedAmmo, 0, weaponStats.MaxAmmoStock);
 
                 isReloading = false;
 
@@ -254,7 +226,7 @@ namespace ArenaShooter.Combat
 
                 // TODO: Check for mobile input:
 #if UNITY_STANDALONE
-                switch (bodyTemplate.FiringMode)
+                switch (weaponStats.FiringMode)
                 {
                     case FiringMode.Single:
                         shouldFire = Input.GetMouseButtonDown(0);
@@ -299,7 +271,7 @@ namespace ArenaShooter.Combat
 
         private void TryFiring()
         {
-            if (bodyTemplate.FiringMode == FiringMode.Burst)
+            if (weaponStats.FiringMode == FiringMode.Burst)
             {
                 StartCoroutine("TryBurstFiring");
             }
@@ -311,7 +283,7 @@ namespace ArenaShooter.Combat
 
         private void TrySingleFiring()
         {
-            if (AmmoLeftInClip - bodyTemplate.AmmoPerFire >= 0 && WeaponCanFire)
+            if (AmmoLeftInClip - weaponStats.AmmoPerFire >= 0 && WeaponCanFire)
             {
                 if (CurrentFireCooldown <= 0f || isBurstFiring)
                 {
@@ -320,14 +292,14 @@ namespace ArenaShooter.Combat
                         OnBeginFire();
                     }
 
-                    if (!bodyTemplate.ManualAmmoDepletion)
+                    if (!weaponStats.ManualAmmoDepletion)
                     {
                         // Remove used ammo:
-                        AmmoLeftInClip -= bodyTemplate.AmmoPerFire;
+                        AmmoLeftInClip -= weaponStats.AmmoPerFire;
                     }
 
                     // Reset the cooldown:
-                    CurrentFireCooldown = bodyTemplate.FireCooldown;
+                    CurrentFireCooldown = weaponStats.FireCooldown;
 
                     weaponIsFiring = true;
 
@@ -358,7 +330,7 @@ namespace ArenaShooter.Combat
 
         private IEnumerator TryBurstFiring()
         {
-            sbyte shotsLeft     = bodyTemplate.BurstShots;
+            sbyte shotsLeft     = weaponStats.BurstShots;
             float burstCooldown = 0f;
 
             isBurstFiring = true;
@@ -372,14 +344,14 @@ namespace ArenaShooter.Combat
                     shotsLeft--;
                     TrySingleFiring();
 
-                    burstCooldown = bodyTemplate.BurstFireInterval;
+                    burstCooldown = weaponStats.BurstFireInterval;
                 }
 
                 yield return new WaitForEndOfFrame();
             }
 
             isBurstFiring       = false;
-            CurrentFireCooldown = bodyTemplate.FireCooldown;
+            CurrentFireCooldown = weaponStats.FireCooldown;
         }
 
         /// <summary>
@@ -443,7 +415,7 @@ namespace ArenaShooter.Combat
 
         protected virtual string FormatAmmoLeft()
         {
-            return string.Format("{0}/{1} | {2}", AmmoLeftInClip, bodyTemplate.MaxAmmoPerClip, AmmoLeftInStock);
+            return string.Format("{0}/{1} | {2}", AmmoLeftInClip, weaponStats.MaxAmmoPerClip, AmmoLeftInStock);
         }
 
         #endregion
