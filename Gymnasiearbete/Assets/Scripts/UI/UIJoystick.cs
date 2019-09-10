@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 namespace ArenaShooter.UI.Joystick
 {
 
-    class UIJoystick : MonoBehaviour, IDragHandler, IEndDragHandler
+    class UIJoystick : MonoBehaviour, IDragHandler, IEndDragHandler 
     {
 
         #region Editor
@@ -40,7 +40,7 @@ namespace ArenaShooter.UI.Joystick
         private void Awake()
         {
 #if UNITY_STANDALONE
-            gameObject.SetActive(false);
+            //gameObject.SetActive(false);
 #endif
 
             containerRadius = container.sizeDelta.x / 2f;
@@ -90,6 +90,8 @@ namespace ArenaShooter.UI.Joystick
         {
             ResetPosition();
         }
+
+       
 
         #endregion
 

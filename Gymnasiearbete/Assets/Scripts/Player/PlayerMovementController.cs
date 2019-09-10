@@ -87,7 +87,7 @@ namespace ArenaShooter.Player
                     direction.y = 0;
                 }
 #elif UNITY_IOS || UNITY_ANDROID
-                Vector3 direction = Controllers.MobileLookController.Singleton.GetLookDirection();
+                Vector3 direction =Controllers.MobileLookController.Singleton.CanLook ? Controllers.MobileLookController.Singleton.GetLookPoint() - transform.position : transform.forward ;
 #endif
 
                 transform.forward = direction;
