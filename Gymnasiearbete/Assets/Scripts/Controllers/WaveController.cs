@@ -70,7 +70,7 @@ namespace ArenaShooter.Controllers
         {
             yield return new WaitForSeconds(firstSpawnOnWaveCooldown);
 
-            while (waveIsOngoing && currentSpawnCount < 10)
+            while (waveIsOngoing && currentSpawnCount < 25)
             {
                 SpawnEnemy();
 

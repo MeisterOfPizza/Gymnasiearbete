@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace ArenaShooter.Entities
 {
@@ -12,11 +13,13 @@ namespace ArenaShooter.Entities
     interface IEntity : IDamagable, IHealable
     {
 
-        EntityTeam EntityTeam { get; }
+        Action OnDeathCallback   { get; set; }
+        Action OnReviveCallback  { get; set; }
+        Action OnDestroyCallback { get; set; }
 
-        BoltEntity entity { get; set; }
-
-        Vector3 BodyOriginPosition { get; }
+        EntityTeam EntityTeam         { get; }
+        Vector3    BodyOriginPosition { get; }
+        BoltEntity entity             { get; set; }
 
     }
 

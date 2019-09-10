@@ -43,7 +43,7 @@ namespace ArenaShooter.Controllers
         public Weapon CreateWeapon(EnemyWeaponTemplate enemyWeaponTemplate, Transform parent)
         {
             GameObject weaponGameObject = new GameObject("Weapon");
-            weaponGameObject.transform.SetParent(parent);
+            weaponGameObject.transform.SetParent(parent, false);
             Weapon weapon = null;
 
             switch (enemyWeaponTemplate.OutputType)

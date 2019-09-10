@@ -129,8 +129,6 @@ namespace ArenaShooter.Player
                 entity.TakeControl();
             }
         }
-
-        public GameObject enemyPrefab;
         
         private void Update()
         {

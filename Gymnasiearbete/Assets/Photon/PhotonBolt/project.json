@@ -1711,7 +1711,6 @@
         {
           "Name": "Transform",
           "Enabled": true,
-          "Expanded": true,
           "ReplicationMode": 1,
           "Priority": 2,
           "PropertyType": {
@@ -1798,6 +1797,23 @@
           "PropertyType": {
             "$type": "Bolt.Compiler.PropertyTypeInteger, bolt.compiler",
             "MaxValue": 255
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
+            "ExtrapolationErrorTolerance": 0.25,
+            "_ExtrapolationCorrectionFrames": 6,
+            "ExtrapolationMaxFrames": 9,
+            "MecanimDirection": 1,
+            "SnapMagnitude": 10.0
+          }
+        },
+        {
+          "Name": "Dead",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeBool, bolt.compiler"
           },
           "AssetSettings": {
             "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
@@ -2033,6 +2049,52 @@
       "GlobalSenders": 3,
       "Name": "WeaponSupportBeginFireEffectEvent",
       "Guid": "c4c332b9-8384-4773-99b3-265c30a5db33",
+      "Groups": [
+        "samples"
+      ]
+    },
+    {
+      "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
+      "Properties": [
+        {
+          "Name": "DeadEntity",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeEntity, bolt.compiler"
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        }
+      ],
+      "EntitySenders": 3,
+      "Name": "EntityDiedEvent",
+      "Guid": "5d01da93-433b-4c63-af3b-3fa1d53867b2",
+      "Groups": [
+        "samples"
+      ]
+    },
+    {
+      "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
+      "Properties": [
+        {
+          "Name": "RevivedEntity",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeEntity, bolt.compiler"
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        }
+      ],
+      "EntitySenders": 3,
+      "Name": "EntityRevivedEvent",
+      "Guid": "54417df6-b65b-4859-915e-3e95a51d02ba",
       "Groups": [
         "samples"
       ]

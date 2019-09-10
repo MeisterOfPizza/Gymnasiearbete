@@ -1,5 +1,6 @@
 ﻿using ArenaShooter.Controllers;
 using ArenaShooter.Entities;
+using ArenaShooter.Extensions;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -52,34 +53,30 @@ namespace ArenaShooter.AI
         {
             // Check if the potential target is the same as current target, or if a potential target does not exist.
             // If so, get the nearest target (that is not the current target).
-            if (currentTarget == potentialTarget || potentialTarget == null)
+            if (currentTarget.IsSame(potentialTarget) || potentialTarget.IsNull())
             {
                 potentialTarget = EntityController.Singleton.GetClosestEntity(agentEntity.BodyOriginPosition, Mathf.Infinity, currentTarget, searchTargetTeam);
             }
 
             // Check if the potential target is closer than the current target:
-            if (currentTarget != null && potentialTarget != null && Vector3.Distance(currentTarget.BodyOriginPosition, agentEntity.BodyOriginPosition) > Vector3.Distance(potentialTarget.BodyOriginPosition, agentEntity.BodyOriginPosition))
+            if (!currentTarget.IsNull() && !potentialTarget.IsNull() && Vector3.Distance(currentTarget.BodyOriginPosition, agentEntity.BodyOriginPosition) > Vector3.Distance(potentialTarget.BodyOriginPosition, agentEntity.BodyOriginPosition))
             {
-                currentTarget   = potentialTarget;
+                SetCurrentTarget(potentialTarget);
                 potentialTarget = null;
             }
 
             // Final failsafe: if the current target is null, check if the potential target can be used. If not: get the closest target with no exceptions.
-            if (currentTarget == null)
+            if (currentTarget.IsNull())
             {
-                currentTarget = potentialTarget != null ? potentialTarget : EntityController.Singleton.GetClosestEntity(agentEntity.BodyOriginPosition, Mathf.Infinity, searchTargetTeam);
+                SetCurrentTarget(!potentialTarget.IsNull() ? potentialTarget : EntityController.Singleton.GetClosestEntity(agentEntity.BodyOriginPosition, Mathf.Infinity, searchTargetTeam));
             }
 
-            lastPositionOfTarget = currentTarget.BodyOriginPosition;
+            lastPositionOfTarget = !currentTarget.IsNull() ? currentTarget.BodyOriginPosition : lastPositionOfTarget;
         }
 
         private void FixedUpdate()
         {
-            if (currentTarget == null)
-            {
-                Search();
-            }
-            else
+            if (!currentTarget.IsNull())
             {
                 if (Vector3.Distance(lastPositionOfTarget, currentTarget.BodyOriginPosition) > searchThreshold)
                 {
@@ -108,20 +105,44 @@ namespace ArenaShooter.AI
             }
         }
 
+        private void SetCurrentTarget(IEntity target)
+        {
+            if (!currentTarget.IsNull())
+            {
+                currentTarget.OnDeathCallback   -= RemoveCurrentTarget;
+                currentTarget.OnDestroyCallback -= RemoveCurrentTarget;
+            }
+
+            potentialTarget = null;
+            currentTarget   = target;
+
+            if (!currentTarget.IsNull())
+            {
+                currentTarget.OnDeathCallback   += RemoveCurrentTarget;
+                currentTarget.OnDestroyCallback += RemoveCurrentTarget;
+            }
+        }
+
+        private void RemoveCurrentTarget()
+        {
+            SetCurrentTarget(null);
+            Search();
+        }
+
         #region OnTrigger
 
         private void OnTriggerEnter(Collider other)
         {
             var entity = other.GetComponent<IEntity>();
 
-            if (entity != null && entity.EntityTeam == searchTargetTeam)
+            if (!entity.IsNull() && entity.EntityTeam == searchTargetTeam)
             {
                 // Check if the entered entity is closer than the last potential target:
-                if (potentialTarget != null && Vector3.Distance(potentialTarget.BodyOriginPosition, agentEntity.BodyOriginPosition) > Vector3.Distance(entity.BodyOriginPosition, agentEntity.BodyOriginPosition))
+                if (!potentialTarget.IsNull() && Vector3.Distance(potentialTarget.BodyOriginPosition, agentEntity.BodyOriginPosition) > Vector3.Distance(entity.BodyOriginPosition, agentEntity.BodyOriginPosition))
                 {
                     potentialTarget = entity;
                 }
-                else if (potentialTarget == null)
+                else if (potentialTarget.IsNull())
                 {
                     potentialTarget = entity;
                 }
@@ -132,10 +153,10 @@ namespace ArenaShooter.AI
         {
             var entity = other.GetComponent<IEntity>();
 
-            if (entity != null && entity.EntityTeam == searchTargetTeam)
+            if (!entity.IsNull() && entity.EntityTeam == searchTargetTeam)
             {
                 // Check if the entity that stayed is not the same as potential entity but also if it's closer than potential target:
-                if (entity != potentialTarget && potentialTarget != null && Vector3.Distance(potentialTarget.BodyOriginPosition, agentEntity.BodyOriginPosition) > Vector3.Distance(entity.BodyOriginPosition, agentEntity.BodyOriginPosition))
+                if (!entity.IsSame(potentialTarget) && !potentialTarget.IsNull() && Vector3.Distance(potentialTarget.BodyOriginPosition, agentEntity.BodyOriginPosition) > Vector3.Distance(entity.BodyOriginPosition, agentEntity.BodyOriginPosition))
                 {
                     potentialTarget = entity;
                 }
@@ -147,7 +168,7 @@ namespace ArenaShooter.AI
             var entity = other.GetComponent<IEntity>();
 
             // If the potential target was the exited entity, then remove the reference.
-            if (potentialTarget == entity)
+            if (potentialTarget.IsSame(entity))
             {
                 potentialTarget = null;
             }

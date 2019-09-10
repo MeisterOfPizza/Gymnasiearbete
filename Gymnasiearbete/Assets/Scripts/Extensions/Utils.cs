@@ -144,7 +144,7 @@ namespace ArenaShooter.Extensions
                 {
                     var hitbox = boltHit.hitbox;
 
-                    if (hitbox.gameObject != self && hitLayerMask.HasLayer(hitbox.gameObject.layer))
+                    if (hitbox.gameObject != self && hitLayerMask.HasLayer(hitbox.gameObject.layer) && Vector3.Distance(hitbox.transform.position, ray.origin) < maxDistance)
                     {
                         return new UtilRaycastHit(boltHit, ray.origin + ray.direction * boltHit.distance, -ray.direction);
                     }
@@ -189,7 +189,7 @@ namespace ArenaShooter.Extensions
                 {
                     var hitbox = boltHit.hitbox;
 
-                    if (hitbox.gameObject != self && hitLayerMask.HasLayer(hitbox.gameObject.layer) && hitbox.GetComponent<T>() != null)
+                    if (hitbox.gameObject != self && hitLayerMask.HasLayer(hitbox.gameObject.layer) && hitbox.GetComponent<T>() != null && Vector3.Distance(hitbox.transform.position, ray.origin) < maxDistance)
                     {
                         return new UtilRaycastHit(boltHit, ray.origin + ray.direction * boltHit.distance, -ray.direction);
                     }
@@ -203,6 +203,21 @@ namespace ArenaShooter.Extensions
 
                 return new UtilRaycastHit();
             }
+        }
+
+        #endregion
+
+        #region IEntity
+
+        public static bool IsNull(this IEntity entity)
+        {
+            // Taken from http://answers.unity.com/answers/586188/view.html in https://answers.unity.com/questions/586144/destroyed-monobehaviour-not-comparing-to-null.html.
+            return entity == null || entity.Equals(null);
+        }
+
+        public static bool IsSame(this IEntity entity, IEntity other)
+        {
+            return !IsNull(entity) ? entity.Equals(other) : entity == other;
         }
 
         #endregion

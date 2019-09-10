@@ -98,17 +98,7 @@ namespace ArenaShooter.Combat
             WeaponUpdate();
         }
 
-        private void LateUpdate()
-        {
-            WeaponLateUpdate();
-        }
-
         protected virtual void WeaponUpdate()
-        {
-            // Leave blank.
-        }
-
-        protected virtual void WeaponLateUpdate()
         {
             // Leave blank.
         }
@@ -117,16 +107,11 @@ namespace ArenaShooter.Combat
 
         #region Equipping
 
-        public virtual void EquipWeapon(IWeaponHolder weaponHolder)
+        public void EquipWeapon(IWeaponHolder weaponHolder)
         {
             this.WeaponHolder = weaponHolder;
 
             OnAmmoChangedCallback?.Invoke(FormatAmmoLeft());
-        }
-
-        public virtual void UnequipWeapon()
-        {
-
         }
 
         #endregion
@@ -217,6 +202,15 @@ namespace ArenaShooter.Combat
         #endregion
 
         #region Firing
+
+        public void FireWithoutInput()
+        {
+            if (!isReloading && !isBurstFiring)
+            {
+                TryFiring();
+                OnFireFrame();
+            }
+        }
 
         public void CheckForInput()
         {
