@@ -1,36 +1,46 @@
 ﻿using UnityEngine;
 
+#pragma warning disable 0649
+
 namespace ArenaShooter.Templates.Weapons
 {
-   [CreateAssetMenu(menuName = "Templates/Weapons/Stock")]
+
+    [CreateAssetMenu(menuName = "Templates/Weapons/Stock")]
     class StockTemplate : WeaponPartTemplate
     {
+
         [Header("Stats")]
-        [SerializeField] private ushort movementSpeed;
-        [SerializeField] private ushort stability;
+        [SerializeField] private float mobility;
+        [SerializeField] private float accuracy;
 
-        public override WeaponTemplateType type
+        #region Getters
+
+        public override WeaponPartTemplateType Type
         {
             get
             {
-                return WeaponTemplateType.stock;
-            }
-        }
-        public ushort MovmentSpeed
-        {
-            get
-            {
-                return movementSpeed;
+                return WeaponPartTemplateType.Stock;
             }
         }
 
-        public ushort Stability
+        public float Mobility
         {
             get
             {
-                return stability;
+                return mobility;
             }
         }
+
+        public float Accuracy
+        {
+            get
+            {
+                return accuracy;
+            }
+        }
+
+        #endregion
+
     }
-}
 
+}

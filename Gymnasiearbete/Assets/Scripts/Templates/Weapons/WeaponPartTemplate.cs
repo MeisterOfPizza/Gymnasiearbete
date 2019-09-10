@@ -1,28 +1,48 @@
 ﻿using UnityEngine;
 
+#pragma warning disable 0649
 
 namespace ArenaShooter.Templates.Weapons
 {
-    enum WeaponTemplateType
+
+    enum WeaponPartTemplateType
     {
-        stock,
-        body,
-        barrel
+        Stock,
+        Body,
+        Barrel
     }
+
+    enum WeaponPartTemplateOutputType
+    {
+        Raycasting,
+        Projectile,
+        Electric,
+        Support
+    }
+
     abstract class WeaponPartTemplate : ScriptableObject
     {
+
+        #region Editor
+
         [Header("General")]
-        [SerializeField]private ushort templateId;
-        [SerializeField]private string name;
-        
+        [SerializeField] private     ushort templateId;
+        [SerializeField] private new string name;
 
         [TextArea]
-        [SerializeField]private string description;
+        [SerializeField] private string description;
+
+        [Space]
+        [SerializeField] private WeaponPartTemplateOutputType outputType;
         
         [Header("Graphics")]
-        [SerializeField]private GameObject weaponPartPrefab;
+        [SerializeField] private GameObject weaponPartPrefab;
 
-        public abstract WeaponTemplateType type { get; }
+        #endregion
+
+        #region Getters
+
+        public abstract WeaponPartTemplateType Type { get; }
 
         public ushort TemplateId
         {
@@ -32,10 +52,40 @@ namespace ArenaShooter.Templates.Weapons
             }
         }
 
-        
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+        }
 
-        
+        public string Description
+        {
+            get
+            {
+                return description;
+            }
+        }
+
+        public WeaponPartTemplateOutputType OutputType
+        {
+            get
+            {
+                return outputType;
+            }
+        }
+
+        public GameObject WeaponPartPrefab
+        {
+            get
+            {
+                return weaponPartPrefab;
+            }
+        }
+
+        #endregion
+
     }
+
 }
-
-

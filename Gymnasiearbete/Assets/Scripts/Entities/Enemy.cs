@@ -1,5 +1,6 @@
 ﻿using ArenaShooter.Controllers;
 using ArenaShooter.Extensions;
+using ArenaShooter.Player;
 using ArenaShooter.UI;
 using Bolt;
 using UnityEngine;
@@ -26,6 +27,29 @@ namespace ArenaShooter.Entities
         [Header("Values")]
         [SerializeField] private int startHealth = 100; // TEST DATA
 
+        [Space]
+        [SerializeField] private HealableBy healableBy = HealableBy.Enemy;
+
+        #endregion
+
+        #region IEntity
+
+        public override EntityTeam EntityTeam
+        {
+            get
+            {
+                return EntityTeam.Enemy;
+            }
+        }
+
+        public override HealableBy HealableBy
+        {
+            get
+            {
+                return healableBy;
+            }
+        }
+
         #endregion
 
         #region Private variables
@@ -45,82 +69,41 @@ namespace ArenaShooter.Entities
             uiEnemyGameStats.transform.position = Camera.main.WorldToScreenPoint(transform.position);
         }
 
-        public LayerMask playerHitLayerMask;
-        public LayerMask weaponHitLayerMask;
+        public LayerMask hitLayerMask;
         private void TestShoot()
         {
-            Ray ray = new Ray(transform.position + Vector3.up, transform.forward * 100f);
-            using (var hits = BoltNetwork.RaycastAll(ray))
+            Ray ray = new Ray(transform.position + Vector3.up, transform.forward);
+            var hit = Utils.Raycast<PlayerController>(ray, 100f, hitLayerMask, gameObject, QueryTriggerInteraction.Ignore);
+            if (hit.HitAnything)
             {
-                bool networkHit = false;
-
-                // Search network hitboxes for hits:
-                for (int i = 0; i < hits.count; i++)
+                if (hit.NetworkHit)
                 {
-                    var hitbox = hits.GetHit(i).hitbox;
-
-                    if (hitbox.gameObject != gameObject && playerHitLayerMask.HasLayer(hitbox.gameObject.layer) && hitbox.GetComponent<IDamagable>() is IDamagable damagable)
-                    {
-                        var takeDamageEvent = TakeDamageEvent.Create(GlobalTargets.Everyone, ReliabilityModes.ReliableOrdered);
-                        takeDamageEvent.Target = hitbox.GetComponent<IEntity>().entity;
-                        takeDamageEvent.DamageTaken = 10;
-                        takeDamageEvent.Send();
-
-                        var weaponFireEvent = WeaponFireEvent.Create(entity);
-                        weaponFireEvent.Shooter = entity;
-                        weaponFireEvent.Send();
-
-                        networkHit = true;
-
-                        break;
-                    }
+                    var takeDamageEvent = TakeDamageEvent.Create(GlobalTargets.Everyone, ReliabilityModes.ReliableOrdered);
+                    takeDamageEvent.Target      = hit.Hitbox.GetComponent<IEntity>().entity;
+                    takeDamageEvent.DamageTaken = 10;
+                    takeDamageEvent.Send();
                 }
 
-                // None were found, search geometry hitboxes for hits:
-                if (!networkHit)
-                {
-                    if (Physics.Raycast(ray, out RaycastHit hit, 100f, weaponHitLayerMask, QueryTriggerInteraction.Ignore))
-                    {
-                        var weaponFireEvent = WeaponFireEvent.Create(entity);
-                        weaponFireEvent.Shooter = entity;
-                        weaponFireEvent.Send();
-                    }
-                }
+                var fireEvent     = WeaponFireEffectEvent.Create(entity);
+                fireEvent.Shooter = entity;
+                fireEvent.Point   = hit.HitPoint;
+                fireEvent.Up      = hit.HitNormal;
+                fireEvent.Send();
             }
         }
 
-        public override void OnEvent(WeaponFireEvent evnt)
+        public override void OnEvent(WeaponFireEffectEvent evnt)
         {
-            Ray ray = new Ray(transform.position + Vector3.up, transform.forward * 100f);
-            using (var hits = BoltNetwork.RaycastAll(ray))
+            if (evnt.Shooter == entity)
             {
-                bool networkHit = false;
-
-                // Search network hitboxes for hits:
-                for (int i = 0; i < hits.count; i++)
-                {
-                    var hitbox = hits.GetHit(i).hitbox;
-
-                    if (hitbox.gameObject != gameObject && playerHitLayerMask.HasLayer(hitbox.gameObject.layer) && hitbox.GetComponent<IDamagable>() is IDamagable damagable)
-                    {
-                        VFXExplosion(ray.origin + ray.direction * hits.GetHit(i).distance);
-                    }
-                }
-
-                // None were found, search geometry hitboxes for hits:
-                if (!networkHit)
-                {
-                    if (Physics.Raycast(ray, out RaycastHit hit, 100f, weaponHitLayerMask, QueryTriggerInteraction.Ignore))
-                    {
-                        VFXExplosion(hit.point);
-                    }
-                }
+                VFXExplosion(evnt.Point, evnt.Up);
             }
         }
 
-        private void VFXExplosion(Vector3 position)
+        private void VFXExplosion(Vector3 position, Vector3 up)
         {
             explosionEffect.transform.position = position;
+            explosionEffect.transform.up       = up;
             explosionEffect.Play(true);
         }
 

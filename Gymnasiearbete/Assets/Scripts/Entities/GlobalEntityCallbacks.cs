@@ -10,6 +10,7 @@ namespace ArenaShooter.Entities
         #region Event callbacks
 
         public Action<TakeDamageEvent> OnTakeDamage { get; set; }
+        public Action<HealEvent>       OnHeal       { get; set; }
 
         #endregion
 
@@ -27,6 +28,14 @@ namespace ArenaShooter.Entities
             if (evnt.Target == Entity.entity)
             {
                 OnTakeDamage?.Invoke(evnt);
+            }
+        }
+
+        public override void OnEvent(HealEvent evnt)
+        {
+            if (evnt.Target == Entity.entity)
+            {
+                OnHeal?.Invoke(evnt);
             }
         }
 
