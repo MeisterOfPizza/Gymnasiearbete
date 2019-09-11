@@ -22,6 +22,11 @@ namespace ArenaShooter.Controllers
 
         Resolution[] resolutions;
 
+        private float masterVolume;
+        private float miscVolume;
+        private float sFXVolume;
+        private float musicVolume;
+
         #endregion
 
         #region Methods
@@ -77,22 +82,58 @@ namespace ArenaShooter.Controllers
 
         public void SetMasterVolume(float volume)
         {
-            Debug.Log(volume);
+            masterVolume = volume;
         }
 
         public void SetMusicVolume(float volume)
         {
-            Debug.Log(volume);
+            musicVolume = volume;
         }
 
         public void SetSFXVolume(float volume)
         {
-            Debug.Log(volume);
+            sFXVolume = volume;
         }
 
         public void SetMiscVolume(float volume)
         {
-            Debug.Log(volume);
+            miscVolume = volume;
+        }
+
+        #endregion
+
+        #region Getters
+
+        public float MasterVolume
+        {
+            get
+            {
+                return masterVolume;
+            }
+        }
+
+        public float MiscVolume
+        {
+            get
+            {
+                return miscVolume;
+            }
+        }
+
+        public float SFXVolume
+        {
+            get
+            {
+                return sFXVolume;
+            }
+        }
+
+        public float MusicVolume
+        {
+            get
+            {
+                return musicVolume;
+            }
         }
 
         #endregion
