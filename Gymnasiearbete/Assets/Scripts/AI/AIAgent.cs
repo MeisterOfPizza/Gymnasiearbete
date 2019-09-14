@@ -10,7 +10,7 @@ namespace ArenaShooter.AI
 {
 
     [DisallowMultipleComponent]
-    sealed class AiAgent : MonoBehaviour
+    sealed class AIAgent : MonoBehaviour
     {
 
         #region Editor
@@ -29,6 +29,10 @@ namespace ArenaShooter.AI
 
         private float searchThreshold;
         private float stoppingDistance;
+        private float movementSpeed;
+        private float turnSpeed;
+
+        private HumanoidBody humanoidBody;
 
         private IEntity currentTarget;
         private IEntity potentialTarget;
@@ -37,13 +41,17 @@ namespace ArenaShooter.AI
 
         #endregion
 
-        public void Initialize(IEntity agentEntity, EntityTeam searchTargetTeam, float searchInterval, float searchThreshold, float stoppingDistance)
+        public void Initialize(IEntity agentEntity, EntityTeam searchTargetTeam, float searchInterval, float searchThreshold, float stoppingDistance, float movementSpeed, float turnSpeed, HumanoidBody humanoidBody)
         {
             this.agentEntity      = agentEntity;
             this.searchTargetTeam = searchTargetTeam;
             this.searchThreshold  = searchThreshold;
             this.stoppingDistance = stoppingDistance;
+            this.movementSpeed    = movementSpeed;
+            this.turnSpeed        = turnSpeed;
+            this.humanoidBody     = humanoidBody;
 
+            agent.speed          = movementSpeed;
             searchTrigger.radius = searchThreshold;
 
             InvokeRepeating("Search", 0f, searchInterval);
@@ -51,57 +59,65 @@ namespace ArenaShooter.AI
 
         private void Search()
         {
-            // Check if the potential target is the same as current target, or if a potential target does not exist.
-            // If so, get the nearest target (that is not the current target).
-            if (currentTarget.IsSame(potentialTarget) || potentialTarget.IsNull())
+            if (!agentEntity.IsNull())
             {
-                potentialTarget = EntityController.Singleton.GetClosestEntity(agentEntity.BodyOriginPosition, Mathf.Infinity, currentTarget, searchTargetTeam);
-            }
+                // Check if the potential target is the same as current target, or if a potential target does not exist.
+                // If so, get the nearest target (that is not the current target).
+                if (currentTarget.IsSame(potentialTarget) || potentialTarget.IsNull())
+                {
+                    potentialTarget = EntityController.Singleton.GetClosestEntity(agentEntity.BodyOriginPosition, Mathf.Infinity, currentTarget, searchTargetTeam);
+                }
 
-            // Check if the potential target is closer than the current target:
-            if (!currentTarget.IsNull() && !potentialTarget.IsNull() && Vector3.Distance(currentTarget.BodyOriginPosition, agentEntity.BodyOriginPosition) > Vector3.Distance(potentialTarget.BodyOriginPosition, agentEntity.BodyOriginPosition))
-            {
-                SetCurrentTarget(potentialTarget);
-                potentialTarget = null;
-            }
+                // Check if the potential target is closer than the current target:
+                if (!currentTarget.IsNull() && !potentialTarget.IsNull() && Vector3.Distance(currentTarget.BodyOriginPosition, agentEntity.BodyOriginPosition) > Vector3.Distance(potentialTarget.BodyOriginPosition, agentEntity.BodyOriginPosition))
+                {
+                    SetCurrentTarget(potentialTarget);
+                    potentialTarget = null;
+                }
 
-            // Final failsafe: if the current target is null, check if the potential target can be used. If not: get the closest target with no exceptions.
-            if (currentTarget.IsNull())
-            {
-                SetCurrentTarget(!potentialTarget.IsNull() ? potentialTarget : EntityController.Singleton.GetClosestEntity(agentEntity.BodyOriginPosition, Mathf.Infinity, searchTargetTeam));
-            }
+                // Final failsafe: if the current target is null, check if the potential target can be used. If not: get the closest target with no exceptions.
+                if (currentTarget.IsNull())
+                {
+                    SetCurrentTarget(!potentialTarget.IsNull() ? potentialTarget : EntityController.Singleton.GetClosestEntity(agentEntity.BodyOriginPosition, Mathf.Infinity, searchTargetTeam));
+                }
 
-            lastPositionOfTarget = !currentTarget.IsNull() ? currentTarget.BodyOriginPosition : lastPositionOfTarget;
+                lastPositionOfTarget = !currentTarget.IsNull() ? currentTarget.BodyOriginPosition : lastPositionOfTarget;
+            }
         }
 
         private void FixedUpdate()
         {
             if (!currentTarget.IsNull())
             {
+                // Check if the player is outside the search area:
                 if (Vector3.Distance(lastPositionOfTarget, currentTarget.BodyOriginPosition) > searchThreshold)
                 {
                     agent.isStopped = false;
                     agent.SetDestination(currentTarget.BodyOriginPosition);
+                    
+                    humanoidBody.SetLowerBodyAsController(currentTarget.BodyOriginPosition);
 
                     lastPositionOfTarget = currentTarget.BodyOriginPosition;
                 }
 
+                // Check if the AI is too close and should stop:
                 if (Vector3.Distance(agentEntity.BodyOriginPosition, currentTarget.BodyOriginPosition) <= stoppingDistance)
                 {
                     agent.isStopped = true;
-                }
-                else
-                {
-                    agent.isStopped = false;
-                    agent.SetDestination(currentTarget.BodyOriginPosition);
-
-                    lastPositionOfTarget = currentTarget.BodyOriginPosition;
+                    
+                    humanoidBody.SetUpperBodyAsController(currentTarget.BodyOriginPosition);
                 }
 
                 if (agent.isStopped)
                 {
-                    agent.transform.rotation = Quaternion.RotateTowards(agent.transform.rotation, Quaternion.LookRotation(currentTarget.BodyOriginPosition - agentEntity.BodyOriginPosition), BoltNetwork.FrameDeltaTime * 250f);
+                    agent.transform.rotation = Quaternion.RotateTowards(agent.transform.rotation, Quaternion.LookRotation(currentTarget.BodyOriginPosition - agentEntity.BodyOriginPosition), turnSpeed);
                 }
+                else
+                {
+                    humanoidBody.SetLowerBodyTarget(agentEntity.BodyOriginPosition + agent.velocity);
+                }
+
+                humanoidBody.SetUpperBodyTarget(currentTarget.BodyOriginPosition);
             }
         }
 
@@ -120,6 +136,8 @@ namespace ArenaShooter.AI
             {
                 currentTarget.OnDeathCallback   += RemoveCurrentTarget;
                 currentTarget.OnDestroyCallback += RemoveCurrentTarget;
+
+                agent.SetDestination(currentTarget.BodyOriginPosition);
             }
         }
 

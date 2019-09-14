@@ -16,14 +16,32 @@ namespace ArenaShooter.Templates.Enemies
         [SerializeField] private new string name = "Enemy";
 
         [Header("Stats")]
-        [SerializeField] private int   health       = 100;
-        [SerializeField] private float movmentSpeed = 2f;
+        [SerializeField] private int   health        = 100;
+        [SerializeField] private float movementSpeed = 3.5f;
+
+        [Header("Logic")]
+        [SerializeField] private TargetSearchFrequencyType targetSearchFrequency = TargetSearchFrequencyType.Normal;
+
+        [Space]
+        [SerializeField] private bool  instantTurn = false;
+        [SerializeField] private float turnSpeed   = 10f;
 
         [Header("References")]
         [SerializeField] private EnemyWeaponTemplate[] possibleWeaponTemplates;
 
         [Header("Prefabs")]
         [SerializeField] private GameObject enemyPrefab;
+
+        #endregion
+
+        #region Enums
+
+        private enum TargetSearchFrequencyType : byte
+        {
+            Slow   = 5,
+            Normal = 3,
+            Fast   = 1
+        }
 
         #endregion
 
@@ -57,7 +75,23 @@ namespace ArenaShooter.Templates.Enemies
         {
             get
             {
-                return movmentSpeed;
+                return movementSpeed;
+            }
+        }
+
+        public float TargetSearchFrequency
+        {
+            get
+            {
+                return (float)targetSearchFrequency;
+            }
+        }
+
+        public float TurnSpeed
+        {
+            get
+            {
+                return instantTurn ? float.MaxValue : turnSpeed;
             }
         }
 

@@ -22,7 +22,11 @@ namespace ArenaShooter.Entities
         #region Editor
 
         [Header("References")]
-        [SerializeField] private AiAgent aiAgent;
+        [SerializeField] private AIAgent      aiAgent;
+        [SerializeField] private HumanoidBody humanoidBody;
+
+        [Space]
+        [SerializeField] private Transform renderTransform;
 
         [Header("Values")]
         [SerializeField] private LayerMask weaponHitLayerMask;
@@ -88,7 +92,7 @@ namespace ArenaShooter.Entities
 
         #endregion
 
-        #region Private variables
+        #region Protected variables
 
         protected EnemyTemplate enemyTemplate;
         protected Weapon        weapon;
@@ -107,6 +111,12 @@ namespace ArenaShooter.Entities
         private void Update()
         {
             uiEnemyGameStats.transform.position = MainCameraController.MainCamera.WorldToScreenPoint(transform.position);
+
+            if (!entity.IsOwner)
+            {
+                humanoidBody.UpperBodyCurrent = state.UpperBodyNormal;
+                humanoidBody.LowerBodyCurrent = state.LowerBodyNormal;
+            }
         }
 
         private void FixedUpdate()
@@ -115,6 +125,12 @@ namespace ArenaShooter.Entities
             {
                 CheckForEnemies();
             }
+        }
+
+        public override void SimulateOwner()
+        {
+            state.UpperBodyNormal = humanoidBody.UpperBodyCurrent;
+            state.LowerBodyNormal = humanoidBody.LowerBodyCurrent;
         }
 
         public override void Attached()
@@ -127,7 +143,7 @@ namespace ArenaShooter.Entities
             uiEnemyGameStats.Initialize(this);
             uiEnemyGameStats.transform.position = MainCameraController.MainCamera.WorldToScreenPoint(transform.position);
 
-            state.SetTransforms(state.Transform, transform);
+            state.SetTransforms(state.Transform, transform, renderTransform);
 
             if (entity.IsOwner)
             {
@@ -136,7 +152,7 @@ namespace ArenaShooter.Entities
 
                 entity.TakeControl();
 
-                aiAgent.Initialize(this, weapon.Stats.TargetEntityTeam, 5f, weapon.Stats.Range * 0.9f, weapon.Stats.Range / 2f);
+                aiAgent.Initialize(this, weapon.Stats.TargetEntityTeam, enemyTemplate.TargetSearchFrequency, weapon.Stats.Range * 0.9f, weapon.Stats.Range / 2f, enemyTemplate.MovementSpeed, enemyTemplate.TurnSpeed, humanoidBody);
             }
             else
             {
@@ -144,6 +160,8 @@ namespace ArenaShooter.Entities
             }
 
             state.AddCallback("Health", uiEnemyGameStats.UpdateUI);
+
+            humanoidBody.ManualControls = !entity.IsOwner;
         }
 
         private void OnDestroy()

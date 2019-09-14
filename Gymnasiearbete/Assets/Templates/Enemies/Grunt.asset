@@ -15,9 +15,12 @@ MonoBehaviour:
   templateId: 0
   name: Grunt
   health: 100
-  movmentSpeed: 2
+  movementSpeed: 3.5
+  targetSearchFrequency: 3
+  instantTurn: 0
+  turnSpeed: 10
   possibleWeaponTemplates:
   - {fileID: 11400000, guid: c7d1fe4055b4f2248acf07ac86dd63d5, type: 2}
   - {fileID: 11400000, guid: b92b093200da4af40ba848ee4f97f35a, type: 2}
-  enemyPrefab: {fileID: 9168198077660110737, guid: 9ee4e87c607b728418f76216ab474197,
+  enemyPrefab: {fileID: 866174922270184751, guid: ae49712810f17c64492dda8ed985e9fe,
     type: 3}
