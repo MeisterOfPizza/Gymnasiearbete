@@ -5,7 +5,7 @@
 namespace ArenaShooter.Entities
 {
 
-    class HumanoidBody : MonoBehaviour
+    class HumanoidBody : Body
     {
 
         #region Editor
@@ -32,11 +32,6 @@ namespace ArenaShooter.Entities
         #region Public properties
 
         /// <summary>
-        /// Should the script NOT restrict body part movement?
-        /// </summary>
-        public bool ManualControls { get; set; } = false;
-
-        /// <summary>
         /// Returns true if <see cref="lowerBody"/> decides where <see cref="upperBody"/> should look.
         /// </summary>
         public bool LowerBodyIsController
@@ -47,7 +42,7 @@ namespace ArenaShooter.Entities
             }
         }
 
-        public Vector3 UpperBodyCurrent
+        public override Vector3 UpperBodyCurrent
         {
             get
             {
@@ -60,7 +55,7 @@ namespace ArenaShooter.Entities
             }
         }
 
-        public Vector3 LowerBodyCurrent
+        public override Vector3 LowerBodyCurrent
         {
             get
             {
@@ -102,7 +97,7 @@ namespace ArenaShooter.Entities
         /// Sets the upper body target.
         /// </summary>
         /// <param name="target">Point to look at.</param>
-        public void SetUpperBodyTarget(Vector3 target)
+        public override void SetUpperBodyTarget(Vector3 target)
         {
             target.y        = container.position.y;
             Vector3 forward = target - container.position;
@@ -114,12 +109,12 @@ namespace ArenaShooter.Entities
             
             upperBodyTarget = forward;
         }
-        
+
         /// <summary>
         /// Sets the lower body target.
         /// </summary>
         /// <param name="target">Point to look at.</param>
-        public void SetLowerBodyTarget(Vector3 target)
+        public override void SetLowerBodyTarget(Vector3 target)
         {
             target.y        = container.position.y;
             Vector3 forward = target - container.position;
@@ -136,7 +131,7 @@ namespace ArenaShooter.Entities
         /// Sets the upper body as the controller.
         /// </summary>
         /// <param name="target">Point to look at.</param>
-        public void SetUpperBodyAsController(Vector3 target)
+        public override void SetUpperBodyAsController(Vector3 target)
         {
             target.y = container.position.y;
 
@@ -148,7 +143,7 @@ namespace ArenaShooter.Entities
         /// Sets the lower body as the controller.
         /// </summary>
         /// <param name="target">Point to look at.</param>
-        public void SetLowerBodyAsController(Vector3 target)
+        public override void SetLowerBodyAsController(Vector3 target)
         {
             target.y = container.position.y;
 
@@ -238,6 +233,20 @@ namespace ArenaShooter.Entities
             }
 
             return normal;
+        }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Restricts the direction that is legal with the current body part controller.
+        /// </summary>
+        /// <param name="direction">Normal to restrict.</param>
+        /// <returns>Returns a clamp/restricted normal.</returns>
+        public override Vector3 RestrictNormal(Vector3 direction)
+        {
+            return RestrictNormal(direction, lowerBodyIsController ? lowerBodyCurrent : upperBodyCurrent);
         }
 
         #endregion

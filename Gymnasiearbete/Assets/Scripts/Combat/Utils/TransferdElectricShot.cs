@@ -49,14 +49,14 @@ namespace ArenaShooter.Combat.Utils
         }
 
         /// <summary>
-        /// Returns the closest entities based on <see cref="Weapon.MaxDistance"/> and <see cref="Weapon.Range"/> as well as <see cref="Weapon.AmmoLeftInClip"/>.
+        /// Returns the closest entities based on <see cref="Weapon.Stats.MaxDistance"/> and <see cref="Weapon.Stats.Range"/> as well as <see cref="Weapon.AmmoLeftInClip"/>.
         /// </summary>
         public override List<IEntity> GetTargets()
         {
             int           shotsLeft     = weapon.AmmoLeftInClip;
             Vector3       position      = weapon.WeaponHolder.WeaponFirePosition;
             List<IEntity> targets       = new List<IEntity>();
-            IEntity       currentEntity = EntityController.Singleton.GetClosestEntity(position, weapon.Stats.MaxDistance, targets, EntityTeam.Enemy);
+            IEntity       currentEntity = EntityController.Singleton.GetClosestEntity(position, weapon.Stats.MaxDistance, targets, weapon.Stats.TargetEntityTeam);
 
             while (shotsLeft > 0 && currentEntity != null)
             {
@@ -65,7 +65,7 @@ namespace ArenaShooter.Combat.Utils
                 position = currentEntity.BodyOriginPosition;
                 targets.Add(currentEntity);
 
-                currentEntity = EntityController.Singleton.GetClosestEntity(position, weapon.Stats.Range, targets, EntityTeam.Enemy);
+                currentEntity = EntityController.Singleton.GetClosestEntity(position, weapon.Stats.Range, targets, weapon.Stats.TargetEntityTeam);
             }
 
             weapon.DepleteAmmo(weapon.AmmoLeftInClip - shotsLeft);

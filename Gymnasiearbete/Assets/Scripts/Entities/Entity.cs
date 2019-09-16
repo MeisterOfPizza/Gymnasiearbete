@@ -26,6 +26,14 @@ namespace ArenaShooter.Entities
             }
         }
 
+        public virtual Vector3 HeadOriginPosition
+        {
+            get
+            {
+                return transform.position + Vector3.up * 2;
+            }
+        }
+
         #endregion
 
         #region Protected variables

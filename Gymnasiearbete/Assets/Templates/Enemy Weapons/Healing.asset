@@ -10,23 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c62f5adec85c034e894aa669da785d0, type: 3}
-  m_Name: Sniper Rifle
+  m_Name: Healing
   m_EditorClassIdentifier: 
-  templateId: 0
-  mobility: 0
-  accuracy: 0.9
-  damage: 3
-  maxAmmoPerClip: 10
+  templateId: 3
+  mobility: 4
+  accuracy: 1
+  damage: 1
+  maxAmmoPerClip: 30
   ammoPerFire: 1
   fireCooldown: 0.5
   reloadTime: 1
   burstFireInterval: 0.05
   burstShots: 3
   range: 10
-  maxDistance: 50
-  firingMode: 0
+  maxDistance: 25
+  firingMode: 2
   manualAmmoDepletion: 0
-  outputType: 0
-  firePrefab: {fileID: 2666111351735457144, guid: 4e7646c61010c11458ac398ca936fc08,
+  outputType: 3
+  firePrefab: {fileID: 2046930185819632498, guid: 605c9ff204190104fa6efc2feb878960,
     type: 3}
   modelPrefab: {fileID: 0}

@@ -20,6 +20,14 @@ namespace ArenaShooter.Extensions
             public RaycastHit?     RaycastHit     { get; private set; }
             public BoltPhysicsHit? BoltPhysicsHit { get; private set; }
 
+            public GameObject GameObject
+            {
+                get
+                {
+                    return HitAnything ? (NetworkHit ? Body.gameObject : Collider.gameObject) : null;
+                }
+            }
+
             public Collider Collider
             {
                 get
@@ -117,7 +125,7 @@ namespace ArenaShooter.Extensions
         #region Raycasting
 
         /// <summary>
-        /// Performs a raycast operation, first on the network, and if no entities on the network were hit, it performs one on the world.
+        /// Performs a raycast operation, first on the geometry, and if no colliders were hit, it performs one on the network.
         /// </summary>
         /// <param name="ray">The ray to cast with.</param>
         /// <param name="maxDistance">Max distance of the raycast.</param>
@@ -127,6 +135,16 @@ namespace ArenaShooter.Extensions
         /// <returns>Returns a <see cref="UtilRaycastHit"/> that contains information about the raycast operation.</returns>
         public static UtilRaycastHit Raycast(Ray ray, float maxDistance, LayerMask hitLayerMask, GameObject self, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
         {
+            // Search geometry colliders for hits:
+            if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, hitLayerMask, queryTriggerInteraction))
+            {
+                if (hit.collider != null && hit.collider.gameObject != self)
+                {
+                    return new UtilRaycastHit(hit, hit.point, hit.normal);
+                }
+            }
+
+            // No geometry was hit, search network hitboxes for hits:
             using (var hitCollection = BoltNetwork.RaycastAll(new Ray(ray.origin, ray.direction * maxDistance), BoltNetwork.ServerFrame))
             {
                 BoltPhysicsHit[] boltHits = new BoltPhysicsHit[hitCollection.count];
@@ -149,19 +167,13 @@ namespace ArenaShooter.Extensions
                         return new UtilRaycastHit(boltHit, ray.origin + ray.direction * boltHit.distance, -ray.direction);
                     }
                 }
-
-                // None were found, search geometry hitboxes for hits:
-                if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, hitLayerMask, queryTriggerInteraction))
-                {
-                    return new UtilRaycastHit(hit, hit.point, hit.normal);
-                }
-
-                return new UtilRaycastHit();
             }
+
+            return new UtilRaycastHit();
         }
 
         /// <summary>
-        /// Performs a raycast operation, first on the network, and if no entities on the network were hit, it performs one on the world.
+        /// Performs a raycast operation, first on the geometry, and if no colliders were hit, it performs one on the network.
         /// </summary>
         /// <typeparam name="T">The type of entity to be hit. <see cref="Entity{T}"/> or <see cref="IEntity"/> can also be passed.</typeparam>
         /// <param name="ray">The ray to cast with.</param>
@@ -172,6 +184,16 @@ namespace ArenaShooter.Extensions
         /// <returns>Returns a <see cref="UtilRaycastHit"/> that contains information about the raycast operation.</returns>
         public static UtilRaycastHit Raycast<T>(Ray ray, float maxDistance, LayerMask hitLayerMask, GameObject self, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal) where T : IEntity
         {
+            // Search geometry colliders for hits:
+            if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, hitLayerMask, queryTriggerInteraction))
+            {
+                if (hit.collider != null && hit.collider.gameObject != self && hit.collider.GetComponent<T>() != null)
+                {
+                    return new UtilRaycastHit(hit, hit.point, hit.normal);
+                }
+            }
+
+            // No geometry was hit, search network hitboxes for hits:
             using (var hitCollection = BoltNetwork.RaycastAll(new Ray(ray.origin, ray.direction * maxDistance), BoltNetwork.ServerFrame))
             {
                 BoltPhysicsHit[] boltHits = new BoltPhysicsHit[hitCollection.count];
@@ -194,15 +216,9 @@ namespace ArenaShooter.Extensions
                         return new UtilRaycastHit(boltHit, ray.origin + ray.direction * boltHit.distance, -ray.direction);
                     }
                 }
-
-                // None were found, search geometry hitboxes for hits:
-                if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, hitLayerMask, queryTriggerInteraction))
-                {
-                    return new UtilRaycastHit(hit, hit.point, hit.normal);
-                }
-
-                return new UtilRaycastHit();
             }
+
+            return new UtilRaycastHit();
         }
 
         #endregion

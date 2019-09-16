@@ -16,14 +16,14 @@ namespace ArenaShooter.Entities
     /// <summary>
     /// Enemies only exist on the server (or host).
     /// </summary>
-    class Enemy : Entity<IEnemyState>, IWeaponHolder
+    class Enemy : Entity<IEnemyState>, IWeaponHolder, IAIAgentBehaviour
     {
 
         #region Editor
 
         [Header("References")]
-        [SerializeField] private AIAgent      aiAgent;
-        [SerializeField] private HumanoidBody humanoidBody;
+        [SerializeField] private AIAgent aiAgent;
+        [SerializeField] private Body    body;
 
         [Space]
         [SerializeField] private Transform renderTransform;
@@ -70,7 +70,7 @@ namespace ArenaShooter.Entities
         {
             get
             {
-                return transform.forward;
+                return body.UpperBodyCurrent;
             }
         }
 
@@ -87,6 +87,66 @@ namespace ArenaShooter.Entities
             get
             {
                 return GlobalTargets.Everyone;
+            }
+        }
+
+        #endregion
+
+        #region IAIAgentBehaviour
+
+        public EntityTeam SearchTargetTeam
+        {
+            get
+            {
+                return weapon.Stats.TargetEntityTeam;
+            }
+        }
+
+        public float SearchInterval
+        {
+            get
+            {
+                return enemyTemplate.TargetSearchFrequency;
+            }
+        }
+
+        public float SearchThreshold
+        {
+            get
+            {
+                return weapon.Stats.Range * 0.9f;
+            }
+        }
+
+        public float StoppingDistance
+        {
+            get
+            {
+                return weapon.Stats.Range / 2f;
+            }
+        }
+
+        public float MovementSpeed
+        {
+            get
+            {
+                return enemyTemplate.MovementSpeed;
+            }
+        }
+
+        public float TurnSpeed
+        {
+            get
+            {
+                return enemyTemplate.TurnSpeed;
+            }
+        }
+
+        public Body Body
+        {
+            get
+            {
+                return body;
             }
         }
 
@@ -114,8 +174,8 @@ namespace ArenaShooter.Entities
 
             if (!entity.IsOwner)
             {
-                humanoidBody.UpperBodyCurrent = state.UpperBodyNormal;
-                humanoidBody.LowerBodyCurrent = state.LowerBodyNormal;
+                body.UpperBodyCurrent = state.UpperBodyNormal;
+                body.LowerBodyCurrent = state.LowerBodyNormal;
             }
         }
 
@@ -123,14 +183,14 @@ namespace ArenaShooter.Entities
         {
             if (entity.IsOwner)
             {
-                CheckForEnemies();
+                CheckForTargets();
             }
         }
 
         public override void SimulateOwner()
         {
-            state.UpperBodyNormal = humanoidBody.UpperBodyCurrent;
-            state.LowerBodyNormal = humanoidBody.LowerBodyCurrent;
+            state.UpperBodyNormal = body.UpperBodyCurrent;
+            state.LowerBodyNormal = body.LowerBodyCurrent;
         }
 
         public override void Attached()
@@ -151,8 +211,8 @@ namespace ArenaShooter.Entities
                 state.WeaponTemplateId = weapon.Stats.GetEnemyWeaponTemplateId();
 
                 entity.TakeControl();
-
-                aiAgent.Initialize(this, weapon.Stats.TargetEntityTeam, enemyTemplate.TargetSearchFrequency, weapon.Stats.Range * 0.9f, weapon.Stats.Range / 2f, enemyTemplate.MovementSpeed, enemyTemplate.TurnSpeed, humanoidBody);
+                
+                aiAgent.Initialize(this);
             }
             else
             {
@@ -161,7 +221,7 @@ namespace ArenaShooter.Entities
 
             state.AddCallback("Health", uiEnemyGameStats.UpdateUI);
 
-            humanoidBody.ManualControls = !entity.IsOwner;
+            body.ManualControls = !entity.IsOwner;
         }
 
         private void OnDestroy()
@@ -202,14 +262,21 @@ namespace ArenaShooter.Entities
 
         #region Combat
 
-        private void CheckForEnemies()
+        private void CheckForTargets()
         {
-            var hit = Utils.Raycast<PlayerController>(new Ray(BodyOriginPosition, transform.forward), weapon.Stats.Range, weaponHitLayerMask, gameObject);
-
-            if (hit.NetworkHit)
+            var hit = Utils.Raycast(new Ray(BodyOriginPosition, body.UpperBodyCurrent), weapon.Stats.Range, Physics.AllLayers, gameObject, QueryTriggerInteraction.Ignore);
+            
+            if (hit.GameObject != null && hit.GameObject.GetComponent<IEntity>() is IEntity entity)
             {
-                weapon.FireWithoutInput();
+                if (entity.EntityTeam == weapon.Stats.TargetEntityTeam)
+                {
+                    weapon.FireWithoutInput();
+
+                    return;
+                }
             }
+
+            weapon.StopFiring();
         }
 
         #endregion

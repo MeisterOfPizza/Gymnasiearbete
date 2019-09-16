@@ -160,8 +160,9 @@ namespace ArenaShooter.Combat
         }
 
         /// <summary>
-        /// Returns <see cref="EntityTeam.Player"/> is it's a support weapon held by the player and <see cref="EntityTeam.Enemy"/> if it's not.
-        /// Returns <see cref="EntityTeam.Enemy"/> is it's a support weapon held by an enemy and <see cref="EntityTeam.Player"/> if it's not.
+        /// Returns the team that the weapon should target.
+        /// Returns <see cref="EntityTeam.Player"/> if it's a support weapon held by the player and <see cref="EntityTeam.Enemy"/> if it's not.
+        /// Returns <see cref="EntityTeam.Enemy"/> if it's a support weapon held by an enemy and <see cref="EntityTeam.Player"/> if it's not.
         /// </summary>
         public EntityTeam TargetEntityTeam
         {

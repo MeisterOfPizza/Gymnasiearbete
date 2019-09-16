@@ -19,7 +19,10 @@ namespace ArenaShooter.Entities
 
         EntityTeam EntityTeam         { get; }
         Vector3    BodyOriginPosition { get; }
+        Vector3    HeadOriginPosition { get; }
         BoltEntity entity             { get; set; }
+
+        GameObject gameObject { get; }
 
     }
 

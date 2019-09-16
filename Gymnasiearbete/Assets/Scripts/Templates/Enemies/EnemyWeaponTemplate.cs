@@ -40,8 +40,8 @@ namespace ArenaShooter.Templates.Enemies
 * Electric weapons can hit its first target at the distance of maxDistance but only jump from target to target that are within range.
 * Support weapons can only support targets that are within range.
 
-NOTE: The enemy will only try to engage players that are within range (the variable)."
-)]
+NOTE: The enemy will only try to engage players that are within range (the variable).
+")]
 
         [SerializeField] private float range       = 10f;
         [SerializeField] private float maxDistance = 50f;
