@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace ArenaShooter.Entities
 {
 
-    enum EntityTeam
+    enum EntityTeam : byte
     {
         Player,
         Enemy
@@ -12,11 +13,16 @@ namespace ArenaShooter.Entities
     interface IEntity : IDamagable, IHealable
     {
 
-        EntityTeam EntityTeam { get; }
+        Action OnDeathCallback   { get; set; }
+        Action OnReviveCallback  { get; set; }
+        Action OnDestroyCallback { get; set; }
 
-        BoltEntity entity { get; set; }
+        EntityTeam EntityTeam         { get; }
+        Vector3    BodyOriginPosition { get; }
+        Vector3    HeadOriginPosition { get; }
+        BoltEntity entity             { get; set; }
 
-        Vector3 BodyOriginPosition { get; }
+        GameObject gameObject { get; }
 
     }
 

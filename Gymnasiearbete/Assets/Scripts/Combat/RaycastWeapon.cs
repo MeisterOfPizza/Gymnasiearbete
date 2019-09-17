@@ -18,12 +18,12 @@ namespace ArenaShooter.Combat
 
         protected override void OnInitialized()
         {
-            hitEffect = Instantiate(BodyTemplate.FirePrefab, transform).GetComponent<ParticleSystem>();
+            hitEffect = Instantiate(Stats.FirePrefab, transform).GetComponent<ParticleSystem>();
         }
 
         protected override void OnFire()
         {
-            var hit = Extensions.Utils.Raycast(new Ray(WeaponHolder.WeaponFirePosition, WeaponHolder.WeaponForward), BarrelTemplate.Range, WeaponHolder.WeaponHitLayerMask, WeaponHolder.gameObject, QueryTriggerInteraction.Ignore);
+            var hit = Extensions.Utils.Raycast(new Ray(WeaponHolder.WeaponFirePosition, WeaponHolder.WeaponForward), Stats.Range, WeaponHolder.WeaponHitLayerMask, WeaponHolder.gameObject, QueryTriggerInteraction.Ignore);
 
             if (hit.HitAnything)
             {

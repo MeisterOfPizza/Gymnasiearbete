@@ -9,8 +9,10 @@ namespace ArenaShooter.Entities
 
         #region Event callbacks
 
-        public Action<TakeDamageEvent> OnTakeDamage { get; set; }
-        public Action<HealEvent>       OnHeal       { get; set; }
+        public Action<TakeDamageEvent>    OnTakeDamage    { get; set; }
+        public Action<HealEvent>          OnHeal          { get; set; }
+        public Action<EntityRevivedEvent> OnEntityRevived { get; set; }
+        public Action<EntityDiedEvent>    OnEntityDied    { get; set; }
 
         #endregion
 
@@ -36,6 +38,22 @@ namespace ArenaShooter.Entities
             if (evnt.Target == Entity.entity)
             {
                 OnHeal?.Invoke(evnt);
+            }
+        }
+
+        public override void OnEvent(EntityRevivedEvent evnt)
+        {
+            if (evnt.RevivedEntity == Entity.entity)
+            {
+                OnEntityRevived?.Invoke(evnt);
+            }
+        }
+
+        public override void OnEvent(EntityDiedEvent evnt)
+        {
+            if (evnt.DeadEntity == Entity.entity)
+            {
+                OnEntityDied?.Invoke(evnt);
             }
         }
 

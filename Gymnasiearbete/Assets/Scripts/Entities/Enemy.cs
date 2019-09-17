@@ -1,6 +1,9 @@
-﻿using ArenaShooter.Controllers;
+﻿using ArenaShooter.AI;
+using ArenaShooter.Combat;
+using ArenaShooter.Controllers;
 using ArenaShooter.Extensions;
 using ArenaShooter.Player;
+using ArenaShooter.Templates.Enemies;
 using ArenaShooter.UI;
 using Bolt;
 using UnityEngine;
@@ -13,22 +16,23 @@ namespace ArenaShooter.Entities
     /// <summary>
     /// Enemies only exist on the server (or host).
     /// </summary>
-    class Enemy : Entity<IEnemyState>
+    class Enemy : Entity<IEnemyState>, IWeaponHolder, IAIAgentBehaviour
     {
 
         #region Editor
 
         [Header("References")]
-        [SerializeField] private ParticleSystem explosionEffect;
+        [SerializeField] private AIAgent aiAgent;
+        [SerializeField] private Body    body;
+
+        [Space]
+        [SerializeField] private Transform renderTransform;
+
+        [Header("Values")]
+        [SerializeField] private LayerMask weaponHitLayerMask;
 
         [Header("Prefabs")]
         [SerializeField] private GameObject uiEnemyGameStatsPrefab;
-
-        [Header("Values")]
-        [SerializeField] private int startHealth = 100; // TEST DATA
-
-        [Space]
-        [SerializeField] private HealableBy healableBy = HealableBy.Enemy;
 
         #endregion
 
@@ -46,80 +50,178 @@ namespace ArenaShooter.Entities
         {
             get
             {
-                return healableBy;
+                return HealableBy.Enemy;
             }
         }
 
         #endregion
 
-        #region Private variables
+        #region IWeaponHolder
 
-        private UIEnemyGameStats uiEnemyGameStats;
+        public Vector3 WeaponFirePosition
+        {
+            get
+            {
+                return transform.position + Vector3.up;
+            }
+        }
+
+        public Vector3 WeaponForward
+        {
+            get
+            {
+                return body.UpperBodyCurrent;
+            }
+        }
+
+        public LayerMask WeaponHitLayerMask
+        {
+            get
+            {
+                return weaponHitLayerMask;
+            }
+        }
+
+        public GlobalTargets WeaponTargets
+        {
+            get
+            {
+                return GlobalTargets.Everyone;
+            }
+        }
 
         #endregion
 
-        private void Awake()
+        #region IAIAgentBehaviour
+
+        public EntityTeam SearchTargetTeam
         {
-            uiEnemyGameStats = Instantiate(uiEnemyGameStatsPrefab, UIEnemyGameStatsController.Singleton.Container).GetComponent<UIEnemyGameStats>();
-            uiEnemyGameStats.Initialize(this);
+            get
+            {
+                return weapon.Stats.TargetEntityTeam;
+            }
+        }
+
+        public float SearchInterval
+        {
+            get
+            {
+                return enemyTemplate.TargetSearchFrequency;
+            }
+        }
+
+        public float SearchThreshold
+        {
+            get
+            {
+                return weapon.Stats.Range * 0.9f;
+            }
+        }
+
+        public float StoppingDistance
+        {
+            get
+            {
+                return weapon.Stats.Range / 2f;
+            }
+        }
+
+        public float MovementSpeed
+        {
+            get
+            {
+                return enemyTemplate.MovementSpeed;
+            }
+        }
+
+        public float TurnSpeed
+        {
+            get
+            {
+                return enemyTemplate.TurnSpeed;
+            }
+        }
+
+        public Body Body
+        {
+            get
+            {
+                return body;
+            }
+        }
+
+        #endregion
+
+        #region Protected variables
+
+        protected EnemyTemplate enemyTemplate;
+        protected Weapon        weapon;
+
+        protected UIEnemyGameStats uiEnemyGameStats;
+
+        #endregion
+
+        #region Game cycle
+
+        public void Initialize(ushort enemyTemplateId)
+        {
+            state.EnemyTemplateId = enemyTemplateId;
         }
 
         private void Update()
         {
-            uiEnemyGameStats.transform.position = Camera.main.WorldToScreenPoint(transform.position);
-        }
+            uiEnemyGameStats.transform.position = MainCameraController.MainCamera.WorldToScreenPoint(transform.position);
 
-        public LayerMask hitLayerMask;
-        private void TestShoot()
-        {
-            Ray ray = new Ray(transform.position + Vector3.up, transform.forward);
-            var hit = Utils.Raycast<PlayerController>(ray, 100f, hitLayerMask, gameObject, QueryTriggerInteraction.Ignore);
-            if (hit.HitAnything)
+            if (!entity.IsOwner)
             {
-                if (hit.NetworkHit)
-                {
-                    var takeDamageEvent = TakeDamageEvent.Create(GlobalTargets.Everyone, ReliabilityModes.ReliableOrdered);
-                    takeDamageEvent.Target      = hit.Hitbox.GetComponent<IEntity>().entity;
-                    takeDamageEvent.DamageTaken = 10;
-                    takeDamageEvent.Send();
-                }
-
-                var fireEvent     = WeaponFireEffectEvent.Create(entity);
-                fireEvent.Shooter = entity;
-                fireEvent.Point   = hit.HitPoint;
-                fireEvent.Up      = hit.HitNormal;
-                fireEvent.Send();
+                body.UpperBodyCurrent = state.UpperBodyNormal;
+                body.LowerBodyCurrent = state.LowerBodyNormal;
             }
         }
 
-        public override void OnEvent(WeaponFireEffectEvent evnt)
+        private void FixedUpdate()
         {
-            if (evnt.Shooter == entity)
+            if (entity.IsOwner)
             {
-                VFXExplosion(evnt.Point, evnt.Up);
+                CheckForTargets();
             }
         }
 
-        private void VFXExplosion(Vector3 position, Vector3 up)
+        public override void SimulateOwner()
         {
-            explosionEffect.transform.position = position;
-            explosionEffect.transform.up       = up;
-            explosionEffect.Play(true);
+            state.UpperBodyNormal = body.UpperBodyCurrent;
+            state.LowerBodyNormal = body.LowerBodyCurrent;
         }
 
         public override void Attached()
         {
+            this.enemyTemplate = EnemyTemplateController.Singleton.GetEnemyTemplate((ushort)state.EnemyTemplateId);
+            this.weapon        = WeaponController.Singleton.CreateWeapon(enemyTemplate.GetEnemyWeaponTemplate(), transform);
+            this.weapon.EquipWeapon(this);
+
+            uiEnemyGameStats = Instantiate(uiEnemyGameStatsPrefab, UIEnemyGameStatsController.Singleton.Container).GetComponent<UIEnemyGameStats>();
+            uiEnemyGameStats.Initialize(this);
+            uiEnemyGameStats.transform.position = MainCameraController.MainCamera.WorldToScreenPoint(transform.position);
+
+            state.SetTransforms(state.Transform, transform, renderTransform);
+
             if (entity.IsOwner)
             {
-                state.SetTransforms(state.Transform, transform);
-                state.Health = startHealth;
+                state.Health           = enemyTemplate.Health;
+                state.WeaponTemplateId = weapon.Stats.GetEnemyWeaponTemplateId();
 
                 entity.TakeControl();
-
-                InvokeRepeating("TestShoot", 1f, 1f);
+                
+                aiAgent.Initialize(this);
+            }
+            else
+            {
+                Destroy(aiAgent);
             }
 
             state.AddCallback("Health", uiEnemyGameStats.UpdateUI);
+
+            body.ManualControls = !entity.IsOwner;
         }
 
         private void OnDestroy()
@@ -129,6 +231,75 @@ namespace ArenaShooter.Entities
                 Destroy(uiEnemyGameStats.gameObject);
             }
         }
+
+        #endregion
+
+        #region Life
+
+        public override void Revive(EntityRevivedEvent @event)
+        {
+            base.Revive(@event);
+
+            if (entity.IsOwner)
+            {
+                state.Health = enemyTemplate.Health;
+
+                // TODO: Reset weapon and reload it instantly.
+            }
+
+            uiEnemyGameStats.gameObject.SetActive(true);
+            uiEnemyGameStats.UpdateUI();
+        }
+
+        public override void Die(EntityDiedEvent @event)
+        {
+            base.Die(@event);
+
+            uiEnemyGameStats.gameObject.SetActive(false);
+        }
+
+        #endregion
+
+        #region Combat
+
+        private void CheckForTargets()
+        {
+            var hit = Utils.Raycast(new Ray(BodyOriginPosition, body.UpperBodyCurrent), weapon.Stats.Range, Physics.AllLayers, gameObject, QueryTriggerInteraction.Ignore);
+            
+            if (hit.GameObject != null && hit.GameObject.GetComponent<IEntity>() is IEntity entity)
+            {
+                if (entity.EntityTeam == weapon.Stats.TargetEntityTeam)
+                {
+                    weapon.FireWithoutInput();
+
+                    return;
+                }
+            }
+
+            weapon.StopFiring();
+        }
+
+        #endregion
+
+        #region OnEvent
+
+        public override void OnEvent(WeaponFireEffectEvent evnt)
+        {
+            if (evnt.Shooter == entity)
+            {
+                weapon.OnEvent(evnt);
+            }
+        }
+
+        public override void OnEvent(WeaponSupportBeginFireEffectEvent evnt)
+        {
+            if (evnt.Shooter == entity)
+            {
+                weapon.OnEvent(evnt);
+            }
+        }
+
+        #endregion
 
     }
 

@@ -5,7 +5,8 @@
     {
 
         void TakeDamage(TakeDamageEvent takeDamageEvent);
-        void Die();
+        void Revive(EntityRevivedEvent @event);
+        void Die(EntityDiedEvent @event);
 
     }
 

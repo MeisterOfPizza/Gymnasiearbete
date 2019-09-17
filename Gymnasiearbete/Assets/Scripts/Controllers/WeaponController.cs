@@ -1,4 +1,5 @@
 ﻿using ArenaShooter.Combat;
+using ArenaShooter.Templates.Enemies;
 using ArenaShooter.Templates.Weapons;
 using System.Linq;
 using UnityEngine;
@@ -39,6 +40,35 @@ namespace ArenaShooter.Controllers
 
         #endregion
 
+        public Weapon CreateWeapon(EnemyWeaponTemplate enemyWeaponTemplate, Transform parent)
+        {
+            GameObject weaponGameObject = new GameObject("Weapon");
+            weaponGameObject.transform.SetParent(parent, false);
+            Weapon weapon = null;
+
+            switch (enemyWeaponTemplate.OutputType)
+            {
+                case WeaponOutputType.Raycasting:
+                    weapon = weaponGameObject.AddComponent<RaycastWeapon>();
+                    break;
+                case WeaponOutputType.Projectile:
+                    weapon = weaponGameObject.AddComponent<ProjectileWeapon>();
+                    break;
+                case WeaponOutputType.Electric:
+                    weapon = weaponGameObject.AddComponent<ElectricWeapon>();
+                    break;
+                case WeaponOutputType.Support:
+                    weapon = weaponGameObject.AddComponent<SupportWeapon>();
+                    break;
+                default:
+                    Debug.LogWarning("Weapon could not be built with the three given part templates.");
+                    return null;
+            }
+
+            weapon.Initialize(new WeaponStats(enemyWeaponTemplate));
+            return weapon;
+        }
+
         public Weapon CreateWeapon(StockTemplate stockTemplate, BodyTemplate bodyTemplate, BarrelTemplate barrelTemplate, Transform parent)
         {
             if (stockTemplate.OutputType == bodyTemplate.OutputType && bodyTemplate.OutputType == barrelTemplate.OutputType)
@@ -49,16 +79,16 @@ namespace ArenaShooter.Controllers
 
                 switch (stockTemplate.OutputType)
                 {
-                    case WeaponPartTemplateOutputType.Raycasting:
+                    case WeaponOutputType.Raycasting:
                         weapon = weaponGameObject.AddComponent<RaycastWeapon>();
                         break;
-                    case WeaponPartTemplateOutputType.Projectile:
+                    case WeaponOutputType.Projectile:
                         weapon = weaponGameObject.AddComponent<ProjectileWeapon>();
                         break;
-                    case WeaponPartTemplateOutputType.Electric:
+                    case WeaponOutputType.Electric:
                         weapon = weaponGameObject.AddComponent<ElectricWeapon>();
                         break;
-                    case WeaponPartTemplateOutputType.Support:
+                    case WeaponOutputType.Support:
                         weapon = weaponGameObject.AddComponent<SupportWeapon>();
                         break;
                     default:
@@ -66,7 +96,7 @@ namespace ArenaShooter.Controllers
                         return null;
                 }
 
-                weapon.Initialize(stockTemplate, bodyTemplate, barrelTemplate);
+                weapon.Initialize(new WeaponStats(stockTemplate, bodyTemplate, barrelTemplate));
                 return weapon;
             }
             else
