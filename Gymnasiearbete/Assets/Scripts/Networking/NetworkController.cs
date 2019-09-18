@@ -19,14 +19,25 @@ namespace ArenaShooter.Networking
 
         #endregion
 
+        #region Private Variables
+
+        private bool serverIsOnline = false;
+        private bool sessionIsFound = false;
+
+        #endregion
+
         public void StartServer()
-        {
+        {  
             BoltLauncher.StartServer(new BoltConfig() { serverConnectionLimit = 4 });
+            serverIsOnline = true;
         }
 
         public void StartClient()
         {
-            BoltLauncher.StartClient();
+            if (serverIsOnline)
+            {
+                BoltLauncher.StartClient();
+            }
         }
 
         public override void BoltStartDone()
@@ -45,12 +56,25 @@ namespace ArenaShooter.Networking
             {
                 UdpSession photonSession = session.Value;
 
-                if (photonSession.Source == UdpSessionSource.Photon)
+                if (photonSession.Source == UdpSessionSource.Photon && photonSession.ConnectionsCurrent < photonSession.ConnectionsMax)
                 {
                     BoltNetwork.Connect(photonSession);
+                    sessionIsFound = true;
                 }
             }
         }
+
+        #region Getters
+
+        public bool SessionIsFound
+        {
+            get
+            {
+                return sessionIsFound;
+            }
+        }
+
+        #endregion
 
     }
 
