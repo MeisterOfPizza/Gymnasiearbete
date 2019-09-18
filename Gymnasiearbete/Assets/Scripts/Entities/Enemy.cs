@@ -2,7 +2,6 @@
 using ArenaShooter.Combat;
 using ArenaShooter.Controllers;
 using ArenaShooter.Extensions;
-using ArenaShooter.Player;
 using ArenaShooter.Templates.Enemies;
 using ArenaShooter.UI;
 using Bolt;
@@ -161,12 +160,61 @@ namespace ArenaShooter.Entities
 
         #endregion
 
-        #region Game cycle
+        #region Initializing
 
+        /// <summary>
+        /// Initializes the enemy which references a template (using <paramref name="enemyTemplateId"/>) and creates the enemy's weapon.
+        /// </summary>
         public void Initialize(ushort enemyTemplateId)
         {
-            state.EnemyTemplateId = enemyTemplateId;
+            this.enemyTemplate    = EnemyTemplateController.Singleton.GetEnemyTemplate((ushort)state.EnemyTemplateId);
+            this.weapon           = WeaponController.Singleton.CreateWeapon(enemyTemplate.GetEnemyWeaponTemplate(), transform);
+
+            state.Health           = enemyTemplate.Health;
+            state.EnemyTemplateId  = enemyTemplateId;
+            state.WeaponTemplateId = weapon.Stats.GetEnemyWeaponTemplateId();
+
+            aiAgent.Initialize(this);
         }
+
+        protected override void Start()
+        {
+            base.Start();
+
+            if (!entity.IsOwner)
+            {
+                this.enemyTemplate = EnemyTemplateController.Singleton.GetEnemyTemplate((ushort)state.EnemyTemplateId);
+                this.weapon        = WeaponController.Singleton.CreateWeapon(WeaponController.Singleton.GetEnemyWeaponTemplate((ushort)state.WeaponTemplateId), transform);
+            }
+
+            this.weapon.EquipWeapon(this);
+        }
+
+        public override void Attached()
+        {
+            uiEnemyGameStats = Instantiate(uiEnemyGameStatsPrefab, UIEnemyGameStatsController.Singleton.Container).GetComponent<UIEnemyGameStats>();
+            uiEnemyGameStats.Initialize(this);
+            uiEnemyGameStats.transform.position = MainCameraController.MainCamera.WorldToScreenPoint(transform.position);
+
+            state.SetTransforms(state.Transform, transform, renderTransform);
+
+            if (entity.IsOwner)
+            {
+                entity.TakeControl();
+            }
+            else
+            {
+                Destroy(aiAgent);
+            }
+
+            state.AddCallback("Health", uiEnemyGameStats.UpdateUI);
+
+            body.ManualControls = !entity.IsOwner;
+        }
+
+        #endregion
+
+        #region Updating
 
         private void Update()
         {
@@ -193,36 +241,9 @@ namespace ArenaShooter.Entities
             state.LowerBodyNormal = body.LowerBodyCurrent;
         }
 
-        public override void Attached()
-        {
-            this.enemyTemplate = EnemyTemplateController.Singleton.GetEnemyTemplate((ushort)state.EnemyTemplateId);
-            this.weapon        = WeaponController.Singleton.CreateWeapon(enemyTemplate.GetEnemyWeaponTemplate(), transform);
-            this.weapon.EquipWeapon(this);
+        #endregion
 
-            uiEnemyGameStats = Instantiate(uiEnemyGameStatsPrefab, UIEnemyGameStatsController.Singleton.Container).GetComponent<UIEnemyGameStats>();
-            uiEnemyGameStats.Initialize(this);
-            uiEnemyGameStats.transform.position = MainCameraController.MainCamera.WorldToScreenPoint(transform.position);
-
-            state.SetTransforms(state.Transform, transform, renderTransform);
-
-            if (entity.IsOwner)
-            {
-                state.Health           = enemyTemplate.Health;
-                state.WeaponTemplateId = weapon.Stats.GetEnemyWeaponTemplateId();
-
-                entity.TakeControl();
-                
-                aiAgent.Initialize(this);
-            }
-            else
-            {
-                Destroy(aiAgent);
-            }
-
-            state.AddCallback("Health", uiEnemyGameStats.UpdateUI);
-
-            body.ManualControls = !entity.IsOwner;
-        }
+        #region Destroying
 
         private void OnDestroy()
         {
@@ -287,7 +308,7 @@ namespace ArenaShooter.Entities
         {
             if (evnt.Shooter == entity)
             {
-                weapon.OnEvent(evnt);
+                weapon?.OnEvent(evnt);
             }
         }
 
@@ -295,7 +316,7 @@ namespace ArenaShooter.Entities
         {
             if (evnt.Shooter == entity)
             {
-                weapon.OnEvent(evnt);
+                weapon?.OnEvent(evnt);
             }
         }
 

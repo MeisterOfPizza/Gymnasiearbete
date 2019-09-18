@@ -14,7 +14,7 @@ namespace ArenaShooter.Controllers
 
         #region Editor
 
-        [Header("References")]
+        [Header("Player Weapon Part Templates")]
         [SerializeField] private StockTemplate[] stockTemplates;
 
         [Space]
@@ -23,7 +23,10 @@ namespace ArenaShooter.Controllers
         [Space]
         [SerializeField] private BarrelTemplate[] barrelTemplates;
 
-        [Space]
+        [Header("Enemy Weapon Templates")]
+        [SerializeField] private EnemyWeaponTemplate[] enemyWeaponTemplates;
+
+        [Header("References")]
         [SerializeField] private Transform projectileContainer;
 
         #endregion
@@ -40,34 +43,7 @@ namespace ArenaShooter.Controllers
 
         #endregion
 
-        public Weapon CreateWeapon(EnemyWeaponTemplate enemyWeaponTemplate, Transform parent)
-        {
-            GameObject weaponGameObject = new GameObject("Weapon");
-            weaponGameObject.transform.SetParent(parent, false);
-            Weapon weapon = null;
-
-            switch (enemyWeaponTemplate.OutputType)
-            {
-                case WeaponOutputType.Raycasting:
-                    weapon = weaponGameObject.AddComponent<RaycastWeapon>();
-                    break;
-                case WeaponOutputType.Projectile:
-                    weapon = weaponGameObject.AddComponent<ProjectileWeapon>();
-                    break;
-                case WeaponOutputType.Electric:
-                    weapon = weaponGameObject.AddComponent<ElectricWeapon>();
-                    break;
-                case WeaponOutputType.Support:
-                    weapon = weaponGameObject.AddComponent<SupportWeapon>();
-                    break;
-                default:
-                    Debug.LogWarning("Weapon could not be built with the three given part templates.");
-                    return null;
-            }
-
-            weapon.Initialize(new WeaponStats(enemyWeaponTemplate));
-            return weapon;
-        }
+        #region Player WeaponPartTemplates
 
         public Weapon CreateWeapon(StockTemplate stockTemplate, BodyTemplate bodyTemplate, BarrelTemplate barrelTemplate, Transform parent)
         {
@@ -120,6 +96,46 @@ namespace ArenaShooter.Controllers
         {
             return barrelTemplates.FirstOrDefault(t => t.TemplateId == id);
         }
+
+        #endregion
+
+        #region EnemyWeaponTemplates
+
+        public Weapon CreateWeapon(EnemyWeaponTemplate enemyWeaponTemplate, Transform parent)
+        {
+            GameObject weaponGameObject = new GameObject("Weapon");
+            weaponGameObject.transform.SetParent(parent, false);
+            Weapon weapon = null;
+
+            switch (enemyWeaponTemplate.OutputType)
+            {
+                case WeaponOutputType.Raycasting:
+                    weapon = weaponGameObject.AddComponent<RaycastWeapon>();
+                    break;
+                case WeaponOutputType.Projectile:
+                    weapon = weaponGameObject.AddComponent<ProjectileWeapon>();
+                    break;
+                case WeaponOutputType.Electric:
+                    weapon = weaponGameObject.AddComponent<ElectricWeapon>();
+                    break;
+                case WeaponOutputType.Support:
+                    weapon = weaponGameObject.AddComponent<SupportWeapon>();
+                    break;
+                default:
+                    Debug.LogWarning("Weapon could not be built with the given enemy weapon template.");
+                    return null;
+            }
+
+            weapon.Initialize(new WeaponStats(enemyWeaponTemplate));
+            return weapon;
+        }
+
+        public EnemyWeaponTemplate GetEnemyWeaponTemplate(ushort id)
+        {
+            return enemyWeaponTemplates.FirstOrDefault(t => t.TemplateId == id);
+        }
+
+        #endregion
 
     }
 
