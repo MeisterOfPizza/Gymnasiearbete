@@ -2,7 +2,6 @@
 using ArenaShooter.Combat;
 using ArenaShooter.Controllers;
 using ArenaShooter.Extensions;
-using ArenaShooter.Player;
 using ArenaShooter.Templates.Enemies;
 using ArenaShooter.UI;
 using Bolt;
