@@ -3,8 +3,8 @@
 namespace ArenaShooter.Networking
 {
 
-    [BoltGlobalBehaviour]
-    class NetworkCallbacks : GlobalEventListener
+    [BoltGlobalBehaviour(BoltScenes.Game)]
+    class NetworkGame : GlobalEventListener
     {
 
         public override void SceneLoadLocalDone(string scene)

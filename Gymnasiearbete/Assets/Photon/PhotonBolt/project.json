@@ -594,6 +594,7 @@
         {
           "Name": "NetworkId",
           "Enabled": true,
+          "Expanded": true,
           "Comment": "",
           "PropertyType": {
             "$type": "Bolt.Compiler.PropertyTypeNetworkId, bolt.compiler"
@@ -1261,7 +1262,6 @@
         {
           "Name": "Color",
           "Enabled": true,
-          "Expanded": true,
           "ReplicationMode": 1,
           "Priority": 1,
           "PropertyType": {
@@ -1278,7 +1278,6 @@
         {
           "Name": "Name",
           "Enabled": true,
-          "Expanded": true,
           "ReplicationMode": 1,
           "Priority": 1,
           "PropertyType": {
@@ -1296,11 +1295,27 @@
         {
           "Name": "Ready",
           "Enabled": true,
-          "Expanded": true,
           "ReplicationMode": 1,
           "Priority": 1,
           "PropertyType": {
             "$type": "Bolt.Compiler.PropertyTypeBool, bolt.compiler"
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
+            "ExtrapolationErrorTolerance": 0.25,
+            "_ExtrapolationCorrectionFrames": 6,
+            "ExtrapolationMaxFrames": 9,
+            "SnapMagnitude": 10.0
+          }
+        },
+        {
+          "Name": "Weapon",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeObject, bolt.compiler",
+            "StructGuid": "b0b61666-381d-47cb-be96-62ee2f895852"
           },
           "AssetSettings": {
             "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
@@ -1442,7 +1457,6 @@
         {
           "Name": "Time",
           "Enabled": true,
-          "Expanded": true,
           "ReplicationMode": 1,
           "Priority": 1,
           "PropertyType": {
@@ -1454,7 +1468,8 @@
           }
         }
       ],
-      "Name": "LobbyCountdown",
+      "GlobalSenders": 3,
+      "Name": "LobbyCountdownEvent",
       "Guid": "aaf1dcec-7cca-4b38-a9a9-f6140d8ee0c7",
       "Groups": [
         "samples"
@@ -1463,7 +1478,9 @@
     {
       "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
       "Properties": [],
-      "Name": "LobbyPlayerKick",
+      "EntitySenders": 3,
+      "GlobalSenders": 1,
+      "Name": "LobbyPlayerKickEvent",
       "Guid": "a812faeb-a700-4c06-b2e7-2f3d3864b084",
       "Groups": [
         "samples"
@@ -2185,6 +2202,16 @@
       "EntitySenders": 3,
       "Name": "EntityRevivedEvent",
       "Guid": "54417df6-b65b-4859-915e-3e95a51d02ba",
+      "Groups": [
+        "samples"
+      ]
+    },
+    {
+      "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
+      "Properties": [],
+      "GlobalSenders": 3,
+      "Name": "LobbyMatchStartEvent",
+      "Guid": "f5cd51e0-8df4-4c3d-8cd2-315cb7d000c2",
       "Groups": [
         "samples"
       ]

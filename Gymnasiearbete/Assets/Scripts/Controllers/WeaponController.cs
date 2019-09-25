@@ -15,12 +15,15 @@ namespace ArenaShooter.Controllers
         #region Editor
 
         [Header("Player Weapon Part Templates")]
+        [SerializeField] private StockTemplate   defaultStockTemplate;
         [SerializeField] private StockTemplate[] stockTemplates;
 
         [Space]
+        [SerializeField] private BodyTemplate   defaultBodyTemplate;
         [SerializeField] private BodyTemplate[] bodyTemplates;
 
         [Space]
+        [SerializeField] private BarrelTemplate   defaultBarrelTemplate;
         [SerializeField] private BarrelTemplate[] barrelTemplates;
 
         [Header("Enemy Weapon Templates")]
@@ -42,6 +45,11 @@ namespace ArenaShooter.Controllers
         }
 
         #endregion
+
+        protected override void OnAwake()
+        {
+            DontDestroyOnLoad(gameObject);
+        }
 
         #region Player WeaponPartTemplates
 
@@ -84,17 +92,23 @@ namespace ArenaShooter.Controllers
 
         public StockTemplate GetStockTemplate(ushort id)
         {
-            return stockTemplates.FirstOrDefault(t => t.TemplateId == id);
+            var template = stockTemplates.FirstOrDefault(t => t.TemplateId == id);
+
+            return template ?? defaultStockTemplate;
         }
 
         public BodyTemplate GetBodyTemplate(ushort id)
         {
-            return bodyTemplates.FirstOrDefault(t => t.TemplateId == id);
+            var template = bodyTemplates.FirstOrDefault(t => t.TemplateId == id);
+
+            return template ?? defaultBodyTemplate;
         }
 
         public BarrelTemplate GetBarrelTemplate(ushort id)
         {
-            return barrelTemplates.FirstOrDefault(t => t.TemplateId == id);
+            var template = barrelTemplates.FirstOrDefault(t => t.TemplateId == id);
+
+            return template ?? defaultBarrelTemplate;
         }
 
         #endregion

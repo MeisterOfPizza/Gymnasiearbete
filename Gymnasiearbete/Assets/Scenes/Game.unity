@@ -4412,7 +4412,7 @@ Transform:
   - {fileID: 1284595210}
   - {fileID: 1440999964}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &638280521
 GameObject:
@@ -5475,36 +5475,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &800477128
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 800477129}
-  m_Layer: 0
-  m_Name: Projectile Container
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &800477129
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 800477128}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &801765891
 GameObject:
   m_ObjectHideFlags: 0
@@ -11621,7 +11591,6 @@ GameObject:
   - component: {fileID: 1928587506}
   - component: {fileID: 1928587508}
   - component: {fileID: 1928587509}
-  - component: {fileID: 1928587510}
   m_Layer: 0
   m_Name: Controllers
   m_TagString: Untagged
@@ -11761,39 +11730,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf1e2e286953ff047914d8d4e96fb9b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1928587510
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1928587500}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47574d898deb1214ea0d4963103ab37a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stockTemplates:
-  - {fileID: 11400000, guid: 0fe2ec43b605de941b1c80577b4f2b47, type: 2}
-  - {fileID: 11400000, guid: 6ba8d1edd0a81ac438b67779da473431, type: 2}
-  - {fileID: 11400000, guid: 28bbb2ed6d534ea4faebd45201650bb6, type: 2}
-  - {fileID: 11400000, guid: 22acf60e8f44d374da45f04b88362bd8, type: 2}
-  bodyTemplates:
-  - {fileID: 11400000, guid: 0a65ac037dd240a41aa72bd2b29f61fc, type: 2}
-  - {fileID: 11400000, guid: 01690448ddc35e747908dc5e5342fa9f, type: 2}
-  - {fileID: 11400000, guid: ba1a5a06ea5d6ff47a28625a84054ddf, type: 2}
-  - {fileID: 11400000, guid: 67354888ad107714eb22cad3d1fe5718, type: 2}
-  barrelTemplates:
-  - {fileID: 11400000, guid: c88ea1effd6a5894cb5647721e5908a8, type: 2}
-  - {fileID: 11400000, guid: 94dc7c8922d36b94ba50200b258b77ba, type: 2}
-  - {fileID: 11400000, guid: 4d727e91e1965ba46b1bfb7927b19378, type: 2}
-  - {fileID: 11400000, guid: 43337d03633dab849ae3dbbca75c59b2, type: 2}
-  enemyWeaponTemplates:
-  - {fileID: 11400000, guid: 96ff3ba563cd2194aba42b1036123d3e, type: 2}
-  - {fileID: 11400000, guid: 3caec7d7845a44d4cb49c680152f68ef, type: 2}
-  - {fileID: 11400000, guid: b92b093200da4af40ba848ee4f97f35a, type: 2}
-  - {fileID: 11400000, guid: c7d1fe4055b4f2248acf07ac86dd63d5, type: 2}
-  projectileContainer: {fileID: 800477129}
 --- !u!1 &2060413742
 GameObject:
   m_ObjectHideFlags: 0

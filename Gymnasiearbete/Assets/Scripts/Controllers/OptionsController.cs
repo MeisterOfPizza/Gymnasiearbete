@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 
+#pragma warning disable 0649
+
 namespace ArenaShooter.Controllers
 {
 

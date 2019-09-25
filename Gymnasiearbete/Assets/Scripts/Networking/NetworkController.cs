@@ -1,43 +1,57 @@
-﻿using Bolt;
+﻿using ArenaShooter.Controllers;
+using ArenaShooter.Networking.Protocols;
+using Bolt;
 using Bolt.Matchmaking;
 using System;
 using UdpKit;
-using UnityEngine;
 
 #pragma warning disable 0649
 
 namespace ArenaShooter.Networking
 {
-
+    
     class NetworkController : GlobalEventListener
     {
 
-        #region Editor
-
-        [Header("References")]
-        [SerializeField] private string gameScene;
-
-        #endregion
-
-        #region Private Variables
-
-        private bool serverIsOnline = false;
-        private bool sessionIsFound = false;
+        #region Private variables
+        
+        private bool sessionListUpdated = false;
 
         #endregion
 
         public void StartServer()
         {  
-            BoltLauncher.StartServer(new BoltConfig() { serverConnectionLimit = 4 });
-            serverIsOnline = true;
+            if (BoltNetwork.IsClient)
+            {
+                BoltLauncher.Shutdown();
+            }
+
+            BoltLauncher.StartServer();
         }
 
         public void StartClient()
         {
-            if (serverIsOnline)
+            if (!BoltNetwork.IsRunning)
             {
+                sessionListUpdated = false;
+
                 BoltLauncher.StartClient();
             }
+        }
+
+        public void Disconnect()
+        {
+            if (BoltNetwork.IsRunning)
+            {
+                BoltLauncher.Shutdown();
+            }
+        }
+
+        public override void BoltStartBegin()
+        {
+            BoltNetwork.RegisterTokenClass<UserToken>();
+            BoltNetwork.RegisterTokenClass<AuthResultToken>();
+            BoltNetwork.RegisterTokenClass<ServerInfoToken>();
         }
 
         public override void BoltStartDone()
@@ -45,36 +59,36 @@ namespace ArenaShooter.Networking
             if (BoltNetwork.IsServer)
             {
                 string sessionId = Guid.NewGuid().ToString();
-
-                BoltMatchmaking.CreateSession(sessionId, sceneToLoad: gameScene);
+                
+                BoltMatchmaking.CreateSession(sessionId, UIServerSetupController.Singleton.GetServerInfoToken());
             }
         }
 
         public override void SessionListUpdated(Map<Guid, UdpSession> sessionList)
         {
-            foreach (var session in sessionList)
+            if (!sessionListUpdated)
             {
-                UdpSession photonSession = session.Value;
+                sessionListUpdated = true;
 
-                if (photonSession.Source == UdpSessionSource.Photon && photonSession.ConnectionsCurrent < photonSession.ConnectionsMax)
+                UIServerBrowserController.Singleton.ClearUIServerBrowser();
+
+                foreach (var session in sessionList)
                 {
-                    BoltNetwork.Connect(photonSession);
-                    sessionIsFound = true;
+                    UdpSession photonSession = session.Value;
+
+                    if (photonSession.Source == UdpSessionSource.Photon && photonSession.ConnectionsCurrent < photonSession.ConnectionsMax)
+                    {
+                        ServerInfo serverInfo = new ServerInfo(photonSession);
+
+                        // Don't show the server if it's invite only.
+                        if (!serverInfo.Info.ServerIsInviteOnly)
+                        {
+                            UIServerBrowserController.Singleton.AddUIServerBrowserInfo(serverInfo);
+                        }
+                    }
                 }
             }
         }
-
-        #region Getters
-
-        public bool SessionIsFound
-        {
-            get
-            {
-                return sessionIsFound;
-            }
-        }
-
-        #endregion
 
     }
 

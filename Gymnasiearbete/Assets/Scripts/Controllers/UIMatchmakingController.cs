@@ -5,19 +5,21 @@ using UnityEngine.UI;
 
 namespace ArenaShooter.Controllers
 {
+
     class UIMatchmakingController : Controller<UIMatchmakingController>
     {
+
         #region Editor
 
-        [SerializeField] private Button join;
-        [SerializeField] private Button host;
+        [SerializeField] private Button            join;
+        [SerializeField] private Button            host;
         [SerializeField] private NetworkController networkController;
 
         #endregion
 
         #region Private variables
 
-        private float waitTime   = 5f;
+        private float       waitTime = 5f;
         private IEnumerator method;
 
         #endregion
@@ -26,33 +28,35 @@ namespace ArenaShooter.Controllers
 
         public void ButtonClick()
         {
-            method = ReActivateJoinButton();
+            //method = ReActivateJoinButton();
             StartCoroutine(method);
         }
 
+        /*
         IEnumerator ReActivateJoinButton()
         {
             while (!networkController.SessionIsFound && waitTime > 0)
             {
                 waitTime -= Time.deltaTime;
+
                 yield return new WaitForEndOfFrame();
-                
             }
-            if(!networkController.SessionIsFound)
+
+            if (!networkController.SessionIsFound)
             {
                 join.interactable = true;
                 host.interactable = true;
+
                 if (BoltNetwork.IsRunning)
                 {
-                    BoltNetwork.Shutdown();
+                    //BoltNetwork.Shutdown();
                 }
-                
             }
-            
         }
+        */
 
         #endregion
+
     }
+
 }
-
-
