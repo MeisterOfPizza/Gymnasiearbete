@@ -72,6 +72,11 @@ namespace ArenaShooter.Extensions
 
         #endregion
 
+        public static void ClearInvitedUsers()
+        {
+            invitedUserIds.Clear();
+        }
+
         public static void AddInvitedUser(Guid userId)
         {
             invitedUserIds.Add(userId);

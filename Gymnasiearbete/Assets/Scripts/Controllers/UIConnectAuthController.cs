@@ -1,8 +1,12 @@
 ﻿using ArenaShooter.Extensions;
 using ArenaShooter.Networking.Protocols;
+using ArenaShooter.UI;
 using TMPro;
 using UdpKit;
 using UnityEngine;
+using UnityEngine.UI;
+
+#pragma warning disable 0649
 
 namespace ArenaShooter.Controllers
 {
@@ -16,7 +20,12 @@ namespace ArenaShooter.Controllers
         [SerializeField] private GameObject connectAuthWindow;
 
         [Space]
+        [SerializeField] private CanvasGroup canvasGroup;
+
+        [Space]
         [SerializeField] private TMP_InputField passwordInputField;
+        [SerializeField] private GameObject     authIncorrectText;
+        [SerializeField] private UILoader       connectionLoader;
 
         #endregion
 
@@ -37,7 +46,7 @@ namespace ArenaShooter.Controllers
         private bool isAuthOpen;
 
         private UdpSession  udpSession;
-        private CanvasGroup canvasGroup;
+        private CanvasGroup backgroundCanvasGroup;
 
         #endregion
 
@@ -49,15 +58,19 @@ namespace ArenaShooter.Controllers
             passwordInputField.contentType         = TMP_InputField.ContentType.Alphanumeric;
         }
 
-        public void OpenConnectAuthWindow(UdpSession udpSession, CanvasGroup canvasGroup)
+        public void OpenConnectAuthWindow(UdpSession udpSession, CanvasGroup backgroundCanvasGroup)
         {
             connectAuthWindow.SetActive(true);
 
             passwordInputField.text = "";
+            authIncorrectText.gameObject.SetActive(false);
+            canvasGroup.interactable = true;
 
-            this.udpSession               = udpSession;
-            this.canvasGroup              = canvasGroup;
-            this.canvasGroup.interactable = false;
+            connectionLoader.Stop();
+
+            this.udpSession                         = udpSession;
+            this.backgroundCanvasGroup              = backgroundCanvasGroup;
+            this.backgroundCanvasGroup.interactable = false;
 
             this.isAuthOpen = true;
         }
@@ -68,15 +81,26 @@ namespace ArenaShooter.Controllers
 
             isAuthOpen = false;
 
-            if (canvasGroup != null)
+            if (backgroundCanvasGroup != null)
             {
-                canvasGroup.interactable = true;
+                backgroundCanvasGroup.interactable = true;
             }
         }
 
         public void AttemptToConnectToSession()
         {
             BoltNetwork.Connect(udpSession, new UserToken(UserUtils.GetUserId(), passwordInputField.text));
+
+            canvasGroup.interactable = false;
+            authIncorrectText.gameObject.SetActive(false);
+            connectionLoader.Begin();
+        }
+
+        public void PasswordAuthFailed()
+        {
+            canvasGroup.interactable = true;
+            authIncorrectText.gameObject.SetActive(true);
+            connectionLoader.Stop();
         }
 
     }

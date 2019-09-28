@@ -30,7 +30,7 @@ namespace ArenaShooter.Networking
             {
                 if (AuthUser(userToken.UserId, userToken.Password))
                 {
-                    AuthResultToken resultToken = new AuthResultToken(Guid.NewGuid().ToString());
+                    AuthResultToken resultToken = AuthResultToken.Accepted;
 
                     BoltNetwork.Accept(endpoint, resultToken);
 
@@ -38,7 +38,7 @@ namespace ArenaShooter.Networking
                 }
             }
 
-            BoltNetwork.Refuse(endpoint, AuthResultToken.invalid);
+            BoltNetwork.Refuse(endpoint, AuthResultToken.Refused);
         }
 
     }

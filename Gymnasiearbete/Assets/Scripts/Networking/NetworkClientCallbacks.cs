@@ -18,7 +18,7 @@ namespace ArenaShooter.Networking
             if (acceptToken != null)
             {
                 BoltLog.Info("AcceptToken: " + acceptToken.GetType());
-                BoltLog.Info("Connection accepted. Token: {0}-{1}", acceptToken.Ticket, acceptToken.Id);
+                BoltLog.Info("Connection accepted." + acceptToken.ToString());
             }
             else
             {
@@ -32,7 +32,8 @@ namespace ArenaShooter.Networking
 
             if (authToken != null)
             {
-                BoltLog.Warn("Connection refused. Token: {0}-{1}", authToken.Ticket, authToken.Id);
+                BoltLog.Warn("AuthToken: " + authToken.GetType());
+                BoltLog.Warn("Connection refused. Token: " + authToken.ToString());
             }
         }
 

@@ -29,9 +29,6 @@ namespace ArenaShooter.Controllers
         [SerializeField] private UIMapSelect    defaultMapSelect;
         [SerializeField] private Toggle         serverIsInviteOnlyToggle;
 
-        [Space]
-        [SerializeField] private NetworkController networkController;
-
         #endregion
 
         #region Private variables
@@ -97,7 +94,7 @@ namespace ArenaShooter.Controllers
                 ServerUtils.SetServerInviteOnly(serverIsInviteOnlyToggle.isOn);
                 ServerUtils.ServerMapTemplate = currentlySelectedMap.MapTemplate;
 
-                networkController.StartServer();
+                NetworkController.Singleton.StartServer();
             }
         }
 

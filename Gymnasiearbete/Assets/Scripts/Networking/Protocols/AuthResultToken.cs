@@ -1,6 +1,9 @@
 ﻿using Bolt;
 using UdpKit;
 
+#pragma warning disable 0660
+#pragma warning disable 0661
+
 namespace ArenaShooter.Networking.Protocols
 {
 
@@ -10,29 +13,39 @@ namespace ArenaShooter.Networking.Protocols
     sealed class AuthResultToken : IProtocolToken
     {
 
-        #region Static variables
+        #region Public static properties
 
-        public static AuthResultToken invalid = new AuthResultToken("");
+        public static AuthResultToken Accepted
+        {
+            get
+            {
+                return new AuthResultToken(AuthResult.Accepted);
+            }
+        }
 
-        private static int currentTicket = 0;
+        public static AuthResultToken Refused
+        {
+            get
+            {
+                return new AuthResultToken(AuthResult.Refused);
+            }
+        }
+
+        #endregion
+
+        #region Private static variables
+
+        private static int currentTicketCount = 0;
 
         #endregion
 
         #region Public properties
-        
-        public int Ticket
-        {
-            get
-            {
-                return ticket;
-            }
-        }
 
-        public string Id
+        public AuthResult Result
         {
             get
             {
-                return id;
+                return authResult;
             }
         }
 
@@ -40,32 +53,47 @@ namespace ArenaShooter.Networking.Protocols
 
         #region Private variables
 
-        private int    ticket;
-        private string id;
+        private AuthResult authResult;
+        private int        ticketCount;
+
+        #endregion
+
+        #region Internal enum
+
+        internal enum AuthResult : byte
+        {
+            Accepted,
+            Refused
+        }
 
         #endregion
 
         public AuthResultToken()
         {
-
+            
         }
 
-        public AuthResultToken(string id = "")
+        public AuthResultToken(AuthResult authResult)
         {
-            this.ticket = currentTicket++;
-            this.id     = id;
+            this.authResult  = authResult;
+            this.ticketCount = currentTicketCount++;
         }
 
         public void Read(UdpPacket packet)
         {
-            this.ticket = packet.ReadInt();
-            this.id     = packet.ReadString();
+            this.authResult  = (AuthResult)packet.ReadByte();
+            this.ticketCount = packet.ReadInt();
         }
 
         public void Write(UdpPacket packet)
         {
-            packet.WriteInt(this.ticket);
-            packet.WriteString(this.id);
+            packet.WriteByte((byte)authResult);
+            packet.WriteInt(ticketCount);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0} - {1}", authResult, ticketCount);
         }
 
     }
