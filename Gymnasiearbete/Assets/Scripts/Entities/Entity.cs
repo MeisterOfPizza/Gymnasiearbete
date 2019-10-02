@@ -75,12 +75,12 @@ namespace ArenaShooter.Entities
 
         private void OnEnable()
         {
-            EntityController.Singleton.AddEntity(this);
+            EntityController.Singleton?.AddEntity(this);
         }
 
         private void OnDisable()
         {
-            EntityController.Singleton.RemoveEntity(this);
+            EntityController.Singleton?.RemoveEntity(this);
         }
 
         private void OnDestroy()

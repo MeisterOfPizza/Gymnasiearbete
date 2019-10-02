@@ -1,14 +1,18 @@
 ﻿using ArenaShooter.Combat;
+using ArenaShooter.Extensions;
+using ArenaShooter.Extensions.Attributes;
 using ArenaShooter.Templates.Enemies;
 using ArenaShooter.Templates.Weapons;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 #pragma warning disable 0649
 
 namespace ArenaShooter.Controllers
 {
 
+    [Persistent]
     class WeaponController : Controller<WeaponController>
     {
 
@@ -48,7 +52,10 @@ namespace ArenaShooter.Controllers
 
         protected override void OnAwake()
         {
-            DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) =>
+            {
+                ClearContainers();
+            };
         }
 
         #region Player WeaponPartTemplates
@@ -147,6 +154,15 @@ namespace ArenaShooter.Controllers
         public EnemyWeaponTemplate GetEnemyWeaponTemplate(ushort id)
         {
             return enemyWeaponTemplates.FirstOrDefault(t => t.TemplateId == id);
+        }
+
+        #endregion
+
+        #region Helpers
+
+        public void ClearContainers()
+        {
+            projectileContainer.Clear();
         }
 
         #endregion

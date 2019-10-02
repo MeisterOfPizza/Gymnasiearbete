@@ -1,6 +1,7 @@
 ﻿using ArenaShooter.Extensions;
 using ArenaShooter.Player;
 using ArenaShooter.UI;
+using Bolt.Matchmaking;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -57,7 +58,7 @@ namespace ArenaShooter.Controllers
 
             if (BoltNetwork.IsServer)
             {
-                serverNameText.text = string.Format("Lobby | {0} - Hosted by {1}", ServerUtils.ServerName, UserUtils.GetUsername());
+                serverNameText.text = string.Format("Lobby | {0} - Hosted by {1}", ServerUtils.CurrentServerHostInfo.ServerName, UserUtils.GetUsername());
             }
             else
             {
@@ -118,7 +119,14 @@ namespace ArenaShooter.Controllers
         /// </summary>
         public void StartMatch()
         {
-            BoltNetwork.LoadScene(ServerUtils.ServerMapTemplate.SceneName);
+            if (BoltNetwork.IsServer)
+            {
+                // Update the server info to tell potential joining players that we're no longer in lobby.
+                ServerUtils.CurrentServerHostInfo.SetServerInLobby(false);
+                BoltMatchmaking.UpdateSession(ServerUtils.CurrentServerHostInfo.CreateServerInfoToken());
+
+                BoltNetwork.LoadScene(ServerUtils.CurrentServerHostInfo.ServerMapTemplate.SceneName);
+            }
         }
 
         /// <summary>

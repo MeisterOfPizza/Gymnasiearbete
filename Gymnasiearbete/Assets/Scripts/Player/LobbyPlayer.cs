@@ -57,6 +57,21 @@ namespace ArenaShooter.Player
             }
         }
 
+        public override void Detached()
+        {
+            if (BoltNetwork.IsServer)
+            {
+                ServerLobbyController.Singleton?.RemoveLobbyPlayer(this);
+            }
+
+            UIServerLobbyController.Singleton?.SetLobbyPlayer(null);
+
+            if (uiLobbyPlayerInfo != null)
+            {
+                Destroy(uiLobbyPlayerInfo.gameObject);
+            }
+        }
+
         #region Events
 
         public void ToggleReady()
@@ -85,6 +100,10 @@ namespace ArenaShooter.Player
             float countdown    = 5f;
             int   countDownInt = (int)countdown;
 
+            LobbyCountdownEvent countdownEvent = LobbyCountdownEvent.Create(entity);
+            countdownEvent.Time = countDownInt;
+            countdownEvent.Send();
+
             while (countdown > 0 && BoltNetwork.IsServer)
             {
                 countdown -= Time.deltaTime;
@@ -92,11 +111,10 @@ namespace ArenaShooter.Player
                 // Decrease the amount of network event calls in order to decrease bandwidth usage:
                 int tmpCountdown = Mathf.CeilToInt(countdown);
 
-                if (tmpCountdown != countdown)
+                if (tmpCountdown != countDownInt)
                 {
-                    countdown = tmpCountdown;
-
-                    LobbyCountdownEvent countdownEvent = LobbyCountdownEvent.Create(entity);
+                    countDownInt = tmpCountdown;
+                    
                     countdownEvent.Time = tmpCountdown;
                     countdownEvent.Send();
                 }
@@ -122,22 +140,6 @@ namespace ArenaShooter.Player
         public override void OnEvent(LobbyCountdownEvent evnt)
         {
             UIServerLobbyController.Singleton.UpdateMatchStartCountdown(evnt.Time);
-        }
-
-        #endregion
-
-        #region OnDestroy
-
-        private void OnDestroy()
-        {
-            if (BoltNetwork.IsServer)
-            {
-                ServerLobbyController.Singleton.RemoveLobbyPlayer(this);
-            }
-
-            UIServerLobbyController.Singleton.SetLobbyPlayer(null);
-
-            Destroy(uiLobbyPlayerInfo.gameObject);
         }
 
         #endregion

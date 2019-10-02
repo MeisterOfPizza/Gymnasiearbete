@@ -25,13 +25,11 @@ namespace ArenaShooter.Networking
 
         public void StartServer()
         {  
-            if (BoltNetwork.IsClient)
+            if (!BoltNetwork.IsRunning)
             {
-                BoltLauncher.Shutdown();
+                ServerUtils.ClearInvitedUsers();
+                BoltLauncher.StartServer();
             }
-
-            ServerUtils.ClearInvitedUsers();
-            BoltLauncher.StartServer();
         }
 
         public void Disconnect()

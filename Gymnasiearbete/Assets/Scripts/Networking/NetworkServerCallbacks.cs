@@ -15,9 +15,9 @@ namespace ArenaShooter.Networking
         {
             Guid.TryParse(userId, out Guid id);
 
-            return (ServerUtils.ServerIsInviteOnly && id != null && ServerUtils.HasUserIdBeenInvited(id))||
-                   (!ServerUtils.ServerIsInviteOnly && ServerUtils.ServerPassword.Equals(password)) ||
-                   (!ServerUtils.ServerIsInviteOnly && !ServerUtils.ServerHasPassword);
+            return (ServerUtils.CurrentServerHostInfo.ServerIsInviteOnly && id != null && ServerUtils.HasUserIdBeenInvited(id))||
+                   (!ServerUtils.CurrentServerHostInfo.ServerIsInviteOnly && ServerUtils.CurrentServerHostInfo.ServerPassword.Equals(password)) ||
+                   (!ServerUtils.CurrentServerHostInfo.ServerIsInviteOnly && !ServerUtils.CurrentServerHostInfo.ServerHasPassword);
         }
 
         public override void ConnectRequest(UdpEndPoint endpoint, IProtocolToken token)

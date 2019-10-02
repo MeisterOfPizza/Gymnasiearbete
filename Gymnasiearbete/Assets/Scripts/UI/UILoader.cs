@@ -62,43 +62,49 @@ namespace ArenaShooter.UI
 
         public void Begin()
         {
-            isLoading = true;
-
-            gameObject.SetActive(true);
-
-            switch (loaderAction)
+            if (!isLoading)
             {
-                case UILoaderAction.Animate:
-                    animator.Play(beginAnimationName);
-                    break;
-                case UILoaderAction.AnimateSpeed:
-                    animator.Play(beginAnimationName);
-                    animator.SetFloat(speedParameterName, spinSpeed);
-                    break;
-                case UILoaderAction.TransformSpin:
-                default:
-                    rectTransform.rotation = Quaternion.identity;
-                    break;
+                isLoading = true;
+
+                gameObject.SetActive(true);
+
+                switch (loaderAction)
+                {
+                    case UILoaderAction.Animate:
+                        animator.Play(beginAnimationName);
+                        break;
+                    case UILoaderAction.AnimateSpeed:
+                        animator.Play(beginAnimationName);
+                        animator.SetFloat(speedParameterName, spinSpeed);
+                        break;
+                    case UILoaderAction.TransformSpin:
+                    default:
+                        rectTransform.rotation = Quaternion.identity;
+                        break;
+                }
             }
         }
 
         public void Stop()
         {
-            switch (loaderAction)
+            if (isLoading)
             {
-                case UILoaderAction.Animate:
-                case UILoaderAction.AnimateSpeed:
-                    animator.Play(stopAnimationName);
-                    break;
-                case UILoaderAction.TransformSpin:
-                default:
-                    break;
+                switch (loaderAction)
+                {
+                    case UILoaderAction.Animate:
+                    case UILoaderAction.AnimateSpeed:
+                        animator.Play(stopAnimationName);
+                        break;
+                    case UILoaderAction.TransformSpin:
+                    default:
+                        break;
+                }
+
+                isLoading = false;
+
+                /// Hide if <see cref="hideOnStop"/> is true.
+                gameObject.SetActive(!hideOnStop);
             }
-
-            isLoading = false;
-
-            /// Hide if <see cref="hideOnStop"/> is true.
-            gameObject.SetActive(!hideOnStop);
         }
 
         private void Update()

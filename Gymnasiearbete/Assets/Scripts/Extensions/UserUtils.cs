@@ -6,7 +6,7 @@ namespace ArenaShooter.Extensions
     static class UserUtils
     {
 
-        private static Guid userId;
+        private static readonly Guid userId;
 
         static UserUtils()
         {

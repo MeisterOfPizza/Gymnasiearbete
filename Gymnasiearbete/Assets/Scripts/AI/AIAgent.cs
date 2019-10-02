@@ -135,23 +135,30 @@ namespace ArenaShooter.AI
 
         private void SetCurrentTarget(IEntity target)
         {
-            if (!currentTarget.IsNull())
+            // Check if the agent still exists AND is placed on a NavMesh.
+            // This is done because when exiting the match as a host, the current target will
+            // invoke a OnDestroy callback, which calls this method (SetCurrentTarget) which will
+            // result in several null reference errors.
+            if (agent != null && agent.isOnNavMesh)
             {
-                currentTarget.OnDeathCallback   -= RemoveCurrentTarget;
-                currentTarget.OnDestroyCallback -= RemoveCurrentTarget;
-            }
-
-            potentialTarget = null;
-            currentTarget   = target;
-
-            if (!currentTarget.IsNull())
-            {
-                currentTarget.OnDeathCallback   += RemoveCurrentTarget;
-                currentTarget.OnDestroyCallback += RemoveCurrentTarget;
-
-                if (agent.gameObject.activeInHierarchy)
+                if (!currentTarget.IsNull())
                 {
-                    agent.SetDestination(currentTarget.BodyOriginPosition);
+                    currentTarget.OnDeathCallback -= RemoveCurrentTarget;
+                    currentTarget.OnDestroyCallback -= RemoveCurrentTarget;
+                }
+
+                potentialTarget = null;
+                currentTarget = target;
+
+                if (!currentTarget.IsNull())
+                {
+                    currentTarget.OnDeathCallback += RemoveCurrentTarget;
+                    currentTarget.OnDestroyCallback += RemoveCurrentTarget;
+
+                    if (agent.gameObject.activeInHierarchy)
+                    {
+                        agent.SetDestination(currentTarget.BodyOriginPosition);
+                    }
                 }
             }
         }
@@ -245,7 +252,7 @@ namespace ArenaShooter.AI
                 {
                     NavMeshPath path = new NavMeshPath();
 
-                    // Calculate the path that the agent needs to take.
+                    // Calculate the path that the agent needs to take:
                     if (NavMesh.CalculatePath(agentEntity.BodyOriginPosition, target.BodyOriginPosition, agent.areaMask, path))
                     {
                         Vector3[] corners      = path.corners; // Get all the corners.

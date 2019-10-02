@@ -39,13 +39,13 @@ namespace ArenaShooter.Controllers
 
         private void Start()
         {
-            serverNameInputField.onSubmit.AddListener((string input) => serverNameInputField.SetTextWithoutNotify(ServerUtils.SetServerName(input)));
+            serverNameInputField.onSubmit.AddListener((string input) => serverNameInputField.SetTextWithoutNotify(ServerUtils.CurrentServerHostInfo?.SetServerName(input)));
             serverNameInputField.characterLimit      = ServerUtils.MAX_SERVER_NAME_LENGTH;
             serverNameInputField.characterValidation = TMP_InputField.CharacterValidation.Alphanumeric;
             serverNameInputField.keyboardType        = TouchScreenKeyboardType.ASCIICapable;
             serverNameInputField.contentType         = TMP_InputField.ContentType.Alphanumeric;
 
-            serverPasswordInputField.onSubmit.AddListener((string input) => serverPasswordInputField.SetTextWithoutNotify(ServerUtils.SetServerPassword(input)));
+            serverPasswordInputField.onSubmit.AddListener((string input) => serverPasswordInputField.SetTextWithoutNotify(ServerUtils.CurrentServerHostInfo?.SetServerPassword(input)));
             serverPasswordInputField.characterLimit      = ServerUtils.MAX_SERVER_PASSWORD_LENGTH;
             serverPasswordInputField.characterValidation = TMP_InputField.CharacterValidation.Alphanumeric;
             serverPasswordInputField.keyboardType        = TouchScreenKeyboardType.ASCIICapable;
@@ -66,6 +66,8 @@ namespace ArenaShooter.Controllers
 
         public void OpenServerSetup()
         {
+            ServerUtils.CurrentServerHostInfo = new ServerHostInfo(defaultMapSelect.MapTemplate);
+
             serverSetupMenu.SetActive(true);
 
             serverNameInputField.text     = "";
@@ -89,18 +91,13 @@ namespace ArenaShooter.Controllers
             {
                 canvasGroup.interactable = false;
 
-                ServerUtils.SetServerName(serverNameInputField.text);
-                ServerUtils.SetServerPassword(serverPasswordInputField.text);
-                ServerUtils.SetServerInviteOnly(serverIsInviteOnlyToggle.isOn);
-                ServerUtils.ServerMapTemplate = currentlySelectedMap.MapTemplate;
+                ServerUtils.CurrentServerHostInfo.SetServerName(serverNameInputField.text);
+                ServerUtils.CurrentServerHostInfo.SetServerPassword(serverPasswordInputField.text);
+                ServerUtils.CurrentServerHostInfo.SetServerInviteOnly(serverIsInviteOnlyToggle.isOn);
+                ServerUtils.CurrentServerHostInfo.ServerMapTemplate = currentlySelectedMap.MapTemplate;
 
                 NetworkController.Singleton.StartServer();
             }
-        }
-
-        public ServerInfoToken GetServerInfoToken()
-        {
-            return new ServerInfoToken(ServerUtils.ServerName, UserUtils.GetUsername(), currentlySelectedMap.MapTemplate.TemplateId, ServerUtils.ServerHasPassword, ServerUtils.ServerIsInviteOnly);
         }
 
         private bool ServerSetupSettingsAreValid()
