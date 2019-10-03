@@ -218,7 +218,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aiAgent: {fileID: 8941281705325509347}
-  humanoidBody: {fileID: 0}
+  body: {fileID: 0}
   renderTransform: {fileID: 0}
   weaponHitLayerMask:
     serializedVersion: 2

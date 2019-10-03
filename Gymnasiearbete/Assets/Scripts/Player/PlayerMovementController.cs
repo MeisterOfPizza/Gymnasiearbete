@@ -96,12 +96,12 @@ namespace ArenaShooter.Player
             if (canLook)
             {
 #if UNITY_STANDALONE
-                Vector3 lookAtPoint = GetMouseLookAtPoint();
+               /* Vector3 lookAtPoint = GetMouseLookAtPoint();
                 lookAtPoint.y = transform.position.y;
                 
-                transform.forward = lookAtPoint - transform.position;
-#elif UNITY_IOS || UNITY_ANDROID
+                transform.forward = lookAtPoint - transform.position;*/
                 Vector3 direction = Controllers.MobileLookController.Singleton.CanLook ? Controllers.MobileLookController.Singleton.GetLookPoint() - transform.position : transform.forward;
+#elif UNITY_IOS || UNITY_ANDROID
 #endif
             }
         }
@@ -111,9 +111,9 @@ namespace ArenaShooter.Player
             if (canMove)
             {
 #if UNITY_STANDALONE
-                Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
-#elif UNITY_IOS || UNITY_ANDROID
+                //Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
                 Vector3 movement = Controllers.MobileMovementController.Singleton.GetMovement();
+#elif UNITY_IOS || UNITY_ANDROID
 #endif
 
                 characterController.Move(movement * moveSpeed * BoltNetwork.FrameDeltaTime);
