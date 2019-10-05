@@ -159,6 +159,11 @@ namespace ArenaShooter.Controllers
             readyButtonText.text = lobbyPlayer.state.Ready ? "Unready" : "Ready up";
         }
 
+        public void UpdateLoadout(Loadout loadout)
+        {
+
+        }
+
         #endregion
 
         #region Helpers

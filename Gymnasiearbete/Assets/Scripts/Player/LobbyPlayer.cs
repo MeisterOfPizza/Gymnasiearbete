@@ -42,10 +42,12 @@ namespace ArenaShooter.Player
             {
                 state.Name = UserUtils.GetUsername() + (BoltNetwork.IsServer ? " (Host)" : "");
 
-                // Set ready state to yes if the local machine is the server/host:
+                // Set ready state to ready if the local machine is the server/host:
                 state.Ready = BoltNetwork.IsServer;
 
                 UIServerLobbyController.Singleton.SetLobbyPlayer(this);
+
+                LoadoutController.Singleton.OnLoadoutChanged += LoadoutChanged;
 
                 entity.TakeControl();
             }
@@ -69,6 +71,11 @@ namespace ArenaShooter.Player
             if (uiLobbyPlayerInfo != null)
             {
                 Destroy(uiLobbyPlayerInfo.gameObject);
+            }
+
+            if (entity.IsOwner)
+            {
+                LoadoutController.Singleton.OnLoadoutChanged -= LoadoutChanged;
             }
         }
 
@@ -126,6 +133,13 @@ namespace ArenaShooter.Player
             {
                 UIServerLobbyController.Singleton.StartMatch();
             }
+        }
+
+        private void LoadoutChanged()
+        {
+            state.Weapon.WeaponStockId  = LoadoutController.Singleton.CurrentLoadout.StockTemplate.TemplateId;
+            state.Weapon.WeaponBodyId   = LoadoutController.Singleton.CurrentLoadout.BodyTemplate.TemplateId;
+            state.Weapon.WeaponBarrelId = LoadoutController.Singleton.CurrentLoadout.BarrelTemplate.TemplateId;
         }
 
         #endregion

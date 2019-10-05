@@ -2,9 +2,7 @@
 using ArenaShooter.Networking;
 using ArenaShooter.Networking.Protocols;
 using ArenaShooter.UI;
-using Bolt.Matchmaking;
 using System.Collections;
-using TMPro;
 using UnityEngine;
 
 #pragma warning disable 0649

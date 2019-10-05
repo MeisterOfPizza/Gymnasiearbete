@@ -3,6 +3,7 @@ using ArenaShooter.Extensions;
 using ArenaShooter.Extensions.Attributes;
 using ArenaShooter.Templates.Enemies;
 using ArenaShooter.Templates.Weapons;
+using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -16,7 +17,40 @@ namespace ArenaShooter.Controllers
     class WeaponController : Controller<WeaponController>
     {
 
+        #region Private constants
+
+        private const ushort PLAYER_WEAPON_TYPE_RAYCAST_DEFAULT_ID_OFFSET    = 000;
+        private const ushort PLAYER_WEAPON_TYPE_PROJECTILE_DEFAULT_ID_OFFSET = 100;
+        private const ushort PLAYER_WEAPON_TYPE_ELECTRIC_DEFAULT_ID_OFFSET   = 200;
+        private const ushort PLAYER_WEAPON_TYPE_SUPPORT_DEFAULT_ID_OFFSET    = 300;
+
+        private const ushort PLAYER_WEAPON_STOCK_TYPE_DEFAULT_ID_OFFSET  = 0000;
+        private const ushort PLAYER_WEAPON_BODY_TYPE_DEFAULT_ID_OFFSET   = 1000;
+        private const ushort PLAYER_WEAPON_BARREL_TYPE_DEFAULT_ID_OFFSET = 2000;
+
+        #endregion
+
         #region Editor
+
+        [Help(@"Player weapon part templates follow a specific ID pattern, where each output type begins with a 100 offset:
+Raycast    = 000
+Projectile = 100
+Electric   = 200
+Support    = 300
+
+And each template part begins with a 1000 offset:
+Stock  = 0000
+Body   = 1000
+Barrel = 2000
+
+Which makes the final ID for any default weapon template part of any output type be calculated like this:
+STOCK  = OUTPUT_TYPE + 0000
+BODY   = OUTPUT_TYPE + 1000
+BARREL = OUTPUT_TYPE + 2000
+
+Which is this:
+defaultTemplate = OUTPUT_TYPE + TEMPLATE_PART
+")]
 
         [Header("Player Weapon Part Templates")]
         [SerializeField] private StockTemplate   defaultStockTemplate;
@@ -39,6 +73,30 @@ namespace ArenaShooter.Controllers
         #endregion
 
         #region Public properties
+
+        public StockTemplate DefaultStockTemplate
+        {
+            get
+            {
+                return defaultStockTemplate;
+            }
+        }
+
+        public BodyTemplate DefaultBodyTemplate
+        {
+            get
+            {
+                return defaultBodyTemplate;
+            }
+        }
+
+        public BarrelTemplate DefaultBarrelTemplate
+        {
+            get
+            {
+                return defaultBarrelTemplate;
+            }
+        }
 
         public Transform ProjectileContainer
         {
@@ -116,6 +174,35 @@ namespace ArenaShooter.Controllers
             var template = barrelTemplates.FirstOrDefault(t => t.TemplateId == id);
 
             return template ?? defaultBarrelTemplate;
+        }
+
+        public Tuple<StockTemplate, BodyTemplate, BarrelTemplate> GetDefaultTemplatesOfType(WeaponOutputType weaponOutputType)
+        {
+            switch (weaponOutputType)
+            {
+                case WeaponOutputType.Raycasting:
+                    return new Tuple<StockTemplate, BodyTemplate, BarrelTemplate>(
+                        GetStockTemplate(PLAYER_WEAPON_TYPE_RAYCAST_DEFAULT_ID_OFFSET  + PLAYER_WEAPON_STOCK_TYPE_DEFAULT_ID_OFFSET),
+                        GetBodyTemplate(PLAYER_WEAPON_TYPE_RAYCAST_DEFAULT_ID_OFFSET   + PLAYER_WEAPON_BODY_TYPE_DEFAULT_ID_OFFSET),
+                        GetBarrelTemplate(PLAYER_WEAPON_TYPE_RAYCAST_DEFAULT_ID_OFFSET + PLAYER_WEAPON_BARREL_TYPE_DEFAULT_ID_OFFSET));
+                case WeaponOutputType.Projectile:
+                    return new Tuple<StockTemplate, BodyTemplate, BarrelTemplate>(
+                        GetStockTemplate(PLAYER_WEAPON_TYPE_PROJECTILE_DEFAULT_ID_OFFSET  + PLAYER_WEAPON_STOCK_TYPE_DEFAULT_ID_OFFSET),
+                        GetBodyTemplate(PLAYER_WEAPON_TYPE_PROJECTILE_DEFAULT_ID_OFFSET   + PLAYER_WEAPON_BODY_TYPE_DEFAULT_ID_OFFSET),
+                        GetBarrelTemplate(PLAYER_WEAPON_TYPE_PROJECTILE_DEFAULT_ID_OFFSET + PLAYER_WEAPON_BARREL_TYPE_DEFAULT_ID_OFFSET));
+                case WeaponOutputType.Electric:
+                    return new Tuple<StockTemplate, BodyTemplate, BarrelTemplate>(
+                        GetStockTemplate(PLAYER_WEAPON_TYPE_ELECTRIC_DEFAULT_ID_OFFSET  + PLAYER_WEAPON_STOCK_TYPE_DEFAULT_ID_OFFSET),
+                        GetBodyTemplate(PLAYER_WEAPON_TYPE_ELECTRIC_DEFAULT_ID_OFFSET   + PLAYER_WEAPON_BODY_TYPE_DEFAULT_ID_OFFSET),
+                        GetBarrelTemplate(PLAYER_WEAPON_TYPE_ELECTRIC_DEFAULT_ID_OFFSET + PLAYER_WEAPON_BARREL_TYPE_DEFAULT_ID_OFFSET));
+                case WeaponOutputType.Support:
+                    return new Tuple<StockTemplate, BodyTemplate, BarrelTemplate>(
+                        GetStockTemplate(PLAYER_WEAPON_TYPE_SUPPORT_DEFAULT_ID_OFFSET  + PLAYER_WEAPON_STOCK_TYPE_DEFAULT_ID_OFFSET),
+                        GetBodyTemplate(PLAYER_WEAPON_TYPE_SUPPORT_DEFAULT_ID_OFFSET   + PLAYER_WEAPON_BODY_TYPE_DEFAULT_ID_OFFSET),
+                        GetBarrelTemplate(PLAYER_WEAPON_TYPE_SUPPORT_DEFAULT_ID_OFFSET + PLAYER_WEAPON_BARREL_TYPE_DEFAULT_ID_OFFSET));
+                default:
+                    return null;
+            }
         }
 
         #endregion
