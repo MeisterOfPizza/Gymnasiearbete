@@ -15,7 +15,7 @@ namespace ArenaShooter.Combat
 
         protected override void OnInitialized()
         {
-            electricShot = Instantiate(BodyTemplate.FirePrefab, transform).GetComponent<ElectricShot>();
+            electricShot = Instantiate(Stats.FirePrefab, transform).GetComponent<ElectricShot>();
             electricShot.Initialize(this);
         }
 

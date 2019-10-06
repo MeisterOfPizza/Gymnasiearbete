@@ -19,7 +19,7 @@ namespace ArenaShooter.Combat
 
         protected override void OnInitialized()
         {
-            projectiles = new GameObjectPool<ProjectileShot>(WeaponController.Singleton.ProjectileContainer, BodyTemplate.FirePrefab, BodyTemplate.MaxAmmoPerClip * 2);
+            projectiles = new GameObjectPool<ProjectileShot>(WeaponController.Singleton.ProjectileContainer, Stats.FirePrefab, Stats.MaxAmmoPerClip * 2);
 
             foreach (var projectile in projectiles.PooledItems)
             {

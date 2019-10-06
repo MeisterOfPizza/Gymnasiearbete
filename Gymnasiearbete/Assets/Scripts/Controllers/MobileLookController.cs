@@ -31,14 +31,14 @@ namespace ArenaShooter.Controllers
 
         public void SetMobileLookAtPoint(Vector3 screenPoint)
         {
-            Ray ray = MainCameraController.MainCamera.ScreenPointToRay(screenPoint);
+            /*Ray ray = MainCameraController.MainCamera.ScreenPointToRay(screenPoint);
 
             // If the ray hits the plane...
             if (mobileLookAtPlane.Raycast(ray, out float distance))
             {
                 lastPositionToLookAt = ray.GetPoint(distance);
             }   
-
+            */
         }
 
 

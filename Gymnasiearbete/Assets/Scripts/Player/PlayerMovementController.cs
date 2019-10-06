@@ -1,4 +1,5 @@
-﻿using ArenaShooter.Extensions.Components;
+﻿using ArenaShooter.Controllers;
+using ArenaShooter.Extensions.Components;
 using Bolt;
 using UnityEngine;
 
@@ -72,6 +73,7 @@ namespace ArenaShooter.Player
 
                 cameraFollow = Instantiate(cameraFollowPrefab).GetComponent<CameraFollow>();
                 cameraFollow.Initialize(transform);
+                MainCameraController.Singleton.SetMainCamera(cameraFollow.Camera);
             }
         }
 

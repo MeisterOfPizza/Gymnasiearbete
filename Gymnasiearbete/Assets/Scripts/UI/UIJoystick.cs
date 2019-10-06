@@ -40,7 +40,7 @@ namespace ArenaShooter.UI.Joystick
         private void Awake()
         {
 #if UNITY_STANDALONE
-            //gameObject.SetActive(false);
+            gameObject.SetActive(false);
 #endif
 
             containerRadius = container.sizeDelta.x / 2f;

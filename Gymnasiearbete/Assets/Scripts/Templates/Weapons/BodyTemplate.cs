@@ -38,6 +38,13 @@ namespace ArenaShooter.Templates.Weapons
         [SerializeField] private bool       manualAmmoDepletion = false;
 
         [Header("Prefabs")]
+        [Help(@"The prefab to be saved as firePrefab depends on what type of OutputType the weapon has:
+
+* Raycast: Simple particle system or other reusable effect. No scripts needed.
+* Projectile: Prefab with rigidbody and script (ProjectileShot) attached needed.
+* Electric: Prefab with script (ElectricShot) attached needed.
+* Support: Prefab with LineRenderer and script (SupportShot) attached needed."
+)]
         [SerializeField] private GameObject firePrefab;
 
         #endregion

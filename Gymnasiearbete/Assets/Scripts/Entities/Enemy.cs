@@ -1,6 +1,8 @@
-﻿using ArenaShooter.Controllers;
+﻿using ArenaShooter.AI;
+using ArenaShooter.Combat;
+using ArenaShooter.Controllers;
 using ArenaShooter.Extensions;
-using ArenaShooter.Player;
+using ArenaShooter.Templates.Enemies;
 using ArenaShooter.UI;
 using Bolt;
 using UnityEngine;
@@ -13,22 +15,23 @@ namespace ArenaShooter.Entities
     /// <summary>
     /// Enemies only exist on the server (or host).
     /// </summary>
-    class Enemy : Entity<IEnemyState>
+    class Enemy : Entity<IEnemyState>, IWeaponHolder, IAIAgentBehaviour
     {
 
         #region Editor
 
         [Header("References")]
-        [SerializeField] private ParticleSystem explosionEffect;
+        [SerializeField] private AIAgent aiAgent;
+        [SerializeField] private Body    body;
+
+        [Space]
+        [SerializeField] private Transform renderTransform;
+
+        [Header("Values")]
+        [SerializeField] private LayerMask weaponHitLayerMask;
 
         [Header("Prefabs")]
         [SerializeField] private GameObject uiEnemyGameStatsPrefab;
-
-        [Header("Values")]
-        [SerializeField] private int startHealth = 100; // TEST DATA
-
-        [Space]
-        [SerializeField] private HealableBy healableBy = HealableBy.Enemy;
 
         #endregion
 
@@ -46,81 +49,201 @@ namespace ArenaShooter.Entities
         {
             get
             {
-                return healableBy;
+                return HealableBy.Enemy;
             }
         }
 
         #endregion
 
-        #region Private variables
+        #region IWeaponHolder
 
-        private UIEnemyGameStats uiEnemyGameStats;
+        public Vector3 WeaponFirePosition
+        {
+            get
+            {
+                return transform.position + Vector3.up;
+            }
+        }
+
+        public Vector3 WeaponForward
+        {
+            get
+            {
+                return body.UpperBodyCurrent;
+            }
+        }
+
+        public LayerMask WeaponHitLayerMask
+        {
+            get
+            {
+                return weaponHitLayerMask;
+            }
+        }
+
+        public GlobalTargets WeaponTargets
+        {
+            get
+            {
+                return GlobalTargets.Everyone;
+            }
+        }
 
         #endregion
 
-        private void Awake()
-        {
-            uiEnemyGameStats = Instantiate(uiEnemyGameStatsPrefab, UIEnemyGameStatsController.Singleton.Container).GetComponent<UIEnemyGameStats>();
-            uiEnemyGameStats.Initialize(this);
-        }
+        #region IAIAgentBehaviour
 
-        private void Update()
+        public EntityTeam SearchTargetTeam
         {
-            uiEnemyGameStats.transform.position = Camera.main.WorldToScreenPoint(transform.position);
-        }
-
-        public LayerMask hitLayerMask;
-        private void TestShoot()
-        {
-            Ray ray = new Ray(transform.position + Vector3.up, transform.forward);
-            var hit = Utils.Raycast<PlayerController>(ray, 100f, hitLayerMask, gameObject, QueryTriggerInteraction.Ignore);
-            if (hit.HitAnything)
+            get
             {
-                if (hit.NetworkHit)
-                {
-                    var takeDamageEvent = TakeDamageEvent.Create(GlobalTargets.Everyone, ReliabilityModes.ReliableOrdered);
-                    takeDamageEvent.Target      = hit.Hitbox.GetComponent<IEntity>().entity;
-                    takeDamageEvent.DamageTaken = 10;
-                    takeDamageEvent.Send();
-                }
-
-                var fireEvent     = WeaponFireEffectEvent.Create(entity);
-                fireEvent.Shooter = entity;
-                fireEvent.Point   = hit.HitPoint;
-                fireEvent.Up      = hit.HitNormal;
-                fireEvent.Send();
+                return weapon.Stats.TargetEntityTeam;
             }
         }
 
-        public override void OnEvent(WeaponFireEffectEvent evnt)
+        public float SearchInterval
         {
-            if (evnt.Shooter == entity)
+            get
             {
-                VFXExplosion(evnt.Point, evnt.Up);
+                return enemyTemplate.TargetSearchFrequency;
             }
         }
 
-        private void VFXExplosion(Vector3 position, Vector3 up)
+        public float SearchThreshold
         {
-            explosionEffect.transform.position = position;
-            explosionEffect.transform.up       = up;
-            explosionEffect.Play(true);
+            get
+            {
+                return weapon.Stats.Range * 0.9f;
+            }
+        }
+
+        public float StoppingDistance
+        {
+            get
+            {
+                return weapon.Stats.Range / 2f;
+            }
+        }
+
+        public float MovementSpeed
+        {
+            get
+            {
+                return enemyTemplate.MovementSpeed;
+            }
+        }
+
+        public float TurnSpeed
+        {
+            get
+            {
+                return enemyTemplate.TurnSpeed;
+            }
+        }
+
+        public Body Body
+        {
+            get
+            {
+                return body;
+            }
+        }
+
+        #endregion
+
+        #region Protected variables
+
+        protected EnemyTemplate enemyTemplate;
+        protected Weapon        weapon;
+
+        protected UIEnemyGameStats uiEnemyGameStats;
+
+        #endregion
+
+        #region Initializing
+
+        /// <summary>
+        /// Initializes the enemy which references a template (using <paramref name="enemyTemplateId"/>) and creates the enemy's weapon.
+        /// </summary>
+        public void Initialize(ushort enemyTemplateId)
+        {
+            this.enemyTemplate    = EnemyTemplateController.Singleton.GetEnemyTemplate((ushort)state.EnemyTemplateId);
+            this.weapon           = WeaponController.Singleton.CreateWeapon(enemyTemplate.GetEnemyWeaponTemplate(), transform);
+
+            state.Health           = enemyTemplate.Health;
+            state.EnemyTemplateId  = enemyTemplateId;
+            state.WeaponTemplateId = weapon.Stats.GetEnemyWeaponTemplateId();
+
+            aiAgent.Initialize(this);
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+
+            if (!entity.IsOwner)
+            {
+                this.enemyTemplate = EnemyTemplateController.Singleton.GetEnemyTemplate((ushort)state.EnemyTemplateId);
+                this.weapon        = WeaponController.Singleton.CreateWeapon(WeaponController.Singleton.GetEnemyWeaponTemplate((ushort)state.WeaponTemplateId), transform);
+            }
+
+            this.weapon.EquipWeapon(this);
         }
 
         public override void Attached()
         {
+            uiEnemyGameStats = Instantiate(uiEnemyGameStatsPrefab, UIEnemyGameStatsController.Singleton.Container).GetComponent<UIEnemyGameStats>();
+            uiEnemyGameStats.Initialize(this);
+            uiEnemyGameStats.transform.position = MainCameraController.MainCamera.WorldToScreenPoint(transform.position);
+
+            state.SetTransforms(state.Transform, transform, renderTransform);
+
             if (entity.IsOwner)
             {
-                state.SetTransforms(state.Transform, transform);
-                state.Health = startHealth;
-
                 entity.TakeControl();
-
-                InvokeRepeating("TestShoot", 1f, 1f);
+            }
+            else
+            {
+                Destroy(aiAgent);
             }
 
             state.AddCallback("Health", uiEnemyGameStats.UpdateUI);
+
+            body.ManualControls = !entity.IsOwner;
         }
+
+        #endregion
+
+        #region Updating
+
+        private void Update()
+        {
+            uiEnemyGameStats.transform.position = MainCameraController.MainCamera.WorldToScreenPoint(transform.position);
+
+            if (!entity.IsOwner)
+            {
+                body.UpperBodyCurrent = state.UpperBodyNormal;
+                body.LowerBodyCurrent = state.LowerBodyNormal;
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            if (entity.IsOwner)
+            {
+                CheckForTargets();
+            }
+        }
+
+        public override void SimulateOwner()
+        {
+            state.UpperBodyNormal = body.UpperBodyCurrent;
+            state.LowerBodyNormal = body.LowerBodyCurrent;
+        }
+
+        #endregion
+
+        #region Destroying
 
         private void OnDestroy()
         {
@@ -129,6 +252,75 @@ namespace ArenaShooter.Entities
                 Destroy(uiEnemyGameStats.gameObject);
             }
         }
+
+        #endregion
+
+        #region Life
+
+        public override void Revive(EntityRevivedEvent @event)
+        {
+            base.Revive(@event);
+
+            if (entity.IsOwner)
+            {
+                state.Health = enemyTemplate.Health;
+
+                // TODO: Reset weapon and reload it instantly.
+            }
+
+            uiEnemyGameStats.gameObject.SetActive(true);
+            uiEnemyGameStats.UpdateUI();
+        }
+
+        public override void Die(EntityDiedEvent @event)
+        {
+            base.Die(@event);
+
+            uiEnemyGameStats.gameObject.SetActive(false);
+        }
+
+        #endregion
+
+        #region Combat
+
+        private void CheckForTargets()
+        {
+            var hit = Utils.Raycast(new Ray(BodyOriginPosition, body.UpperBodyCurrent), weapon.Stats.Range, Physics.AllLayers, gameObject, QueryTriggerInteraction.Ignore);
+            
+            if (hit.GameObject != null && hit.GameObject.GetComponent<IEntity>() is IEntity entity)
+            {
+                if (entity.EntityTeam == weapon.Stats.TargetEntityTeam)
+                {
+                    weapon.FireWithoutInput();
+
+                    return;
+                }
+            }
+
+            weapon.StopFiring();
+        }
+
+        #endregion
+
+        #region OnEvent
+
+        public override void OnEvent(WeaponFireEffectEvent evnt)
+        {
+            if (evnt.Shooter == entity)
+            {
+                weapon?.OnEvent(evnt);
+            }
+        }
+
+        public override void OnEvent(WeaponSupportBeginFireEffectEvent evnt)
+        {
+            if (evnt.Shooter == entity)
+            {
+                weapon?.OnEvent(evnt);
+            }
+        }
+
+        #endregion
 
     }
 

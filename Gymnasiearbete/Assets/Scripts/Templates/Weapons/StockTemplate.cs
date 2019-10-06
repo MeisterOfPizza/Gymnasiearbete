@@ -10,8 +10,8 @@ namespace ArenaShooter.Templates.Weapons
     {
 
         [Header("Stats")]
-        [SerializeField] private float mobility;
-        [SerializeField] private float accuracy;
+        [SerializeField]                private float mobility;
+        [SerializeField, Range(0f, 1f)] private float accuracy = 0.75f;
 
         #region Getters
 

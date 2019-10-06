@@ -24,7 +24,7 @@ namespace ArenaShooter.Combat.Utils
         {
             get
             {
-                return EntityController.Singleton.GetClosestEntity(weapon.WeaponHolder.WeaponFirePosition, weapon.BarrelTemplate.Range, weapon.WeaponHolder, EntityTeam.Player) != null;
+                return EntityController.Singleton.GetClosestEntity(weapon.WeaponHolder.WeaponFirePosition, weapon.Stats.Range, weapon.WeaponHolder, weapon.Stats.SupportTargetEntityTeam) != null;
             }
         }
 
@@ -46,7 +46,7 @@ namespace ArenaShooter.Combat.Utils
 
         public override void OnBeginSupport()
         {
-            var potentialTarget = EntityController.Singleton.GetClosestEntity(weapon.WeaponHolder.WeaponFirePosition, weapon.BarrelTemplate.Range, weapon.WeaponHolder, EntityTeam.Player);
+            var potentialTarget = EntityController.Singleton.GetClosestEntity(weapon.WeaponHolder.WeaponFirePosition, weapon.Stats.Range, weapon.WeaponHolder, weapon.Stats.SupportTargetEntityTeam);
 
             if (potentialTarget != null)
             {
@@ -74,7 +74,7 @@ namespace ArenaShooter.Combat.Utils
 
         public override void SupportTargets()
         {
-            if (target != null && Vector3.Distance(weapon.WeaponHolder.WeaponFirePosition, target.BodyOriginPosition) <= weapon.BarrelTemplate.Range)
+            if (target != null && Vector3.Distance(weapon.WeaponHolder.WeaponFirePosition, target.BodyOriginPosition) <= weapon.Stats.Range)
             {
                 var healEvent    = HealEvent.Create(GlobalTargets.Everyone, ReliabilityModes.ReliableOrdered);
                 healEvent.Target = target.entity;

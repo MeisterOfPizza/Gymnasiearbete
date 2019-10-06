@@ -28,7 +28,7 @@ namespace ArenaShooter.Combat
 
         protected override void OnInitialized()
         {
-            supportShot = Instantiate(BodyTemplate.FirePrefab, transform).GetComponent<SupportShot>();
+            supportShot = Instantiate(Stats.FirePrefab, transform).GetComponent<SupportShot>();
             supportShot.Initialize(this);
         }
 
