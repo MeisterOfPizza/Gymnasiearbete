@@ -11818,6 +11818,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 94dc7c8922d36b94ba50200b258b77ba, type: 2}
   - {fileID: 11400000, guid: 4d727e91e1965ba46b1bfb7927b19378, type: 2}
   - {fileID: 11400000, guid: 43337d03633dab849ae3dbbca75c59b2, type: 2}
+  enemyWeaponTemplates:
+  - {fileID: 11400000, guid: 96ff3ba563cd2194aba42b1036123d3e, type: 2}
+  - {fileID: 11400000, guid: 3caec7d7845a44d4cb49c680152f68ef, type: 2}
+  - {fileID: 11400000, guid: b92b093200da4af40ba848ee4f97f35a, type: 2}
+  - {fileID: 11400000, guid: c7d1fe4055b4f2248acf07ac86dd63d5, type: 2}
   projectileContainer: {fileID: 800477129}
 --- !u!1 &2060413742
 GameObject:
