@@ -13,9 +13,33 @@
 
         #endregion
 
-        protected override void BeforeAwake()
+        protected override bool BeforeAwake()
         {
+            if (HasPersistentAttribute<T>())
+            {
+                if (Singleton != null)
+                {
+                    Destroy(this);
+
+                    return false;
+                }
+                else
+                {
+                    DontDestroyOnLoad(gameObject);
+                }
+            }
+
             Singleton = (T)this;
+
+            return true;
+        }
+
+        protected virtual void OnDestroy()
+        {
+            if (Singleton == this)
+            {
+                Singleton = null;
+            }
         }
 
     }
