@@ -64,9 +64,8 @@ namespace ArenaShooter.Player
             if (BoltNetwork.IsServer)
             {
                 ServerLobbyController.Singleton?.RemoveLobbyPlayer(this);
+                UIServerLobbyController.Singleton?.CheckIfClientsAreReady();
             }
-
-            UIServerLobbyController.Singleton?.SetLobbyPlayer(null);
 
             if (uiLobbyPlayerInfo != null)
             {
@@ -76,6 +75,7 @@ namespace ArenaShooter.Player
             if (entity.IsOwner)
             {
                 LoadoutController.Singleton.OnLoadoutChanged -= LoadoutChanged;
+                UIServerLobbyController.Singleton?.SetLobbyPlayer(null);
             }
         }
 

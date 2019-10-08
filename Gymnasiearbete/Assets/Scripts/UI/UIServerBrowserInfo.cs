@@ -1,5 +1,7 @@
 ﻿using ArenaShooter.Controllers;
 using ArenaShooter.Networking;
+using Photon.Realtime;
+using System.Net.NetworkInformation;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -22,7 +24,7 @@ namespace ArenaShooter.UI
         [SerializeField] private TMP_Text mapNameText;
         [SerializeField] private TMP_Text hostUsernameText;
         [SerializeField] private TMP_Text playerCountText;
-        [SerializeField] private TMP_Text pingText;
+        [SerializeField] private TMP_Text statusText;
         [SerializeField] private Button   joinButton;
 
         #endregion
@@ -40,7 +42,7 @@ namespace ArenaShooter.UI
             this.serverNameText.text   = serverInfo.Info.ServerName;
             this.hostUsernameText.text = serverInfo.Info.HostUsername;
             this.playerCountText.text  = serverInfo.PlayerCount;
-            //this.pingText.text = serverInfo.UdpSession;
+            this.statusText.text       = serverInfo.Info.ServerIsInLobby ? "In Lobby" : "In-game";
 
 #if UNITY_IOS || UNITY_ANDROID
             joinButton.gameObject.SetActive(true);
@@ -66,7 +68,7 @@ namespace ArenaShooter.UI
             mapNameText.color      = Color.black;
             hostUsernameText.color = Color.black;
             playerCountText.color  = Color.black;
-            pingText.color         = Color.black;
+            statusText.color       = Color.black;
 
 #if UNITY_STANDALONE
             joinButton.gameObject.SetActive(true);
@@ -85,7 +87,7 @@ namespace ArenaShooter.UI
             mapNameText.color      = Color.white;
             hostUsernameText.color = Color.white;
             playerCountText.color  = Color.white;
-            pingText.color         = Color.white;
+            statusText.color       = Color.white;
 
 #if UNITY_STANDALONE
             joinButton.gameObject.SetActive(false);

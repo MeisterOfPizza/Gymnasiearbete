@@ -176,7 +176,7 @@ namespace ArenaShooter.Networking
                 {
                     UdpSession photonSession = session.Value;
 
-                    if (photonSession.Source == UdpSessionSource.Photon && photonSession.ConnectionsCurrent < photonSession.ConnectionsMax)
+                    if (photonSession.Source == UdpSessionSource.Photon)
                     {
                         ServerInfo serverInfo = new ServerInfo(photonSession);
 

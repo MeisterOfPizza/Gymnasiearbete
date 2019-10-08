@@ -68,15 +68,22 @@ namespace ArenaShooter.Controllers
 
         public void JoinSession(ServerInfo serverInfo)
         {
-            ServerUtils.CurrentServerInfo = serverInfo;
-
-            if (serverInfo.Info.ServerIsPassworded)
+            if (serverInfo.UdpSession.ConnectionsCurrent < serverInfo.UdpSession.ConnectionsMax)
             {
-                UIConnectAuthController.Singleton.OpenConnectAuthWindow(serverInfo.UdpSession, canvasGroup);
+                ServerUtils.CurrentServerInfo = serverInfo;
+
+                if (serverInfo.Info.ServerIsPassworded)
+                {
+                    UIConnectAuthController.Singleton.OpenConnectAuthWindow(serverInfo.UdpSession, canvasGroup);
+                }
+                else
+                {
+                    BoltNetwork.Connect(serverInfo.UdpSession, new UserToken(UserUtils.GetUserId(), ""));
+                }
             }
             else
             {
-                BoltNetwork.Connect(serverInfo.UdpSession, new UserToken(UserUtils.GetUserId(), ""));
+                UIErrorMessageBoxController.Singleton.DisplayError("Server is full!", "Try joining another server.");
             }
         }
 

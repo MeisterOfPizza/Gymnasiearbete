@@ -69,6 +69,7 @@ namespace ArenaShooter.Controllers
             hostStartMatchButton.interactable = true;
 
             readyButton.gameObject.SetActive(!BoltNetwork.IsServer);
+            readyButtonText.text = "Ready up";
 
             matchStartCountdownText.text = "";
         }
