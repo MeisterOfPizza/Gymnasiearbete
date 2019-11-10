@@ -11,7 +11,7 @@ namespace ArenaShooter.Templates.Interactable
     }
     abstract class InteractableTemplate : ScriptableObject
     {
-        public int id;
+        public float spawnCooldown = 5f;
         public abstract InteractableType type { get; }
 
         public abstract void Interact(IEntity entity);

@@ -89,6 +89,14 @@ namespace ArenaShooter.Entities
             }
         }
 
+        public Weapon Weapon
+        {
+            get
+            {
+                return weapon;
+            }
+        }
+
         #endregion
 
         #region IAIAgentBehaviour

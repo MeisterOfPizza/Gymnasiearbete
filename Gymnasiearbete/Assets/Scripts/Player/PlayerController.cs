@@ -85,6 +85,14 @@ namespace ArenaShooter.Player
             }
         }
 
+        public Weapon Weapon
+        {
+            get
+            {
+                return weapon;
+            }
+        }
+
         #endregion
 
         protected override void Start()

@@ -1,30 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using ArenaShooter.Extensions;
-using ArenaShooter.Combat.Pickup;
-using ArenaShooter.Templates.Interactable;
+﻿using UnityEngine;
 
 namespace ArenaShooter.Controllers
 {
-    class InteractableController : Controller<InteractableController>
+    class InteractableController : ServerController<InteractableController>
     {
         #region Editor
 
-        [SerializeField] private int             amountOfLargeMedkits;
-        [SerializeField] private int             amountOfSmallMedkits;
-        [SerializeField] private GameObject      largeMedkitPrefab;
-        [SerializeField] private GameObject      smallMedKitPrefab;
+        
         [SerializeField] private Transform       medKitContainer;
-        [SerializeField] private Transform[]     spawnPoints;
-
-        #endregion
-
-        #region Private Variables
-
-        private GameObjectPool<Interactable> largeMedkitsPool;
-        private GameObjectPool<Interactable> smallMedkitsPool;
-        private int positionInSpawnPoint = 0;
+        [SerializeField] private Transform[]     spawnPointsLargeMedkits;
+        [SerializeField] private Transform[]     spawnPointsSmallMedkits;
+        [SerializeField] private Transform[]     spawnPointsSmallAmmoboxes;
+        [SerializeField] private Transform[]     spawnPointsLargeAmmoBoxes;
 
         #endregion
 
@@ -32,30 +19,25 @@ namespace ArenaShooter.Controllers
 
         private void Start()
         {
-            largeMedkitsPool = new GameObjectPool<Interactable>(medKitContainer, largeMedkitPrefab, amountOfLargeMedkits);
-            smallMedkitsPool = new GameObjectPool<Interactable>(medKitContainer, smallMedKitPrefab, amountOfSmallMedkits);
-           
             
-        }
-
-        private void SpawnLargeMedkit()
-        {
-            if(positionInSpawnPoint > spawnPoints.Length - 1)
+            for (int i = 0; i < spawnPointsLargeMedkits.Length; i++)
             {
-                positionInSpawnPoint = 0;
+                BoltNetwork.Instantiate(BoltPrefabs.LargeMedkitInteractablePrefab, spawnPointsLargeMedkits[i].position, Quaternion.identity);
             }
-            var Interactable = largeMedkitsPool.GetItem();
-            Interactable.transform.position = spawnPoints[positionInSpawnPoint].position;
-        }
-
-        private void SpawnSmallMedkit()
-        {
-            if (positionInSpawnPoint > spawnPoints.Length - 1)
+            for (int i = 0; i < spawnPointsSmallMedkits.Length; i++)
             {
-                positionInSpawnPoint = 0;
+                BoltNetwork.Instantiate(BoltPrefabs.SmallMedkitPrefab, spawnPointsSmallMedkits[i].position, Quaternion.identity);
             }
-            var Interactable = smallMedkitsPool.GetItem();
-            Interactable.transform.position = spawnPoints[positionInSpawnPoint].position;
+
+            for (int i = 0; i < spawnPointsLargeAmmoBoxes.Length; i++)
+            {
+                BoltNetwork.Instantiate(BoltPrefabs.LargeAmmoBoxPrefab, spawnPointsLargeAmmoBoxes[i].position, Quaternion.identity);
+            }
+            for (int i = 0; i < spawnPointsSmallAmmoboxes.Length; i++)
+            {
+                BoltNetwork.Instantiate(BoltPrefabs.SmallAmmoBoxPrefab, spawnPointsSmallAmmoboxes[i].position, Quaternion.identity);
+            }
+                     
         }
 
         #endregion

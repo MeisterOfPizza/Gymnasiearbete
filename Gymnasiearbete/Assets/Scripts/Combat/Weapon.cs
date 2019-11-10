@@ -414,6 +414,20 @@ namespace ArenaShooter.Combat
 
         #endregion
 
+        #region Refilling Ammo
+
+        public void RefillAmmo(int amountOfClips)
+        {
+            this.AmmoLeftInStock += amountOfClips * weaponStats.MaxAmmoPerClip;
+            if(this.AmmoLeftInStock > this.weaponStats.MaxAmmoStock)
+            {
+                this.AmmoLeftInStock = this.weaponStats.MaxAmmoStock;
+            }
+            OnAmmoChangedCallback.Invoke(FormatAmmoLeft());
+        }
+
+        #endregion
+
     }
 
 }

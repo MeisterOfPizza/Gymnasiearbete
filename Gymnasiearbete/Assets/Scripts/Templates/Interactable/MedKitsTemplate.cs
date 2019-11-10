@@ -4,25 +4,20 @@ using Bolt;
 
 namespace ArenaShooter.Templates.Interactable
 {
-    [CreateAssetMenu(menuName = "Templates/Interacteble/Medkits")]
+    [CreateAssetMenu(menuName = "Templates/Interactable/Medkits")]
     class MedKitsTemplate : InteractableTemplate
     {
         #region Editor
 
-        [SerializeField] private int restoredHealth = 50;//Temp
-        [SerializeField] private GameObject modelPrefab;
-
-        #endregion
-
-        #region Private variables
+        [SerializeField] private int restoredHealth = 50;//PlaceHolder
 
         #endregion
 
         public override void Interact(IEntity entity)
         {
-            var healEvent = HealEvent.Create(GlobalTargets.Everyone, ReliabilityModes.ReliableOrdered);
+            var healEvent    = HealEvent.Create(GlobalTargets.Everyone, ReliabilityModes.ReliableOrdered);
             healEvent.Target = entity.entity;
-            healEvent.Heal = restoredHealth;
+            healEvent.Heal   = restoredHealth;
             healEvent.Send();
         }
         public InteractableType thisType = InteractableType.Medkit; 
