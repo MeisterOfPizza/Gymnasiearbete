@@ -1,6 +1,7 @@
 ﻿using ArenaShooter.Entities;
 using Bolt.LagCompensation;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace ArenaShooter.Extensions
@@ -109,6 +110,18 @@ namespace ArenaShooter.Extensions
                 this.BoltPhysicsHit = boltPhysicsHit;
             }
 
+        }
+
+        #endregion
+
+        #region Transforms
+
+        public static void Clear(this Transform parent)
+        {
+            foreach (Transform child in parent)
+            {
+                GameObject.Destroy(child.gameObject);
+            }
         }
 
         #endregion
@@ -234,6 +247,61 @@ namespace ArenaShooter.Extensions
         public static bool IsSame(this IEntity entity, IEntity other)
         {
             return !IsNull(entity) ? entity.Equals(other) : entity == other;
+        }
+
+        #endregion
+
+        #region Strings
+
+        /// <summary>
+        /// Converts a string to ASCII encoding using Regex expressions.
+        /// </summary>
+        public static string ToASCII(this string value, string replacement = "")
+        {
+            // Refer to: https://stackoverflow.com/a/123340/8722695 in https://stackoverflow.com/questions/123336/how-can-you-strip-non-ascii-characters-from-a-string-in-c.
+            // The '^' tells regex to find everything that doesn't match, which in this case is any character outside the range of 0 to 127 (decimal).
+            // The \u####-\u#### tells regex which characters to match.
+            return Regex.Replace(value, @"[^\u0000-\u007F]+", replacement);
+        }
+
+        /// <summary>
+        /// Truncates a string, removing all characters after a certain length.
+        /// </summary>
+        public static string Truncate(this string value, int maxLength)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return value;
+            }
+
+            return value.Length <= maxLength ? value : value.Substring(0, maxLength);
+        }
+
+        /// <summary>
+        /// Clamps the string, adding and removing characters to make its length fit inside the given range.
+        /// </summary>
+        public static string Clamp(this string value, int minLength, int maxLength, string replacement = "")
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return value;
+            }
+
+            if (value.Length < minLength)
+            {
+                int charsToAdd = minLength - value.Length;
+
+                for (int i = 0; i < charsToAdd; i++)
+                {
+                    value += replacement;
+                }
+            }
+            else if (value.Length > maxLength)
+            {
+                value = value.Substring(0, maxLength);
+            }
+
+            return value;
         }
 
         #endregion

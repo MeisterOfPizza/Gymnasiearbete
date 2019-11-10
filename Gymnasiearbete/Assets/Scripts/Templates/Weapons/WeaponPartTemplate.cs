@@ -5,14 +5,14 @@
 namespace ArenaShooter.Templates.Weapons
 {
 
-    enum WeaponPartTemplateType
+    enum WeaponPartTemplateType : byte
     {
         Stock,
         Body,
         Barrel
     }
 
-    enum WeaponOutputType
+    enum WeaponOutputType : byte
     {
         Raycasting,
         Projectile,
@@ -24,6 +24,25 @@ namespace ArenaShooter.Templates.Weapons
     {
 
         #region Editor
+        [Help(@"Player weapon part templates follow a specific ID pattern, where each output type begins with a 100 offset:
+Raycast    = 000
+Projectile = 100
+Electric   = 200
+Support    = 300
+
+And each template part begins with a 1000 offset:
+Stock  = 0000
+Body   = 1000
+Barrel = 2000
+
+Which makes the final ID for any default weapon template part of any output type be calculated like this:
+STOCK  = OUTPUT_TYPE + 0000
+BODY   = OUTPUT_TYPE + 1000
+BARREL = OUTPUT_TYPE + 2000
+
+Which is this:
+defaultTemplate = OUTPUT_TYPE + TEMPLATE_PART
+")]
 
         [Header("General")]
         [SerializeField] private     ushort templateId;
