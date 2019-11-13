@@ -9,11 +9,12 @@ namespace ArenaShooter.Entities
 
         #region Event callbacks
 
-        public Action<TakeDamageEvent>    OnTakeDamage    { get; set; }
-        public Action<HealEvent>          OnHeal          { get; set; }
-        public Action<EntityRevivedEvent> OnEntityRevived { get; set; }
-        public Action<EntityDiedEvent>    OnEntityDied    { get; set; }
-
+        public Action<TakeDamageEvent>           OnTakeDamage    { get; set; }
+        public Action<HealEvent>                 OnHeal          { get; set; }
+        public Action<EntityRevivedEvent>        OnEntityRevived { get; set; }
+        public Action<EntityDiedEvent>           OnEntityDied    { get; set; }
+        public Action<RefillAmmoEvent>           OnAmmoRefill    { get; set; }   
+        
         #endregion
 
         public IEntity Entity { get; private set; }
@@ -54,6 +55,14 @@ namespace ArenaShooter.Entities
             if (evnt.DeadEntity == Entity.entity)
             {
                 OnEntityDied?.Invoke(evnt);
+            }
+        }
+
+        public override void OnEvent(RefillAmmoEvent evnt)
+        {
+            if(evnt.Target == Entity.entity)
+            {
+                OnAmmoRefill?.Invoke(evnt);
             }
         }
 

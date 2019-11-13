@@ -85,6 +85,14 @@ namespace ArenaShooter.Player
             }
         }
 
+        public Weapon Weapon
+        {
+            get
+            {
+                return weapon;
+            }
+        }
+
         #endregion
 
         protected override void Start()
@@ -153,6 +161,14 @@ namespace ArenaShooter.Player
             if (evnt.Shooter == entity)
             {
                 weapon.OnEvent(evnt);
+            }
+        }
+
+        public override void OnEvent(RefillAmmoEvent evnt)
+        {
+            if(evnt.Target == entity && entity.IsOwner)
+            {
+                weapon.RefillAmmo(evnt.AmountOfClips);
             }
         }
 

@@ -3,7 +3,17 @@ guid: 4e5410adf1ce24746a928b18db556133
 ModelImporter:
   serializedVersion: 26
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Ammo sign
+    second: {fileID: 2100000, guid: 4df87c0d62362ec449c063cd22e966ae, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material
+    second: {fileID: 2100000, guid: e99c760d01faa554893fa32540d73fad, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
