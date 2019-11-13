@@ -19,6 +19,7 @@ namespace ArenaShooter.Templates.Interactable
             healEvent.Target = entity.entity;
             healEvent.Heal   = restoredHealth;
             healEvent.Send();
+
         }
         public InteractableType thisType = InteractableType.Medkit; 
 

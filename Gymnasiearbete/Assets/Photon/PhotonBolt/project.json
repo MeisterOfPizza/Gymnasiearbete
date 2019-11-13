@@ -2304,12 +2304,77 @@
         }
       },
       "Name": "InteractableState",
-      "Guid": "05b9028b-e354-40a9-9331-4078d00f7fbf",
+      "Guid": "9a972725-4147-42d3-9ca7-ead84c1cdeeb",
+      "Groups": [
+        "samples"
+      ]
+    },
+    {
       "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
       "Properties": [],
       "GlobalSenders": 3,
       "Name": "LobbyMatchStartEvent",
-      "Guid": "f5cd51e0-8df4-4c3d-8cd2-315cb7d000c2",
+      "Guid": "8165738c-4841-40f0-b6e0-69baff984bce",
+      "Groups": [
+        "samples"
+      ]
+    },
+    {
+      "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
+      "Properties": [
+        {
+          "Name": "IsFading",
+          "Enabled": true,
+          "Expanded": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeBool, bolt.compiler"
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        }
+      ],
+      "Name": "InteractableInteractEvent",
+      "Guid": "911ddab6-24b4-44ea-ac41-900d06c544f7",
+      "Groups": [
+        "samples"
+      ]
+    },
+    {
+      "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
+      "Properties": [
+        {
+          "Name": "AmountOfClips",
+          "Enabled": true,
+          "Expanded": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeInteger, bolt.compiler",
+            "MaxValue": 255
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        },
+        {
+          "Name": "Target",
+          "Enabled": true,
+          "Expanded": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeEntity, bolt.compiler"
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        }
+      ],
+      "Name": "RefillAmmoEvent",
+      "Guid": "fef9431e-0160-4b7f-958f-2e6417327576",
       "Groups": [
         "samples"
       ]

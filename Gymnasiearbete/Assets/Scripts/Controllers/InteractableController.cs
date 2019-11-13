@@ -12,8 +12,17 @@ namespace ArenaShooter.Controllers
         [SerializeField] private Transform[]     spawnPointsSmallMedkits;
         [SerializeField] private Transform[]     spawnPointsSmallAmmoboxes;
         [SerializeField] private Transform[]     spawnPointsLargeAmmoBoxes;
+        [SerializeField] private RectTransform   container;
 
         #endregion
+
+        public RectTransform Container
+        {
+            get
+            {
+                return container;
+            }
+        }
 
         #region Methods
 
@@ -23,6 +32,7 @@ namespace ArenaShooter.Controllers
             for (int i = 0; i < spawnPointsLargeMedkits.Length; i++)
             {
                 BoltNetwork.Instantiate(BoltPrefabs.LargeMedkitInteractablePrefab, spawnPointsLargeMedkits[i].position, Quaternion.identity);
+
             }
             for (int i = 0; i < spawnPointsSmallMedkits.Length; i++)
             {

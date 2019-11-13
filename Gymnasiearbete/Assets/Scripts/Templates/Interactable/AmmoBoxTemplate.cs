@@ -20,7 +20,10 @@ namespace ArenaShooter.Templates.Interactable
 
         public override void Interact(IEntity entity)
         {
-            entity.entity.GetComponent<PlayerController>().Weapon.RefillAmmo(amountOfClips);
+            var refillAmmoEvent = RefillAmmoEvent.Create(entity.entity, EntityTargets.Everyone);
+            refillAmmoEvent.Target = entity.entity;
+            refillAmmoEvent.AmountOfClips = amountOfClips;
+            refillAmmoEvent.Send();
         }
 
     }

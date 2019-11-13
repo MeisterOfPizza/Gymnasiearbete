@@ -4,6 +4,8 @@ using ArenaShooter.Player;
 using ArenaShooter.Templates.Interactable;
 using System.Collections;
 using UnityEngine.UI;
+using ArenaShooter.UI;
+using ArenaShooter.Controllers;
 
 namespace ArenaShooter.Combat.Pickup
 {
@@ -15,8 +17,8 @@ namespace ArenaShooter.Combat.Pickup
         [SerializeField] private InteractableTemplate template;
         [SerializeField] private GameObject           model;
         [SerializeField] private MeshRenderer         meshRenderer;
-        [SerializeField] private Image                circleCooldownImage;
         [SerializeField] private GameObject           circlePosition3D;
+        [SerializeField] private GameObject           uiInteractablePrefab;
 
         #endregion
 
@@ -30,7 +32,9 @@ namespace ArenaShooter.Combat.Pickup
 
         private Vector3 posOffset;
         private Vector3 tempPos;
-        private Vector3 imagePosition3D;
+        
+
+        private UIInteractable cooldownCircle;
 
         #endregion
 
@@ -41,19 +45,27 @@ namespace ArenaShooter.Combat.Pickup
             if (entity.IsOwner && other.GetComponentInParent<PlayerController>() is PlayerController player && isAvailable)
             {
                 template.Interact(player);
-                isAvailable = false;
-                StartCoroutine("FadeOutEffect");
-                StartCoroutine("SpawnCooldown");
-                circleCooldownImage.enabled = true;
-                circleCooldownImage.fillAmount = 0f;
+                var interactableEvent = InteractableInteractEvent.Create(entity, EntityTargets.Everyone);
+                interactableEvent.IsFading = true;
+                interactableEvent.Send();
             }
         }
 
         private void Start()
         {
+            cooldownCircle = Instantiate(uiInteractablePrefab, InteractableController.Singleton.Container).GetComponent<UIInteractable>();
             posOffset                   = model.transform.position;
-            imagePosition3D             = circlePosition3D.transform.position;
-            circleCooldownImage.enabled = false;
+        }
+
+        public override void OnEvent(InteractableInteractEvent evnt)
+        {
+            if (evnt.IsFading)
+            {
+                isAvailable = false;
+                StartCoroutine("FadeOutEffect");
+                StartCoroutine("SpawnCooldown");
+                
+            }
         }
 
         private void Update()
@@ -65,8 +77,10 @@ namespace ArenaShooter.Combat.Pickup
 
             model.transform.position = tempPos;
 
-            circleCooldownImage.gameObject.transform.position = Camera.main.WorldToScreenPoint(imagePosition3D);
+            cooldownCircle.gameObject.transform.position = Camera.main.WorldToScreenPoint(circlePosition3D.transform.position);
+          
         }
+
 
         #endregion
 
@@ -74,6 +88,7 @@ namespace ArenaShooter.Combat.Pickup
 
         IEnumerator SpawnCooldown()
         {
+            cooldownCircle.gameObject.SetActive(true);
             float originalTime = template.spawnCooldown;
             float time         = template.spawnCooldown;
             while (time > 0)
@@ -81,15 +96,14 @@ namespace ArenaShooter.Combat.Pickup
                 time               -= Time.deltaTime;
                 state.SpawnCooldown = time;
 
-                circleCooldownImage.fillAmount = Mathf.Clamp01((originalTime - time) / originalTime);
+                cooldownCircle.CountDown(1 - time / originalTime);
 
                 yield return new WaitForEndOfFrame();
             }
 
             isAvailable = true;
             model.SetActive(true);
-            StartCoroutine("FadeInEFfect");
-            circleCooldownImage.enabled = false;
+            StartCoroutine("FadeInEFfect"); 
         }
 
         IEnumerator FadeOutEffect()
@@ -112,6 +126,7 @@ namespace ArenaShooter.Combat.Pickup
 
         IEnumerator FadeInEFfect()
         {
+            cooldownCircle.gameObject.SetActive(false);
             float time = 0f;
             while (time < 1)
             {
