@@ -126,6 +126,16 @@ namespace ArenaShooter.Extensions
 
         #endregion
 
+        #region GameObjects
+
+        public static bool IsNull(this GameObject gameObject)
+        {
+            // Taken from http://answers.unity.com/answers/586188/view.html in https://answers.unity.com/questions/586144/destroyed-monobehaviour-not-comparing-to-null.html.
+            return gameObject == null || gameObject.Equals(null);
+        }
+
+        #endregion
+
         #region Layers
 
         public static bool HasLayer(this LayerMask layerMask, int layer)

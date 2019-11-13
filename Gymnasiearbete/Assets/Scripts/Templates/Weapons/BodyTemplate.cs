@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using ArenaShooter.Templates.Items;
+using System.Collections.Generic;
+using UnityEngine;
 
 #pragma warning disable 0649
 
@@ -153,6 +155,25 @@ namespace ArenaShooter.Templates.Weapons
             {
                 return firePrefab;
             }
+        }
+
+        #endregion
+
+        #region Helpers
+
+        public override Dictionary<StatType, float> GetStatTypeValues()
+        {
+            return new Dictionary<StatType, float>()
+            {
+                { StatType.Damage,            damage },
+                { StatType.MaxAmmoPerClip,    maxAmmoPerClip },
+                { StatType.MaxAmmoStock,      maxAmmoStock },
+                { StatType.FireCooldown,      fireCooldown },
+                { StatType.ReloadTime,        reloadTime },
+                { StatType.FullReloadTime,    fullReloadTime },
+                { StatType.BurstFireInterval, burstFireInterval },
+                { StatType.BurstShots,        burstShots }
+            };
         }
 
         #endregion

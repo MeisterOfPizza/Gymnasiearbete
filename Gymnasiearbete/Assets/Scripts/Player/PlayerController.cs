@@ -102,7 +102,7 @@ namespace ArenaShooter.Player
             }
             else
             {
-                weapon = WeaponController.Singleton.CreateWeapon(WeaponController.Singleton.GetStockTemplate((ushort)state.Weapon.WeaponStockId), WeaponController.Singleton.GetBodyTemplate((ushort)state.Weapon.WeaponBodyId), WeaponController.Singleton.GetBarrelTemplate((ushort)state.Weapon.WeaponBarrelId), transform);
+                weapon = WeaponController.Singleton.CreateBystanderWeapon(WeaponController.Singleton.GetStockTemplate((ushort)state.Weapon.WeaponStockId), WeaponController.Singleton.GetBodyTemplate((ushort)state.Weapon.WeaponBodyId), WeaponController.Singleton.GetBarrelTemplate((ushort)state.Weapon.WeaponBarrelId), transform);
             }
 
             if (entity.IsOwner)

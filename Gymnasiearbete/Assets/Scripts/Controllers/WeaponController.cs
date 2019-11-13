@@ -118,7 +118,44 @@ defaultTemplate = OUTPUT_TYPE + TEMPLATE_PART
 
         #region Player WeaponPartTemplates
 
-        public Weapon CreateWeapon(StockTemplate stockTemplate, BodyTemplate bodyTemplate, BarrelTemplate barrelTemplate, Transform parent)
+        public Weapon CreateWeapon(WeaponPartItem<StockTemplate> stockPartItem, WeaponPartItem<BodyTemplate> bodyPartItem, WeaponPartItem<BarrelTemplate> barrelPartItem, Transform parent)
+        {
+            if (stockPartItem.Template.OutputType == bodyPartItem.Template.OutputType && bodyPartItem.Template.OutputType == barrelPartItem.Template.OutputType)
+            {
+                GameObject weaponGameObject = new GameObject("Weapon");
+                weaponGameObject.transform.SetParent(parent);
+                Weapon weapon = null;
+
+                switch (stockPartItem.Template.OutputType)
+                {
+                    case WeaponOutputType.Raycasting:
+                        weapon = weaponGameObject.AddComponent<RaycastWeapon>();
+                        break;
+                    case WeaponOutputType.Projectile:
+                        weapon = weaponGameObject.AddComponent<ProjectileWeapon>();
+                        break;
+                    case WeaponOutputType.Electric:
+                        weapon = weaponGameObject.AddComponent<ElectricWeapon>();
+                        break;
+                    case WeaponOutputType.Support:
+                        weapon = weaponGameObject.AddComponent<SupportWeapon>();
+                        break;
+                    default:
+                        Debug.LogWarning("Weapon could not be built with the three given part templates.");
+                        return null;
+                }
+
+                weapon.Initialize(new PlayerWeaponStats(stockPartItem, bodyPartItem, barrelPartItem));
+                return weapon;
+            }
+            else
+            {
+                Debug.LogWarning("Weapon could not be built with the three given part templates.");
+                return null;
+            }
+        }
+
+        public Weapon CreateBystanderWeapon(StockTemplate stockTemplate, BodyTemplate bodyTemplate, BarrelTemplate barrelTemplate, Transform parent)
         {
             if (stockTemplate.OutputType == bodyTemplate.OutputType && bodyTemplate.OutputType == barrelTemplate.OutputType)
             {
@@ -145,7 +182,7 @@ defaultTemplate = OUTPUT_TYPE + TEMPLATE_PART
                         return null;
                 }
 
-                weapon.Initialize(new WeaponStats(stockTemplate, bodyTemplate, barrelTemplate));
+                weapon.Initialize(new BystanderWeaponStats(stockTemplate, bodyTemplate, barrelTemplate));
                 return weapon;
             }
             else
@@ -234,7 +271,7 @@ defaultTemplate = OUTPUT_TYPE + TEMPLATE_PART
                     return null;
             }
 
-            weapon.Initialize(new WeaponStats(enemyWeaponTemplate));
+            weapon.Initialize(new EnemyWeaponStats(enemyWeaponTemplate));
             return weapon;
         }
 

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using ArenaShooter.Templates.Items;
+using System.Collections.Generic;
+using UnityEngine;
 
 #pragma warning disable 0649
 
@@ -7,9 +9,9 @@ namespace ArenaShooter.Templates.Weapons
 
     enum WeaponPartTemplateType : byte
     {
-        Stock,
-        Body,
-        Barrel
+        Stock  = 0,
+        Body   = 10,
+        Barrel = 20
     }
 
     enum WeaponOutputType : byte
@@ -102,6 +104,12 @@ defaultTemplate = OUTPUT_TYPE + TEMPLATE_PART
                 return weaponPartPrefab;
             }
         }
+
+        #endregion
+
+        #region Helpers
+
+        public abstract Dictionary<StatType, float> GetStatTypeValues();
 
         #endregion
 

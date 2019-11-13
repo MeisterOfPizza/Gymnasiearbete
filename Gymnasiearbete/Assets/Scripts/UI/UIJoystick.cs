@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
+#pragma warning disable 0649
+
 namespace ArenaShooter.UI.Joystick
 {
 
