@@ -137,9 +137,9 @@ namespace ArenaShooter.Player
 
         private void LoadoutChanged()
         {
-            state.Weapon.WeaponStockId  = LoadoutController.Singleton.CurrentLoadout.StockPartItem.Template.TemplateId;
-            state.Weapon.WeaponBodyId   = LoadoutController.Singleton.CurrentLoadout.BodyPartItem.Template.TemplateId;
-            state.Weapon.WeaponBarrelId = LoadoutController.Singleton.CurrentLoadout.BarrelPartItem.Template.TemplateId;
+            state.Weapon.WeaponStockId  = Profile.SelectedLoadoutSlot.Loadout.StockPartItem.Template.TemplateId;
+            state.Weapon.WeaponBodyId   = Profile.SelectedLoadoutSlot.Loadout.BodyPartItem.Template.TemplateId;
+            state.Weapon.WeaponBarrelId = Profile.SelectedLoadoutSlot.Loadout.BarrelPartItem.Template.TemplateId;
         }
 
         #endregion

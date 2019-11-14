@@ -93,7 +93,7 @@ namespace ArenaShooter.Player
 
             if (entity.IsOwner)
             {
-                weapon = LoadoutController.Singleton.CurrentLoadout.CreateWeapon(transform);
+                weapon = Profile.SelectedLoadoutSlot.Loadout.CreateWeapon(transform);
 
                 weapon.Stats.GetWeaponPartTemplateIds(out ushort stockId, out ushort bodyId, out ushort barrelId);
                 state.Weapon.WeaponStockId  = stockId;

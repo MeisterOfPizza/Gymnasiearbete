@@ -26,20 +26,30 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 43337d03633dab849ae3dbbca75c59b2, type: 2}
   - {fileID: 11400000, guid: 67354888ad107714eb22cad3d1fe5718, type: 2}
   - {fileID: 11400000, guid: 22acf60e8f44d374da45f04b88362bd8, type: 2}
+  statChangesToApply: 3
   statChanges:
-  - statType: 16
+  - priority: 0
+    statType: 16
     changeType: 0
     minValue: 1
     maxValue: 2
-  - statType: 8
+  - priority: 0
+    statType: 8
     changeType: 1
-    minValue: 1.025
+    minValue: 0.975
     maxValue: 1.25
-  - statType: 384
+  - priority: 0
+    statType: 384
     changeType: 1
     minValue: 0.95
-    maxValue: 0.975
-  - statType: 3
+    maxValue: 1.05
+  - priority: 0
+    statType: 3
+    changeType: 1
+    minValue: 1.1
+    maxValue: 1.25
+  - priority: 0
+    statType: 16
     changeType: 1
     minValue: 1.1
     maxValue: 1.25

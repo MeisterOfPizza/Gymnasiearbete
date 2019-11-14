@@ -16,10 +16,10 @@ namespace ArenaShooter.Templates.Weapons
 
     enum WeaponOutputType : byte
     {
-        Raycasting,
-        Projectile,
-        Electric,
-        Support
+        Raycasting = 0,
+        Projectile = 1,
+        Electric   = 2,
+        Support    = 3
     }
 
     abstract class WeaponPartTemplate : ScriptableObject
@@ -110,6 +110,43 @@ defaultTemplate = OUTPUT_TYPE + TEMPLATE_PART
         #region Helpers
 
         public abstract Dictionary<StatType, float> GetStatTypeValues();
+
+        public static string GetStatTypeValueFormatted(StatType statType, float value, string color)
+        {
+            switch (statType)
+            {
+                case StatType.Range:
+                    return $"Range: <color={color}>{value.ToString("F1")} M</color>";
+                case StatType.MaxDistance:
+                    return $"Distance: <color={color}>{value.ToString("F1")} M</color>";
+                case StatType.DamageMultiplier:
+                    return $"Damage Boost: <color={color}>{value.ToString("P0")}</color>";
+                case StatType.Damage:
+                    return $"Damage: <color={color}>{value}</color>";
+                case StatType.MaxAmmoPerClip:
+                    return $"Ammo: <color={color}>{value}</color>";
+                case StatType.MaxAmmoStock:
+                    return $"Ammo Stock: <color={color}>{value}</color>";
+                case StatType.FireCooldown:
+                    return $"Fire Interval: <color={color}>{value.ToString("F1")} s</color>";
+                case StatType.ReloadTime:
+                    return $"Reload: <color={color}>{value.ToString("F1")} s</color>";
+                case StatType.FullReloadTime:
+                    return $"Full Reload: <color={color}>{value.ToString("F1")} s</color>";
+                case StatType.BurstFireInterval:
+                    return $"Burst Interval: <color={color}>{value.ToString("F1")} s</color>";
+                case StatType.BurstShots:
+                    return $"Burst Shots: <color={color}>{value}</color>";
+                case StatType.Mobility:
+                    return $"Mobility: <color={color}>{value}</color>";
+                case StatType.Accuracy:
+                    return $"Accuracy: <color={color}>{value.ToString("P0")}</color>";
+                case StatType.FiringMode:
+                    return "Mode: " + System.Enum.GetName(typeof(FiringMode), (byte)value);
+                default:
+                    return "";
+            }
+        }
 
         #endregion
 

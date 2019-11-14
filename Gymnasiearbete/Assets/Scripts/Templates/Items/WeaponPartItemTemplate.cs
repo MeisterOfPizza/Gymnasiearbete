@@ -60,6 +60,7 @@ namespace ArenaShooter.Templates.Items
         BurstShots        = 1024,
         Mobility          = 2048,
         Accuracy          = 4096,
+        FiringMode        = 8192,
         Everything        = ~0
     }
     
@@ -79,6 +80,10 @@ namespace ArenaShooter.Templates.Items
         [SerializeField] private WeaponPartTemplate[] possibleWeaponPartTemplates  = new WeaponPartTemplate[0];
 
         [Space]
+        [Help("1 to N (inclusive) of these stat changes will be applied to the selected weapon part template.")]
+        [SerializeField] private int statChangesToApply = 1;
+
+        [Space]
         [SerializeField] private StatChange[] statChanges;
 
         #endregion
@@ -89,10 +94,28 @@ namespace ArenaShooter.Templates.Items
         private class StatChange
         {
 
+            #region Editor
+
+            [SerializeField, Tooltip("The StatChange with the highest priority gets applied first.")] private byte priority = 0;
+
             [SerializeField] private StatType   statType   = StatType.None;
             [SerializeField] private ChangeType changeType = ChangeType.Multiplication;
             [SerializeField] private float      minValue   = 1f;
             [SerializeField] private float      maxValue   = 1f;
+
+            #endregion
+
+            #region Public properties
+
+            public byte Priority
+            {
+                get
+                {
+                    return priority;
+                }
+            }
+
+            #endregion
 
             #region Enum
 
@@ -126,7 +149,16 @@ namespace ArenaShooter.Templates.Items
 
         public WeaponPartItem<T> CreateWeaponPartItem<T>() where T : WeaponPartTemplate
         {
-            StatChange chosenStatChange = statChanges[Random.Range(0, statChanges.Length)];
+            List<StatChange> statChangesPool   = statChanges.ToList();
+            StatChange[]     chosenStatChanges = new StatChange[Random.Range(Mathf.Min(1, statChanges.Length), Mathf.Min(statChangesToApply, statChanges.Length))];
+
+            for (int i = 0; i < chosenStatChanges.Length; i++)
+            {
+                int index = Random.Range(0, statChangesPool.Count);
+
+                chosenStatChanges[i] = statChangesPool[index];
+                statChangesPool.RemoveAt(index);
+            }
 
             var templatePool = possibleWeaponPartTemplates.Where(p => p.GetType() == typeof(T));
 
@@ -134,7 +166,16 @@ namespace ArenaShooter.Templates.Items
             {
                 WeaponPartItem<T> weaponPartItem = new WeaponPartItem<T>(rarity, (T)templatePool.ElementAt(Random.Range(0, templatePool.Count())));
 
-                chosenStatChange.ApplyValues(weaponPartItem.StatTypeValues);
+                var statTypeValues = weaponPartItem.StatTypeValues.ToDictionary(s => s.Key, s => s.Value);
+
+                foreach (var statChange in chosenStatChanges.OrderByDescending(sc => sc.Priority))
+                {
+                    statChange.ApplyValues(statTypeValues);
+                }
+
+                weaponPartItem.ValidateStatTypeValues(statTypeValues);
+                weaponPartItem.UpdateStatTypeValueDeltas(statTypeValues);
+                weaponPartItem.SetStatTypeValues(statTypeValues);
 
                 return weaponPartItem;
             }
@@ -144,13 +185,46 @@ namespace ArenaShooter.Templates.Items
             }
         }
 
-        public WeaponPartItem<WeaponPartTemplate> CreateRandomWeaponPartItem()
+        public WeaponPartItemWrapper CreateRandomWeaponPartItem()
         {
-            StatChange chosenStatChange = statChanges[Random.Range(0, statChanges.Length)];
+            List<StatChange> statChangesPool   = statChanges.ToList();
+            StatChange[]     chosenStatChanges = new StatChange[Random.Range(Mathf.Min(1, statChanges.Length), Mathf.Min(statChangesToApply, statChanges.Length))];
 
-            WeaponPartItem<WeaponPartTemplate> weaponPartItem = new WeaponPartItem<WeaponPartTemplate>(rarity, possibleWeaponPartTemplates[Random.Range(0, possibleWeaponPartTemplates.Length)]);
+            for (int i = 0; i < chosenStatChanges.Length; i++)
+            {
+                int index = Random.Range(0, statChangesPool.Count);
 
-            chosenStatChange.ApplyValues(weaponPartItem.StatTypeValues);
+                chosenStatChanges[i] = statChangesPool[index];
+                statChangesPool.RemoveAt(index);
+            }
+
+            WeaponPartTemplate template = possibleWeaponPartTemplates[Random.Range(0, possibleWeaponPartTemplates.Length)];
+
+            WeaponPartItemWrapper weaponPartItem = null;
+
+            switch (template.Type)
+            {
+                case WeaponPartTemplateType.Stock:
+                    weaponPartItem = new WeaponPartItem<StockTemplate>(rarity, (StockTemplate)template);
+                    break;
+                case WeaponPartTemplateType.Body:
+                    weaponPartItem = new WeaponPartItem<BodyTemplate>(rarity, (BodyTemplate)template);
+                    break;
+                case WeaponPartTemplateType.Barrel:
+                    weaponPartItem = new WeaponPartItem<BarrelTemplate>(rarity, (BarrelTemplate)template);
+                    break;
+            }
+
+            var statTypeValues = weaponPartItem.StatTypeValues.ToDictionary(s => s.Key, s => s.Value);
+
+            foreach (var statChange in chosenStatChanges.OrderByDescending(sc => sc.Priority))
+            {
+                statChange.ApplyValues(statTypeValues);
+            }
+
+            weaponPartItem.ValidateStatTypeValues(statTypeValues);
+            weaponPartItem.UpdateStatTypeValueDeltas(statTypeValues);
+            weaponPartItem.SetStatTypeValues(statTypeValues);
 
             return weaponPartItem;
         }

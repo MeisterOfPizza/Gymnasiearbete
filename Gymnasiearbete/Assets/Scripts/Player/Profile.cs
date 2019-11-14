@@ -36,7 +36,7 @@ namespace ArenaShooter.Player
             // Check if profile data exists:
             if (profileData != null)
             {
-                // Id does. Load it:
+                // It does. Load it:
                 TotalKills          = profileData.totalKills;
                 TotalDeaths         = profileData.totalDeaths;
                 TotalShots          = profileData.totalShots;

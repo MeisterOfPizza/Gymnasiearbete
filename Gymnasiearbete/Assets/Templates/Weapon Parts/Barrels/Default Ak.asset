@@ -16,7 +16,8 @@ MonoBehaviour:
   name: Default Ak
   description: 
   outputType: 0
-  weaponPartPrefab: {fileID: 0}
+  weaponPartPrefab: {fileID: 4397034097026080610, guid: 610761267e037b147b3658e1d989010f,
+    type: 3}
   range: 25
   maxDistance: 50
   damageMulitplier: 1

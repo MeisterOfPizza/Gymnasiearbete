@@ -1,5 +1,7 @@
-﻿using ArenaShooter.Player;
+﻿using ArenaShooter.Combat;
+using ArenaShooter.Player;
 using System;
+using System.Collections.Generic;
 
 namespace ArenaShooter.Data
 {
@@ -8,15 +10,15 @@ namespace ArenaShooter.Data
     sealed class LoadoutData
     {
 
-        public WeaponPartItemData stockPartItemData;
-        public WeaponPartItemData bodyPartItemData;
-        public WeaponPartItemData barrelPartItemData;
+        public int stockPartItemIndex;
+        public int bodyPartItemIndex;
+        public int barrelPartItemIndex;
 
-        public LoadoutData(Loadout loadout)
+        public LoadoutData(Loadout loadout, List<WeaponPartItemWrapper> weaponPartItems)
         {
-            this.stockPartItemData  = new WeaponPartItemData(loadout.StockPartItem);
-            this.bodyPartItemData   = new WeaponPartItemData(loadout.BodyPartItem);
-            this.barrelPartItemData = new WeaponPartItemData(loadout.BarrelPartItem);
+            this.stockPartItemIndex  = weaponPartItems.IndexOf(loadout.StockPartItem);
+            this.bodyPartItemIndex   = weaponPartItems.IndexOf(loadout.BodyPartItem);
+            this.barrelPartItemIndex = weaponPartItems.IndexOf(loadout.BarrelPartItem);
         }
 
     }

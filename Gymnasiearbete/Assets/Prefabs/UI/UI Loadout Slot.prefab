@@ -86,6 +86,7 @@ GameObject:
   - component: {fileID: 873921327590737240}
   - component: {fileID: 873921327590737243}
   - component: {fileID: 873921327590737241}
+  - component: {fileID: 390500967927953367}
   m_Layer: 5
   m_Name: UI Loadout Slot
   m_TagString: Untagged
@@ -135,13 +136,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: 41017da28bd7e5f41ad947325d67e820, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -149,7 +150,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 2
 --- !u!114 &873921327590737243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,18 +164,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 0
+  m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_NormalColor: {r: 0.13, g: 0.13, b: 0.13, a: 0.2}
+    m_HighlightedColor: {r: 0.13, g: 0.13, b: 0.13, a: 0.29803923}
+    m_PressedColor: {r: 0.13, g: 0.13, b: 0.13, a: 0.4}
+    m_SelectedColor: {r: 0.13, g: 0.13, b: 0.13, a: 0.4}
+    m_DisabledColor: {r: 0.13, g: 0.13, b: 0.13, a: 0}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -189,7 +190,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 873921327590737240}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -219,6 +220,19 @@ MonoBehaviour:
   newIconGameObject: {fileID: 873921326807081755}
   createdContainer: {fileID: 873921328199611756}
   loadoutNameText: {fileID: 873921328013736219}
+  loadoutSlotInfoText: {fileID: 873921328005362837}
+--- !u!114 &390500967927953367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 873921327590737236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &873921328005362839
 GameObject:
   m_ObjectHideFlags: 0
@@ -470,9 +484,9 @@ MonoBehaviour:
   m_fontSize: 30
   m_fontSizeBase: 30
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 20
+  m_fontSizeMax: 30
   m_fontStyle: 0
   m_textAlignment: 1026
   m_characterSpacing: 0
@@ -505,7 +519,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 5, y: 5, z: 5, w: 0}
   m_textInfo:
     textComponent: {fileID: 873921328013736219}
     characterCount: 6

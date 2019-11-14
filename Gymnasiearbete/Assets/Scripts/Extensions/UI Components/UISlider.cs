@@ -10,8 +10,7 @@ namespace ArenaShooter.Extensions.UIComponents
 {
 
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(Image))]
-    sealed class UISlider : MonoBehaviour, IPointerDownHandler, IDragHandler
+    sealed class UISlider : Graphic, IPointerDownHandler, IDragHandler
     {
 
         #region Editor
@@ -38,13 +37,20 @@ namespace ArenaShooter.Extensions.UIComponents
 
         #endregion
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
+
+            color = Color.clear;
+
             UpdateFiller(false);
         }
 
-        private void OnValidate()
+#if UNITY_EDITOR
+        protected override void OnValidate()
         {
+            base.OnValidate();
+
             if (Application.isPlaying || fillerImage != null)
             {
                 fillerImage.fillMethod = verticalFill ? Image.FillMethod.Vertical : Image.FillMethod.Horizontal;
@@ -52,6 +58,7 @@ namespace ArenaShooter.Extensions.UIComponents
                 UpdateFiller(Application.isPlaying);
             }
         }
+#endif
 
         public void SetValue(float value, bool sendUpdate)
         {
@@ -72,8 +79,17 @@ namespace ArenaShooter.Extensions.UIComponents
 
         private void MoveFiller(Vector2 dragPosition)
         {
-            Vector2 point = fillerContainer.InverseTransformPoint(dragPosition);
-            
+            Vector2 point = Vector2.zero;
+
+            if (canvas.renderMode == RenderMode.ScreenSpaceOverlay)
+            {
+                point = fillerContainer.InverseTransformPoint(dragPosition);
+            }
+            else if (canvas.renderMode == RenderMode.ScreenSpaceCamera)
+            {
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, dragPosition, canvas.worldCamera, out point);
+            }
+
             float valueBorder     = verticalFill ? fillerContainer.rect.height : fillerContainer.rect.width;
             float halfValueBorder = valueBorder / 2f;
 

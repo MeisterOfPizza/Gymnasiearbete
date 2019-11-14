@@ -12,7 +12,7 @@ namespace ArenaShooter.Data
         #region Private constants
 
         private const string SAVE_FOLDER_PATH = "/ArenaShooter/savedata/";
-        private const string SAVE_FILE_PATH   = "profile.sav";
+        private const string SAVE_FILE_PATH   = "profile.dat";
 
         #endregion
 

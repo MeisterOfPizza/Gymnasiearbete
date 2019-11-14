@@ -1,5 +1,7 @@
-﻿using ArenaShooter.Player;
+﻿using ArenaShooter.Combat;
+using ArenaShooter.Player;
 using System;
+using System.Collections.Generic;
 
 namespace ArenaShooter.Data
 {
@@ -13,12 +15,12 @@ namespace ArenaShooter.Data
         public bool        isUnlocked;
         public LoadoutData loadoutData;
 
-        public LoadoutSlotData(LoadoutSlot loadoutSlot)
+        public LoadoutSlotData(LoadoutSlot loadoutSlot, List<WeaponPartItemWrapper> weaponPartItems)
         {
             this.slotId      = loadoutSlot.SlotId;
             this.loadoutName = loadoutSlot.LoadoutName;
             this.isUnlocked  = loadoutSlot.IsUnlocked;
-            this.loadoutData = new LoadoutData(loadoutSlot.Loadout);
+            this.loadoutData = new LoadoutData(loadoutSlot.Loadout, weaponPartItems);
         }
 
     }

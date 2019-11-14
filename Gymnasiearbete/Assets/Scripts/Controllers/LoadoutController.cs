@@ -19,27 +19,11 @@ namespace ArenaShooter.Controllers
 
         public Action OnLoadoutChanged { get; set; }
 
-        public Loadout CurrentLoadout
-        {
-            get
-            {
-                return selectedLoadoutSlot.Loadout;
-            }
-        }
-
-        #endregion
-
-        #region Private variables
-
-        private LoadoutSlot selectedLoadoutSlot;
-
         #endregion
 
         protected override void OnAwake()
         {
             Profile.Load();
-
-            selectedLoadoutSlot = Profile.Inventory.LoadoutSlots[0];
         }
 
         private void OnApplicationQuit()
@@ -49,7 +33,7 @@ namespace ArenaShooter.Controllers
 
         public void SetSelectedLoadoutSlot(LoadoutSlot loadoutSlot)
         {
-            this.selectedLoadoutSlot = loadoutSlot;
+            Profile.SelectedLoadoutSlot = loadoutSlot;
 
             OnLoadoutChanged?.Invoke();
         }

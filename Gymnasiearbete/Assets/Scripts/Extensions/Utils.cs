@@ -1,5 +1,6 @@
 ﻿using ArenaShooter.Entities;
 using Bolt.LagCompensation;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -121,6 +122,14 @@ namespace ArenaShooter.Extensions
             foreach (Transform child in parent)
             {
                 GameObject.Destroy(child.gameObject);
+            }
+        }
+
+        public static void SetChildrenActive(this Transform parent, bool active)
+        {
+            foreach (Transform child in parent)
+            {
+                child.gameObject.SetActive(active);
             }
         }
 
@@ -312,6 +321,20 @@ namespace ArenaShooter.Extensions
             }
 
             return value;
+        }
+
+        #endregion
+
+        #region Lists
+
+        public static T TakeRandom<T>(this IList<T> list)
+        {
+            return list[Random.Range(0, list.Count)];
+        }
+
+        public static T TakeRandom<T>(this IEnumerable<T> enumerable)
+        {
+            return enumerable.ElementAt(Random.Range(0, enumerable.Count()));
         }
 
         #endregion

@@ -17,12 +17,27 @@ namespace ArenaShooter.UI
         [SerializeField] private GameObject newIconGameObject;
         [SerializeField] private GameObject createdContainer;
         [SerializeField] private TMP_Text   loadoutNameText;
+        [SerializeField] private TMP_Text   loadoutSlotInfoText;
+
+        #endregion
+
+        #region Public properties
+
+        public LoadoutSlot LoadoutSlot
+        {
+            get
+            {
+                return loadoutSlot;
+            }
+        }
 
         #endregion
 
         #region Private variables
 
         private LoadoutSlot loadoutSlot;
+
+        private bool isSelected;
 
         #endregion
 
@@ -32,32 +47,47 @@ namespace ArenaShooter.UI
 
             newIconGameObject.SetActive(!loadoutSlot.IsUnlocked);
             createdContainer.SetActive(loadoutSlot.IsUnlocked);
-            loadoutNameText.text = loadoutSlot.LoadoutName;
+
+            UpdateText();
         }
 
         private void CreateNew()
         {
             loadoutSlot.Unlock();
 
-            string[] loadoutNamePresets = new string[] { "Ranger", "Sniper", "Assassin", "Spy", "Soldier" };
-            loadoutSlot.Rename(loadoutNamePresets[Random.Range(0, loadoutNamePresets.Length)]);
+            loadoutSlot.Rename(LoadoutSlot.GetRandomLoadoutName());
 
-            UpdateName();
+            UpdateText();
         }
 
         public void Select()
         {
-            if (!loadoutSlot.IsUnlocked)
+            if (!isSelected)
             {
-                CreateNew();
-            }
+                if (!loadoutSlot.IsUnlocked)
+                {
+                    CreateNew();
+                }
 
-            LoadoutController.Singleton.SetSelectedLoadoutSlot(loadoutSlot);
+                isSelected = true;
+
+                UpdateText();
+
+                UILoadoutController.Singleton.SetSelectedLoadoutSlot(this);
+            }
         }
 
-        public void UpdateName()
+        public void UpdateText()
         {
-            loadoutNameText.text = loadoutSlot.LoadoutName;
+            loadoutNameText.text     = loadoutSlot.LoadoutName;
+            loadoutSlotInfoText.text = isSelected ? "<color=orange>Selected</color>" : loadoutSlot.WeaponOutputTypeString();
+        }
+
+        public void SetSelected(bool isSelected)
+        {
+            this.isSelected = isSelected;
+
+            UpdateText();
         }
 
     }
