@@ -120,7 +120,7 @@ namespace ArenaShooter.Combat
 
         public virtual int CalculateDamage(float range)
         {
-            return (int)(Damage * (1 - Mathf.Clamp01(range / weaponStats.Range)));
+            return Mathf.CeilToInt((Damage * (1 - Mathf.Clamp01(range / weaponStats.Range))));
         }
 
         #endregion
