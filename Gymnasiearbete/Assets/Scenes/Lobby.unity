@@ -620,7 +620,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   eventMask:
     serializedVersion: 2
-    m_Bits: 32768
+    m_Bits: 131072
 --- !u!20 &23389845
 Camera:
   m_ObjectHideFlags: 0
@@ -652,7 +652,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 32768
+    m_Bits: 131072
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -7861,7 +7861,7 @@ GameObject:
   m_Component:
   - component: {fileID: 566263201}
   - component: {fileID: 566263202}
-  m_Layer: 29
+  m_Layer: 30
   m_Name: Post Processing Volume
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17357,7 +17357,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 909115703
+    m_Bits: 1837416759
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -17398,7 +17398,7 @@ MonoBehaviour:
   volumeTrigger: {fileID: 1292936860}
   volumeLayer:
     serializedVersion: 2
-    m_Bits: 536870912
+    m_Bits: 1610612736
   stopNaNPropagation: 1
   finalBlitToCameraTarget: 0
   antialiasingMode: 1
@@ -26027,7 +26027,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2070346367}
-  m_Layer: 15
+  m_Layer: 17
   m_Name: Weapon Parts Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28274,7 +28274,7 @@ GameObject:
   - component: {fileID: 2324925650434380729}
   - component: {fileID: 2324925650434380730}
   m_Layer: 5
-  m_Name: Checkbox
+  m_Name: 
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3848188617405101134}
   - component: {fileID: 3848188617405101121}
   - component: {fileID: 3848188617405101120}
-  m_Layer: 20
+  m_Layer: 23
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 3848188618349009616}
   - component: {fileID: 8551715770339357374}
   - component: {fileID: 7110989654633788932}
-  m_Layer: 20
+  m_Layer: 23
   m_Name: Player Rocket Projectile Shot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -173,6 +173,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Explosion Effect - Rocket
       objectReference: {fileID: 0}
+    - target: {fileID: 2666111351735457144, guid: 33fb9914a76d7024abaa0e54b9b78152,
+        type: 3}
+      propertyPath: m_Layer
+      value: 23
+      objectReference: {fileID: 0}
     - target: {fileID: 2666111351735457145, guid: 33fb9914a76d7024abaa0e54b9b78152,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -227,6 +232,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9008169944310955500, guid: 33fb9914a76d7024abaa0e54b9b78152,
+        type: 3}
+      propertyPath: m_Layer
+      value: 23
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 33fb9914a76d7024abaa0e54b9b78152, type: 3}

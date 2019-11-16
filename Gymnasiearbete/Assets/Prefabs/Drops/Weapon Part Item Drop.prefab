@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3860792230359260041}
   - component: {fileID: 3860792230359260042}
   - component: {fileID: 3860792230359260040}
-  m_Layer: 17
+  m_Layer: 18
   m_Name: Weapon Part Item Drop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 4947677698470205562}
   - component: {fileID: 4947677698470205560}
   - component: {fileID: 4947677698470205561}
-  m_Layer: 17
+  m_Layer: 18
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}

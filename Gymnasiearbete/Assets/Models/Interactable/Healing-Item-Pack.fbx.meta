@@ -3,7 +3,17 @@ guid: ce048142c2e14c8488d1242cc05eff92
 ModelImporter:
   serializedVersion: 26
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Cross
+    second: {fileID: 2100000, guid: 06d0981ec6668484ca6ef0dc84508306, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Medkit
+    second: {fileID: 2100000, guid: 569a923e90a65464384fcc7590513737, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

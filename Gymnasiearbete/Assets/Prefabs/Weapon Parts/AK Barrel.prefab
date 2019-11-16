@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4397034097026080612}
   - component: {fileID: 4397034097026080613}
   - component: {fileID: 818462460473158996}
-  m_Layer: 15
+  m_Layer: 17
   m_Name: AK Barrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}

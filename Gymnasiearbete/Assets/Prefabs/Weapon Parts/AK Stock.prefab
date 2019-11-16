@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8537350361406475985}
   - component: {fileID: 8537350361406475984}
   - component: {fileID: 1068029690742083834}
-  m_Layer: 15
+  m_Layer: 17
   m_Name: AK Stock
   m_TagString: Untagged
   m_Icon: {fileID: 0}

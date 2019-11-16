@@ -89,6 +89,14 @@ namespace ArenaShooter.Entities
             }
         }
 
+        public Weapon Weapon
+        {
+            get
+            {
+                return weapon;
+            }
+        }
+
         #endregion
 
         #region IAIAgentBehaviour
@@ -192,7 +200,7 @@ namespace ArenaShooter.Entities
 
         public override void Attached()
         {
-            uiEnemyGameStats = Instantiate(uiEnemyGameStatsPrefab, UIEnemyGameStatsController.Singleton.Container).GetComponent<UIEnemyGameStats>();
+            uiEnemyGameStats = Instantiate(uiEnemyGameStatsPrefab, UIGameController.Singleton.EnemyOverlayContainer).GetComponent<UIEnemyGameStats>();
             uiEnemyGameStats.Initialize(this);
             uiEnemyGameStats.transform.position = MainCameraController.MainCamera.WorldToScreenPoint(transform.position);
 
