@@ -20,7 +20,9 @@ namespace ArenaShooter.Editor
             {
                 EnemyTemplate enemyTemplate = target as EnemyTemplate;
 
-                enemyTemplate.weaponPartItemDrops = enemyTemplate.weaponPartItemDrops.OrderByDescending(t => t.DropChance).ToArray();
+                enemyTemplate.weaponPartItemDrops = enemyTemplate.weaponPartItemDrops.OrderBy(t => t.DropChance).ToArray();
+
+                EditorUtility.SetDirty(enemyTemplate);
             }
         }
 
