@@ -34,21 +34,27 @@ namespace ArenaShooter.Drops
             {
                 case WeaponPartItemRarity.Standard:
                 default:
+                    meshRenderer.material.SetColor("_Color", WeaponPartItemWrapper.StandardRarityColor);
                     meshRenderer.material.SetColor("_Emission", WeaponPartItemWrapper.StandardRarityColor);
                     break;
                 case WeaponPartItemRarity.Common:
+                    meshRenderer.material.SetColor("_Color", WeaponPartItemWrapper.CommonRarityColor);
                     meshRenderer.material.SetColor("_Emission", WeaponPartItemWrapper.CommonRarityColor);
                     break;
                 case WeaponPartItemRarity.Uncommon:
+                    meshRenderer.material.SetColor("_Color", WeaponPartItemWrapper.UncommonRarityColor);
                     meshRenderer.material.SetColor("_Emission", WeaponPartItemWrapper.UncommonRarityColor);
                     break;
                 case WeaponPartItemRarity.Rare:
+                    meshRenderer.material.SetColor("_Color", WeaponPartItemWrapper.RareRarityColor);
                     meshRenderer.material.SetColor("_Emission", WeaponPartItemWrapper.RareRarityColor);
                     break;
                 case WeaponPartItemRarity.Legendary:
+                    meshRenderer.material.SetColor("_Color", WeaponPartItemWrapper.LegendaryRarityColor);
                     meshRenderer.material.SetColor("_Emission", WeaponPartItemWrapper.LegendaryRarityColor);
                     break;
                 case WeaponPartItemRarity.Ancient:
+                    meshRenderer.material.SetColor("_Color", WeaponPartItemWrapper.AncientRarityColor);
                     meshRenderer.material.SetColor("_Emission", WeaponPartItemWrapper.AncientRarityColor);
                     break;
             }
@@ -56,16 +62,17 @@ namespace ArenaShooter.Drops
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.tag != "Player") return;
-
-            var item = weaponPartItemTemplate.CreateRandomWeaponPartItem();
-
-            if (item != null)
+            if (other.tag == "Player" && other.GetComponent<PlayerController>() is PlayerController playerController && playerController.entity.IsOwner)
             {
-                Profile.Inventory.WeaponPartItems.Add(item);
-            }
+                var item = weaponPartItemTemplate.CreateRandomWeaponPartItem();
 
-            Destroy(gameObject);
+                if (item != null)
+                {
+                    Profile.Inventory.WeaponPartItems.Add(item);
+                }
+
+                Destroy(gameObject);
+            }
         }
 
     }

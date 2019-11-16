@@ -2,6 +2,7 @@
 using ArenaShooter.Controllers;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 #pragma warning disable 0649
 
@@ -14,9 +15,10 @@ namespace ArenaShooter.UI
         #region Editor
 
         [Header("References")]
-        [SerializeField] private TMP_Text itemName;
-        [SerializeField] private TMP_Text itemRarity;
-        [SerializeField] private TMP_Text itemStats;
+        [SerializeField] private RectTransform rectTransform;
+        [SerializeField] private TMP_Text      itemName;
+        [SerializeField] private TMP_Text      itemRarity;
+        [SerializeField] private TMP_Text      itemStats;
 
         #endregion
 
@@ -34,10 +36,17 @@ namespace ArenaShooter.UI
 
         #region Private variables
 
+        private RectTransform parentRectTransform;
+
         private WeaponPartItemWrapper weaponPartItem;
         private bool                  isSelected;
 
         #endregion
+
+        private void Awake()
+        {
+            parentRectTransform = transform.parent.GetComponent<RectTransform>();
+        }
 
         public void Initialize(WeaponPartItemWrapper weaponPartItem)
         {
@@ -65,6 +74,13 @@ namespace ArenaShooter.UI
             this.isSelected = isSelected;
 
             itemName.text = weaponPartItem.BaseTemplate.Name + (isSelected ? " (<color=orange>Selected</color>)" : "");
+            
+            LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
+
+            if (parentRectTransform != null)
+            {
+                LayoutRebuilder.ForceRebuildLayoutImmediate(parentRectTransform);
+            }
         }
 
     }

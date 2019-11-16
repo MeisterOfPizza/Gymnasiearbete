@@ -148,6 +148,40 @@ defaultTemplate = OUTPUT_TYPE + TEMPLATE_PART
             }
         }
 
+        public static sbyte GetStatTypeValueDeltaDirection(StatType statType, float oldValue, float newValue)
+        {
+            if (oldValue != newValue)
+            {
+                switch (statType)
+                {
+                    // old > new = -1 and old < new = 1
+                    case StatType.Range:
+                    case StatType.MaxDistance:
+                    case StatType.DamageMultiplier:
+                    case StatType.Damage:
+                    case StatType.MaxAmmoPerClip:
+                    case StatType.MaxAmmoStock:
+                    case StatType.BurstShots:
+                    case StatType.Mobility:
+                    case StatType.Accuracy:
+                        return oldValue > newValue ? (sbyte)-1 : (sbyte)1;
+
+                    // old > new = 1 and old < new = -1
+                    case StatType.FireCooldown:
+                    case StatType.ReloadTime:
+                    case StatType.FullReloadTime:
+                    case StatType.BurstFireInterval:
+                        return oldValue > newValue ? (sbyte)1 : (sbyte)-1;
+                    default:
+                        return 0;
+                }
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
         #endregion
 
     }

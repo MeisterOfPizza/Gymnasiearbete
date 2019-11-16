@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 58283636779e66b459ec967a5a9b0649, type: 3}
-  m_Name: Common
+  m_Name: Uncommon
   m_EditorClassIdentifier: 
-  id: 0
-  rarity: 10
+  id: 10
+  rarity: 20
   possibleWeaponPartTemplates:
   - {fileID: 11400000, guid: c88ea1effd6a5894cb5647721e5908a8, type: 2}
   - {fileID: 11400000, guid: 0a65ac037dd240a41aa72bd2b29f61fc, type: 2}
@@ -27,30 +27,30 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 43337d03633dab849ae3dbbca75c59b2, type: 2}
   - {fileID: 11400000, guid: 67354888ad107714eb22cad3d1fe5718, type: 2}
   - {fileID: 11400000, guid: 22acf60e8f44d374da45f04b88362bd8, type: 2}
-  statChangesToApply: 3
+  statChangesToApply: 4
   statChanges:
   - priority: 0
     statType: 16
     changeType: 0
-    minValue: 1
-    maxValue: 2
+    minValue: 3
+    maxValue: 4
   - priority: 0
     statType: 8
     changeType: 1
-    minValue: 0.975
-    maxValue: 1.25
+    minValue: 0.99
+    maxValue: 1.4
   - priority: 0
     statType: 384
     changeType: 1
-    minValue: 0.95
-    maxValue: 1.05
+    minValue: 0.9
+    maxValue: 0.95
   - priority: 0
     statType: 3
     changeType: 1
-    minValue: 1.1
-    maxValue: 1.25
+    minValue: 1.2
+    maxValue: 1.5
   - priority: 0
     statType: 32
     changeType: 1
-    minValue: 1.1
-    maxValue: 1.25
+    minValue: 1.2
+    maxValue: 1.3

@@ -525,6 +525,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca6d1ec7b210e684ebe0a3d0d6a69e1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rectTransform: {fileID: 5471099756483111485}
   itemName: {fileID: 5471099757183329532}
   itemRarity: {fileID: 5471099755416769726}
   itemStats: {fileID: 5471099756007182807}

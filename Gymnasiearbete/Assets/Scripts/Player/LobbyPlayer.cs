@@ -47,6 +47,7 @@ namespace ArenaShooter.Player
 
                 UIServerLobbyController.Singleton.SetLobbyPlayer(this);
 
+                LoadoutChanged();
                 LoadoutController.Singleton.OnLoadoutChanged += LoadoutChanged;
 
                 entity.TakeControl();

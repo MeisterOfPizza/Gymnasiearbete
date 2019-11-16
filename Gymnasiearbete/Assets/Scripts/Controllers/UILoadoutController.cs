@@ -122,6 +122,7 @@ namespace ArenaShooter.Controllers
         public void OpenLoadoutMenu(GameObject goBackMenu)
         {
             this.goBackMenu = goBackMenu;
+            goBackMenu.SetActive(false);
 
             loadoutMenu.SetActive(true);
 
@@ -192,6 +193,8 @@ namespace ArenaShooter.Controllers
                 UpdateWeaponPartItemLists();
                 DisplaySelectedLoadout();
                 DeselectWeaponPart();
+
+                LoadoutController.Singleton.OnLoadoutChanged?.Invoke();
             }
         }
 

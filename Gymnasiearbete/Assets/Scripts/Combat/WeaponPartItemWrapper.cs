@@ -130,14 +130,7 @@ namespace ArenaShooter.Combat
             {
                 if (StatTypeValues.ContainsKey(kvp.Key))
                 {
-                    if (StatTypeValues[kvp.Key] > kvp.Value)
-                    {
-                        StatTypeValuesDelta[kvp.Key] = -1;
-                    }
-                    else if (StatTypeValues[kvp.Key] < kvp.Value)
-                    {
-                        StatTypeValuesDelta[kvp.Key] = 1;
-                    }
+                    StatTypeValuesDelta[kvp.Key] = WeaponPartTemplate.GetStatTypeValueDeltaDirection(kvp.Key, StatTypeValues[kvp.Key], kvp.Value);
                 }
             }
         }
