@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.16788375, g: 0.21073635, b: 0.28994125, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1519,7 +1519,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &239291526
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2068,7 +2068,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &291909402
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2660,9 +2660,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 357148985}
-  - component: {fileID: 357148986}
   - component: {fileID: 357148987}
   - component: {fileID: 357148988}
+  - component: {fileID: 357148986}
   m_Layer: 0
   m_Name: UI Controllers
   m_TagString: Untagged
@@ -2693,10 +2693,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 357148984}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0557ada0bee6aa142b3c6f07aa825c5c, type: 3}
+  m_Script: {fileID: 11500000, guid: c7a3fe6f6d29a544e9b432957422dff1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  container: {fileID: 1350200559}
+  enemyOverlayContainer: {fileID: 1350200559}
+  interactableOverlayContainer: {fileID: 1475319341}
 --- !u!114 &357148987
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5141,7 +5142,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 777563213}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 4.833817, y: 3.567402, z: -6.281021}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1304477482}
@@ -7214,8 +7215,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1086222351}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 4.833817, y: 3.567402, z: -6.281021}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 968597741}
@@ -7337,7 +7338,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1111853436}
-  m_Mesh: {fileID: 7033574902162620072, guid: d4b2da71d426d1c478557cdae7bed271, type: 3}
+  m_Mesh: {fileID: 2193668401873010470, guid: d4b2da71d426d1c478557cdae7bed271, type: 3}
 --- !u!1 &1131805341
 GameObject:
   m_ObjectHideFlags: 0
@@ -8954,59 +8955,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!1 &1349571484
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1349571486}
-  - component: {fileID: 1349571485}
-  m_Layer: 0
-  m_Name: InteractableController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1349571485
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1349571484}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3c3a28f22894744eb5642cdf11abcb2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  medKitContainer: {fileID: 1086222352}
-  spawnPointsLargeMedkits:
-  - {fileID: 805369786}
-  spawnPointsSmallMedkits:
-  - {fileID: 1904164695}
-  spawnPointsSmallAmmoboxes:
-  - {fileID: 795096399}
-  spawnPointsLargeAmmoBoxes:
-  - {fileID: 1740937250}
-  container: {fileID: 1475319341}
---- !u!4 &1349571486
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1349571484}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1349868460
 GameObject:
   m_ObjectHideFlags: 0
@@ -9020,7 +8968,7 @@ GameObject:
   - component: {fileID: 1349868463}
   - component: {fileID: 1349868462}
   m_Layer: 5
-  m_Name: Joystick Camera Movment Image
+  m_Name: Joystick Camera Movement Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10454,13 +10402,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1659642493}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.833817, y: 3.567402, z: -6.281021}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1086222352}
   - {fileID: 777563214}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1659915229
 GameObject:
@@ -12324,6 +12272,7 @@ GameObject:
   - component: {fileID: 1928587506}
   - component: {fileID: 1928587508}
   - component: {fileID: 1928587509}
+  - component: {fileID: 1928587510}
   m_Layer: 0
   m_Name: Controllers
   m_TagString: Untagged
@@ -12463,6 +12412,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf1e2e286953ff047914d8d4e96fb9b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1928587510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928587500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3c3a28f22894744eb5642cdf11abcb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  medKitContainer: {fileID: 1086222352}
+  spawnPointsLargeMedkits:
+  - {fileID: 805369786}
+  spawnPointsSmallMedkits:
+  - {fileID: 1904164695}
+  spawnPointsSmallAmmoboxes:
+  - {fileID: 795096399}
+  spawnPointsLargeAmmoBoxes:
+  - {fileID: 1740937250}
 --- !u!1 &2060413742
 GameObject:
   m_ObjectHideFlags: 0

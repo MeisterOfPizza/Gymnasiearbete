@@ -16,17 +16,18 @@ MonoBehaviour:
   name: Default RPG
   description: 
   outputType: 1
-  weaponPartPrefab: {fileID: 0}
-  damage: 10
-  maxAmmoPerClip: 30
-  maxAmmoStock: 150
+  weaponPartPrefab: {fileID: 945334509661296513, guid: 772abd546b47d6d4d8d2c4242cfa877f,
+    type: 3}
+  damage: 95
+  maxAmmoPerClip: 2
+  maxAmmoStock: 12
   ammoPerFire: 1
-  fireCooldown: 0.1
+  fireCooldown: 0.25
   reloadTime: 1
   fullReloadTime: 1.5
   burstFireInterval: 0.05
   burstShots: 3
-  firingMode: 2
+  firingMode: 0
   manualAmmoDepletion: 0
   firePrefab: {fileID: 3848188618349009631, guid: b3623cda8cdf7644e86a8d996e0d9ac3,
     type: 3}

@@ -20,22 +20,22 @@ TagManager:
   - 
   - 
   - Interactable
-  - 
   - Interactable Search
+  - 
+  - Weapon Part
+  - Player Drop
+  - 
   - 
   - 
   - 
   - Player Projectile
   - Enemy Projectile
   - 
-  - 
-  - 
   - Player
   - Enemy
   - 
   - Target Search
-  - 
-  - 
+  - PostProcessing
   - 
   m_SortingLayers:
   - name: Default

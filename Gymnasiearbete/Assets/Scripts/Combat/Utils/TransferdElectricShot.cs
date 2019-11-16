@@ -42,6 +42,9 @@ namespace ArenaShooter.Combat.Utils
             {
                 timeLeft -= Time.deltaTime;
 
+                effect.startColor = new Color(effect.startColor.r, effect.startColor.g, effect.startColor.b, timeLeft / effectTime);
+                effect.endColor   = new Color(effect.endColor.r, effect.endColor.g, effect.endColor.b, timeLeft / effectTime);
+
                 yield return new WaitForEndOfFrame();
             }
 

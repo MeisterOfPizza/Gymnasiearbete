@@ -1,6 +1,7 @@
 ﻿using ArenaShooter.Combat;
 using ArenaShooter.Controllers;
 using ArenaShooter.Entities;
+using ArenaShooter.Extensions;
 using ArenaShooter.UI;
 using Bolt;
 using UnityEngine;
@@ -14,6 +15,10 @@ namespace ArenaShooter.Player
     {
 
         #region Editor
+
+        [Header("References")]
+        [SerializeField] private Transform    rightHand;
+        [SerializeField] private LineRenderer laserSight;
 
         [Header("Values")]
         [SerializeField] private int startHealth = 100;  // TEST DATA
@@ -101,7 +106,8 @@ namespace ArenaShooter.Player
 
             if (entity.IsOwner)
             {
-                weapon = LoadoutController.Singleton.CurrentLoadout.CreateWeapon(transform);
+                weapon = Profile.SelectedLoadoutSlot.Loadout.CreateWeapon(rightHand);
+                BuiltWeapon.AssembleWeapon(Profile.SelectedLoadoutSlot.Loadout, rightHand).transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
 
                 weapon.Stats.GetWeaponPartTemplateIds(out ushort stockId, out ushort bodyId, out ushort barrelId);
                 state.Weapon.WeaponStockId  = stockId;
@@ -110,7 +116,12 @@ namespace ArenaShooter.Player
             }
             else
             {
-                weapon = WeaponController.Singleton.CreateWeapon(WeaponController.Singleton.GetStockTemplate((ushort)state.Weapon.WeaponStockId), WeaponController.Singleton.GetBodyTemplate((ushort)state.Weapon.WeaponBodyId), WeaponController.Singleton.GetBarrelTemplate((ushort)state.Weapon.WeaponBarrelId), transform);
+                var stockTemplate  = WeaponController.Singleton.GetStockTemplate((ushort)state.Weapon.WeaponStockId);
+                var bodyTemplate   = WeaponController.Singleton.GetBodyTemplate((ushort)state.Weapon.WeaponBodyId);
+                var barrelTemplate = WeaponController.Singleton.GetBarrelTemplate((ushort)state.Weapon.WeaponBarrelId);
+
+                weapon = WeaponController.Singleton.CreateBystanderWeapon(stockTemplate, bodyTemplate, barrelTemplate, rightHand);
+                BuiltWeapon.AssembleWeapon(stockTemplate, bodyTemplate, barrelTemplate, rightHand).transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
             }
 
             if (entity.IsOwner)
@@ -120,6 +131,8 @@ namespace ArenaShooter.Player
             }
 
             weapon.EquipWeapon(this);
+
+            UpdateLaserSight();
         }
 
         public override void Attached()
@@ -144,6 +157,8 @@ namespace ArenaShooter.Player
             {
                 weapon.CheckForInput();
             }
+
+            UpdateLaserSight();
         }
 
         #region OnEvents
@@ -169,6 +184,28 @@ namespace ArenaShooter.Player
             if(evnt.Target == entity && entity.IsOwner)
             {
                 weapon.RefillAmmo(evnt.AmountOfClips);
+            }
+        }
+
+        #endregion
+
+        #region Helpers
+
+        private void UpdateLaserSight()
+        {
+            Ray ray = new Ray(rightHand.position, rightHand.forward);
+
+            laserSight.SetPosition(0, rightHand.position);
+
+            var hit = Utils.Raycast(ray, weapon.Stats.MaxDistance, WeaponHitLayerMask, gameObject, QueryTriggerInteraction.Ignore);
+
+            if (hit.HitAnything)
+            {
+                laserSight.SetPosition(1, hit.HitPoint);
+            }
+            else
+            {
+                laserSight.SetPosition(1, ray.origin + ray.direction * weapon.Stats.MaxDistance);
             }
         }
 

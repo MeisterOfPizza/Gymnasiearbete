@@ -16,6 +16,7 @@ MonoBehaviour:
   name: Default Ak
   description: 
   outputType: 0
-  weaponPartPrefab: {fileID: 0}
+  weaponPartPrefab: {fileID: 8537350361406474543, guid: 61f825f9bc3ae2e479122fc579ac42fc,
+    type: 3}
   mobility: 0
   accuracy: 0.7

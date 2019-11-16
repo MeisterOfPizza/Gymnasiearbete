@@ -16,7 +16,8 @@ MonoBehaviour:
   name: Default RPG
   description: 
   outputType: 1
-  weaponPartPrefab: {fileID: 0}
-  range: 2.5
+  weaponPartPrefab: {fileID: 4397034097026080610, guid: 610761267e037b147b3658e1d989010f,
+    type: 3}
+  range: 10
   maxDistance: 25
   damageMulitplier: 1

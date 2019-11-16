@@ -27,6 +27,9 @@ namespace ArenaShooter.UI
         [SerializeField] private TMP_Text statusText;
         [SerializeField] private Button   joinButton;
 
+        [Header("Values")]
+        [SerializeField] private Color hoverColor = Color.white;
+
         #endregion
 
         #region Private variables
@@ -62,7 +65,7 @@ namespace ArenaShooter.UI
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            background.color = Color.white;
+            background.color = hoverColor;
 
             serverNameText.color   = Color.black;
             mapNameText.color      = Color.black;

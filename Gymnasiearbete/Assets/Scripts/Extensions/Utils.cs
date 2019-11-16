@@ -1,5 +1,6 @@
 ﻿using ArenaShooter.Entities;
 using Bolt.LagCompensation;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -122,6 +123,24 @@ namespace ArenaShooter.Extensions
             {
                 GameObject.Destroy(child.gameObject);
             }
+        }
+
+        public static void SetChildrenActive(this Transform parent, bool active)
+        {
+            foreach (Transform child in parent)
+            {
+                child.gameObject.SetActive(active);
+            }
+        }
+
+        #endregion
+
+        #region GameObjects
+
+        public static bool IsNull(this GameObject gameObject)
+        {
+            // Taken from http://answers.unity.com/answers/586188/view.html in https://answers.unity.com/questions/586144/destroyed-monobehaviour-not-comparing-to-null.html.
+            return gameObject == null || gameObject.Equals(null);
         }
 
         #endregion
@@ -302,6 +321,20 @@ namespace ArenaShooter.Extensions
             }
 
             return value;
+        }
+
+        #endregion
+
+        #region Lists
+
+        public static T TakeRandom<T>(this IList<T> list)
+        {
+            return list[Random.Range(0, list.Count)];
+        }
+
+        public static T TakeRandom<T>(this IEnumerable<T> enumerable)
+        {
+            return enumerable.ElementAt(Random.Range(0, enumerable.Count()));
         }
 
         #endregion

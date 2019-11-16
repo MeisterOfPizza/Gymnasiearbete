@@ -1,11 +1,12 @@
-﻿using UnityEngine;
-using Bolt;
+﻿using ArenaShooter.Controllers;
 using ArenaShooter.Player;
 using ArenaShooter.Templates.Interactable;
-using System.Collections;
-using UnityEngine.UI;
 using ArenaShooter.UI;
-using ArenaShooter.Controllers;
+using Bolt;
+using System.Collections;
+using UnityEngine;
+
+#pragma warning disable 0649
 
 namespace ArenaShooter.Combat.Pickup
 {
@@ -53,8 +54,8 @@ namespace ArenaShooter.Combat.Pickup
 
         private void Start()
         {
-            cooldownCircle = Instantiate(uiInteractablePrefab, InteractableController.Singleton.Container).GetComponent<UIInteractable>();
-            posOffset                   = model.transform.position;
+            cooldownCircle = Instantiate(uiInteractablePrefab, UIGameController.Singleton.InteractableOverlayContainer).GetComponent<UIInteractable>();
+            posOffset      = model.transform.position;
         }
 
         public override void OnEvent(InteractableInteractEvent evnt)
@@ -64,7 +65,6 @@ namespace ArenaShooter.Combat.Pickup
                 isAvailable = false;
                 StartCoroutine("FadeOutEffect");
                 StartCoroutine("SpawnCooldown");
-                
             }
         }
 
@@ -80,7 +80,6 @@ namespace ArenaShooter.Combat.Pickup
             cooldownCircle.gameObject.transform.position = Camera.main.WorldToScreenPoint(circlePosition3D.transform.position);
           
         }
-
 
         #endregion
 

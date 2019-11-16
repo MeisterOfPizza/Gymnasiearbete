@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using ArenaShooter.Templates.Items;
+using System.Collections.Generic;
+using UnityEngine;
 
 #pragma warning disable 0649
 
@@ -56,6 +58,20 @@ namespace ArenaShooter.Templates.Weapons
             {
                 return damageMulitplier;
             }
+        }
+
+        #endregion
+
+        #region Helpers
+
+        public override Dictionary<StatType, float> GetStatTypeValues()
+        {
+            return new Dictionary<StatType, float>()
+            {
+                { StatType.Range,            range },
+                { StatType.MaxDistance,      maxDistance },
+                { StatType.DamageMultiplier, damageMulitplier }
+            };
         }
 
         #endregion

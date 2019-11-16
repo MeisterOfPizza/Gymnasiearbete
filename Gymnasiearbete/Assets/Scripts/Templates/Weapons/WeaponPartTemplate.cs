@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using ArenaShooter.Templates.Items;
+using System.Collections.Generic;
+using UnityEngine;
 
 #pragma warning disable 0649
 
@@ -7,17 +9,17 @@ namespace ArenaShooter.Templates.Weapons
 
     enum WeaponPartTemplateType : byte
     {
-        Stock,
-        Body,
-        Barrel
+        Stock  = 0,
+        Body   = 10,
+        Barrel = 20
     }
 
     enum WeaponOutputType : byte
     {
-        Raycasting,
-        Projectile,
-        Electric,
-        Support
+        Raycasting = 0,
+        Projectile = 1,
+        Electric   = 2,
+        Support    = 3
     }
 
     abstract class WeaponPartTemplate : ScriptableObject
@@ -100,6 +102,83 @@ defaultTemplate = OUTPUT_TYPE + TEMPLATE_PART
             get
             {
                 return weaponPartPrefab;
+            }
+        }
+
+        #endregion
+
+        #region Helpers
+
+        public abstract Dictionary<StatType, float> GetStatTypeValues();
+
+        public static string GetStatTypeValueFormatted(StatType statType, float value, string color)
+        {
+            switch (statType)
+            {
+                case StatType.Range:
+                    return $"Range: <color={color}>{value.ToString("F1")} M</color>";
+                case StatType.MaxDistance:
+                    return $"Distance: <color={color}>{value.ToString("F1")} M</color>";
+                case StatType.DamageMultiplier:
+                    return $"Damage Boost: <color={color}>{value.ToString("P0")}</color>";
+                case StatType.Damage:
+                    return $"Damage: <color={color}>{value}</color>";
+                case StatType.MaxAmmoPerClip:
+                    return $"Ammo: <color={color}>{value}</color>";
+                case StatType.MaxAmmoStock:
+                    return $"Ammo Stock: <color={color}>{value}</color>";
+                case StatType.FireCooldown:
+                    return $"Fire Interval: <color={color}>{value.ToString("F1")} s</color>";
+                case StatType.ReloadTime:
+                    return $"Reload: <color={color}>{value.ToString("F1")} s</color>";
+                case StatType.FullReloadTime:
+                    return $"Full Reload: <color={color}>{value.ToString("F1")} s</color>";
+                case StatType.BurstFireInterval:
+                    return $"Burst Interval: <color={color}>{value.ToString("F1")} s</color>";
+                case StatType.BurstShots:
+                    return $"Burst Shots: <color={color}>{value}</color>";
+                case StatType.Mobility:
+                    return $"Mobility: <color={color}>{value}</color>";
+                case StatType.Accuracy:
+                    return $"Accuracy: <color={color}>{value.ToString("P0")}</color>";
+                case StatType.FiringMode:
+                    return "Mode: " + System.Enum.GetName(typeof(FiringMode), (byte)value);
+                default:
+                    return "";
+            }
+        }
+
+        public static sbyte GetStatTypeValueDeltaDirection(StatType statType, float oldValue, float newValue)
+        {
+            if (oldValue != newValue)
+            {
+                switch (statType)
+                {
+                    // old > new = -1 and old < new = 1
+                    case StatType.Range:
+                    case StatType.MaxDistance:
+                    case StatType.DamageMultiplier:
+                    case StatType.Damage:
+                    case StatType.MaxAmmoPerClip:
+                    case StatType.MaxAmmoStock:
+                    case StatType.BurstShots:
+                    case StatType.Mobility:
+                    case StatType.Accuracy:
+                        return oldValue > newValue ? (sbyte)-1 : (sbyte)1;
+
+                    // old > new = 1 and old < new = -1
+                    case StatType.FireCooldown:
+                    case StatType.ReloadTime:
+                    case StatType.FullReloadTime:
+                    case StatType.BurstFireInterval:
+                        return oldValue > newValue ? (sbyte)1 : (sbyte)-1;
+                    default:
+                        return 0;
+                }
+            }
+            else
+            {
+                return 0;
             }
         }
 

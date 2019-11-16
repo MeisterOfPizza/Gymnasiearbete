@@ -47,6 +47,7 @@ namespace ArenaShooter.Player
 
                 UIServerLobbyController.Singleton.SetLobbyPlayer(this);
 
+                LoadoutChanged();
                 LoadoutController.Singleton.OnLoadoutChanged += LoadoutChanged;
 
                 entity.TakeControl();
@@ -137,9 +138,9 @@ namespace ArenaShooter.Player
 
         private void LoadoutChanged()
         {
-            state.Weapon.WeaponStockId  = LoadoutController.Singleton.CurrentLoadout.StockTemplate.TemplateId;
-            state.Weapon.WeaponBodyId   = LoadoutController.Singleton.CurrentLoadout.BodyTemplate.TemplateId;
-            state.Weapon.WeaponBarrelId = LoadoutController.Singleton.CurrentLoadout.BarrelTemplate.TemplateId;
+            state.Weapon.WeaponStockId  = Profile.SelectedLoadoutSlot.Loadout.StockPartItem.Template.TemplateId;
+            state.Weapon.WeaponBodyId   = Profile.SelectedLoadoutSlot.Loadout.BodyPartItem.Template.TemplateId;
+            state.Weapon.WeaponBarrelId = Profile.SelectedLoadoutSlot.Loadout.BarrelPartItem.Template.TemplateId;
         }
 
         #endregion
