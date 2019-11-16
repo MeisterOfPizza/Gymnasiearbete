@@ -14,12 +14,12 @@ namespace ArenaShooter.Combat
 
         #region Public static properties
 
-        public Color32 StandardRarityColor  { get; private set; } = new Color32(199, 199, 199, 255);
-        public Color32 CommonRarityColor    { get; private set; } = new Color32(255, 255, 255, 255);
-        public Color32 UncommonRarityColor  { get; private set; } = new Color32(142, 224, 054, 255);
-        public Color32 RareRarityColor      { get; private set; } = new Color32(095, 216, 250, 255);
-        public Color32 LegendaryRarityColor { get; private set; } = new Color32(255, 248, 051, 255);
-        public Color32 AncientRarityColor   { get; private set; } = new Color32(255, 031, 064, 255);
+        public static Color32 StandardRarityColor  { get; private set; } = new Color32(199, 199, 199, 255);
+        public static Color32 CommonRarityColor    { get; private set; } = new Color32(255, 255, 255, 255);
+        public static Color32 UncommonRarityColor  { get; private set; } = new Color32(142, 224, 054, 255);
+        public static Color32 RareRarityColor      { get; private set; } = new Color32(095, 216, 250, 255);
+        public static Color32 LegendaryRarityColor { get; private set; } = new Color32(255, 248, 051, 255);
+        public static Color32 AncientRarityColor   { get; private set; } = new Color32(255, 031, 064, 255);
 
         #endregion
 

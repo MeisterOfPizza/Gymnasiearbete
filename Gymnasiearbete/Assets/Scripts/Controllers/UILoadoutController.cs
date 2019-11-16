@@ -172,16 +172,7 @@ namespace ArenaShooter.Controllers
             weaponPartsDisplayContainer.gameObject.SetActive(true);
             weaponPartsDisplayContainer.Clear();
 
-            var stockPart  = Instantiate(Profile.SelectedLoadoutSlot.Loadout.StockPartItem.Template.WeaponPartPrefab, weaponPartsDisplayContainer).GetComponent<WeaponPart>();
-            var bodyPart   = Instantiate(Profile.SelectedLoadoutSlot.Loadout.BodyPartItem.Template.WeaponPartPrefab, weaponPartsDisplayContainer).GetComponent<WeaponPart>();
-            var barrelPart = Instantiate(Profile.SelectedLoadoutSlot.Loadout.BarrelPartItem.Template.WeaponPartPrefab, weaponPartsDisplayContainer).GetComponent<WeaponPart>();
-
-            stockPart.Initialize(Profile.SelectedLoadoutSlot.Loadout.StockPartItem, true);
-            bodyPart.Initialize(Profile.SelectedLoadoutSlot.Loadout.BodyPartItem, true);
-            barrelPart.Initialize(Profile.SelectedLoadoutSlot.Loadout.BarrelPartItem, true);
-
-            bodyPart.AttachStock(stockPart);
-            bodyPart.AttachBarrel(barrelPart);
+            BuiltWeapon.AssembleWeapon(Profile.SelectedLoadoutSlot.Loadout, weaponPartsDisplayContainer, true);
         }
 
         #endregion
@@ -218,7 +209,7 @@ namespace ArenaShooter.Controllers
                 uiBodyWeaponPartItemContainer.gameObject.SetActive(false);
                 uiBarrelWeaponPartItemContainer.gameObject.SetActive(false);
 
-                switch (selectedWeaponPart.WeaponPartItem.BaseTemplate.Type)
+                switch (selectedWeaponPart.WeaponPartTemplate.Type)
                 {
                     case WeaponPartTemplateType.Stock:
                         uiStockWeaponPartItemContainer.gameObject.SetActive(true);
@@ -233,7 +224,7 @@ namespace ArenaShooter.Controllers
 
                 weaponPartItemScrollRect.SetActive(true);
 
-                weaponPartsDisplayContainer.SetChildrenActive(false);
+                weaponPartsDisplayContainer.GetChild(0).SetChildrenActive(false);
                 showWeaponButton.SetActive(true);
                 weaponPart.gameObject.SetActive(true);
 
@@ -247,7 +238,7 @@ namespace ArenaShooter.Controllers
 
             weaponPartItemScrollRect.SetActive(false);
             showWeaponButton.SetActive(false);
-            weaponPartsDisplayContainer.SetChildrenActive(true);
+            weaponPartsDisplayContainer.GetChild(0).SetChildrenActive(true);
 
             StartCoroutine("FocusOnWeapon");
         }

@@ -1,4 +1,5 @@
 ﻿using ArenaShooter.Controllers;
+using ArenaShooter.Templates.Weapons;
 using UnityEngine;
 
 #pragma warning disable 0649
@@ -21,7 +22,8 @@ namespace ArenaShooter.Combat
         #region Editor
 
         [Header("References")]
-        [SerializeField] private MeshRenderer meshRenderer;
+        [SerializeField] private     MeshRenderer meshRenderer;
+        [SerializeField] private new Collider     collider;
 
         [Header("Values")]
         [SerializeField] private string[] highlightMaterialNames;
@@ -41,11 +43,11 @@ The beginConnectPoint is forwards and endConnectPoint is backwards.")]
 
         #region Public properties
 
-        public WeaponPartItemWrapper WeaponPartItem
+        public WeaponPartTemplate WeaponPartTemplate
         {
             get
             {
-                return weaponPartItem;
+                return weaponPartTemplate;
             }
         }
 
@@ -53,15 +55,17 @@ The beginConnectPoint is forwards and endConnectPoint is backwards.")]
 
         #region Private variables
 
-        private WeaponPartItemWrapper weaponPartItem;
-        private bool                  shouldHighlight;
+        private WeaponPartTemplate weaponPartTemplate;
+        private bool               shouldHighlight;
 
         #endregion
 
-        public void Initialize(WeaponPartItemWrapper weaponPartItem, bool shouldHighlight)
+        public void Initialize(WeaponPartTemplate weaponPartTemplate, bool shouldHighlight)
         {
-            this.weaponPartItem  = weaponPartItem;
-            this.shouldHighlight = shouldHighlight;
+            this.weaponPartTemplate = weaponPartTemplate;
+            this.shouldHighlight    = shouldHighlight;
+
+            collider.enabled = shouldHighlight;
 
             if (shouldHighlight)
             {
@@ -81,11 +85,11 @@ The beginConnectPoint is forwards and endConnectPoint is backwards.")]
 
         private void OffsetPart(Vector3 connectPoint)
         {
-            if (weaponPartItem.BaseTemplate.Type == Templates.Weapons.WeaponPartTemplateType.Stock)
+            if (weaponPartTemplate.Type == WeaponPartTemplateType.Stock)
             {
                 transform.localPosition = beginConnectPoint - transform.localPosition + connectPoint;
             }
-            else if (weaponPartItem.BaseTemplate.Type == Templates.Weapons.WeaponPartTemplateType.Barrel)
+            else if (weaponPartTemplate.Type == WeaponPartTemplateType.Barrel)
             {
                 transform.localPosition = endConnectPoint - transform.localPosition + connectPoint;
             }
@@ -93,7 +97,7 @@ The beginConnectPoint is forwards and endConnectPoint is backwards.")]
 
         private void SetupMaterialsForHighlights()
         {
-            if (meshRenderer.materials.Length > 1)
+            if (meshRenderer.materials.Length > 1 && highlightMaterialNames.Length > 0)
             {
                 for (int i = 0; i < meshRenderer.materials.Length; i++)
                 {
@@ -108,7 +112,10 @@ The beginConnectPoint is forwards and endConnectPoint is backwards.")]
             }
             else
             {
-                meshRenderer.material.EnableKeyword("_EMISSION");
+                for (int i = 0; i < meshRenderer.materials.Length; i++)
+                {
+                    meshRenderer.materials[i].EnableKeyword("_EMISSION");
+                }
             }
         }
 
@@ -116,7 +123,7 @@ The beginConnectPoint is forwards and endConnectPoint is backwards.")]
         {
             if (shouldHighlight)
             {
-                if (meshRenderer.materials.Length > 1)
+                if (meshRenderer.materials.Length > 1 && highlightMaterialNames.Length > 0)
                 {
                     for (int i = 0; i < meshRenderer.materials.Length; i++)
                     {
@@ -131,7 +138,10 @@ The beginConnectPoint is forwards and endConnectPoint is backwards.")]
                 }
                 else
                 {
-                    meshRenderer.material.SetColor("_EmissionColor", HighlightColor);
+                    for (int i = 0; i < meshRenderer.materials.Length; i++)
+                    {
+                        meshRenderer.materials[i].SetColor("_EmissionColor", HighlightColor);
+                    }
                 }
             }
         }
@@ -149,7 +159,7 @@ The beginConnectPoint is forwards and endConnectPoint is backwards.")]
         {
             if (shouldHighlight)
             {
-                if (meshRenderer.materials.Length > 1)
+                if (meshRenderer.materials.Length > 1 && highlightMaterialNames.Length > 0)
                 {
                     for (int i = 0; i < meshRenderer.materials.Length; i++)
                     {
@@ -164,7 +174,10 @@ The beginConnectPoint is forwards and endConnectPoint is backwards.")]
                 }
                 else
                 {
-                    meshRenderer.material.SetColor("_EmissionColor", Color.clear);
+                    for (int i = 0; i < meshRenderer.materials.Length; i++)
+                    {
+                        meshRenderer.materials[i].SetColor("_EmissionColor", Color.clear);
+                    }
                 }
             }
         }

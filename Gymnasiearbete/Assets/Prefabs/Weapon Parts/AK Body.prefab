@@ -93,6 +93,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meshRenderer: {fileID: 945334509661296515}
+  collider: {fileID: 2681683673809791657}
   highlightMaterialNames: []
   changableMaterialNames: []
   beginConnectPoint: {x: 0, y: 0, z: 0}

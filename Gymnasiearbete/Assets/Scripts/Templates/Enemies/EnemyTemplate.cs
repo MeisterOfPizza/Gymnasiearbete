@@ -146,7 +146,7 @@ namespace ArenaShooter.Templates.Enemies
 
             for (int i = 0; i < weaponPartItemDrops.Length; i++)
             {
-                if (chance > weaponPartItemDrops[i].DropChance)
+                if (chance < weaponPartItemDrops[i].DropChance)
                 {
                     return weaponPartItemDrops[Random.Range(0, i)].WeaponPartItemTemplate;
                 }

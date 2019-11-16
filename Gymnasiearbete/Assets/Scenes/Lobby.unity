@@ -7912,6 +7912,7 @@ GameObject:
   - component: {fileID: 541403049}
   - component: {fileID: 541403048}
   - component: {fileID: 541403050}
+  - component: {fileID: 541403051}
   m_Layer: 0
   m_Name: Persistent Controllers
   m_TagString: Untagged
@@ -7985,6 +7986,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a6107b6bdc1ae54e8fc7d92b78ed2f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &541403051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 541403047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e16c57aa1134c5d47bd29cc6e4cceaae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponPartItemTemplates:
+  - {fileID: 11400000, guid: 5aa2041720e15f645a3bba135864dcc9, type: 2}
+  weaponPartItemDropPrefab: {fileID: 3860792230359260043, guid: 0cbce3a00546a5d439b80f02370cc415,
+    type: 3}
 --- !u!1 &546264829
 GameObject:
   m_ObjectHideFlags: 0

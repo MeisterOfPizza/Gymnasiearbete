@@ -76,6 +76,7 @@ namespace ArenaShooter.Templates.Items
 
         #region Editor
 
+        [SerializeField] private byte                 id                           = 0;
         [SerializeField] private WeaponPartItemRarity rarity                       = WeaponPartItemRarity.Common;
         [SerializeField] private WeaponPartTemplate[] possibleWeaponPartTemplates  = new WeaponPartTemplate[0];
 
@@ -85,6 +86,26 @@ namespace ArenaShooter.Templates.Items
 
         [Space]
         [SerializeField] private StatChange[] statChanges;
+
+        #endregion
+
+        #region Public properties
+
+        public byte Id
+        {
+            get
+            {
+                return id;
+            }
+        }
+
+        public WeaponPartItemRarity Rarity
+        {
+            get
+            {
+                return rarity;
+            }
+        }
 
         #endregion
 

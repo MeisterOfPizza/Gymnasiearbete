@@ -231,8 +231,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _shape: 0
   _type: 0
-  _center: {x: 0, y: 0.9, z: -0.08}
-  _boxSize: {x: 0.65, y: 2, z: 0.2}
+  _center: {x: 0, y: 0.9, z: 0}
+  _boxSize: {x: 1, y: 2, z: 0.7}
   _sphereRadius: 0.25
 --- !u!195 &866174922270184738
 NavMeshAgent:

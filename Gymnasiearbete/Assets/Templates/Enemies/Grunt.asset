@@ -27,6 +27,6 @@ MonoBehaviour:
   weaponPartItemDrops:
   - weaponPartItemTemplate: {fileID: 11400000, guid: 5aa2041720e15f645a3bba135864dcc9,
       type: 2}
-    dropChance: 0.025
+    dropChance: 1
   enemyPrefab: {fileID: 866174922270184751, guid: ae49712810f17c64492dda8ed985e9fe,
     type: 3}
