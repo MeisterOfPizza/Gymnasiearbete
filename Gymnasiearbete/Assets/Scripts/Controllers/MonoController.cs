@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using ArenaShooter.Extensions.Attributes;
+using System;
+using UnityEngine;
 
 namespace ArenaShooter.Controllers
 {
@@ -21,16 +23,23 @@ namespace ArenaShooter.Controllers
             {
                 awakeCalled = true;
 
-                BeforeAwake();
-                OnAwake();
+                if (BeforeAwake())
+                {
+                    OnAwake();
+                }
             }
         }
 
-        protected abstract void BeforeAwake();
+        protected abstract bool BeforeAwake();
 
         protected virtual void OnAwake()
         {
             // Leave blank.
+        }
+
+        protected bool HasPersistentAttribute<T>() where T : MonoController
+        {
+            return Attribute.GetCustomAttribute(typeof(T), typeof(PersistentAttribute)) != null;
         }
 
     }

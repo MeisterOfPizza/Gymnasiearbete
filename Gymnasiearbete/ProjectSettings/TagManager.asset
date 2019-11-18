@@ -13,6 +13,7 @@ TagManager:
   - UI
   - 
   - 
+  - UIBackground
   - 
   - 
   - 
@@ -24,16 +25,15 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
+  - Player Projectile
+  - Enemy Projectile
   - 
   - 
   - 
   - Player
   - Enemy
   - 
-  - 
+  - Target Search
   - 
   - 
   - 

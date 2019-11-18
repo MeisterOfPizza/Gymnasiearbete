@@ -1,4 +1,6 @@
-﻿using Bolt;
+﻿using ArenaShooter.Controllers;
+using Bolt;
+using System;
 using UnityEngine;
 
 namespace ArenaShooter.Entities
@@ -8,22 +10,59 @@ namespace ArenaShooter.Entities
     abstract class Entity<T> : EntityEventListener<T>, IEntity where T : IState
     {
 
+        #region Public properties
+
+        public Action OnDeathCallback   { get; set; }
+        public Action OnReviveCallback  { get; set; }
+        public Action OnDestroyCallback { get; set; }
+
+        public abstract EntityTeam EntityTeam { get; }
+
+        public virtual Vector3 BodyOriginPosition
+        {
+            get
+            {
+                return transform.position + Vector3.up;
+            }
+        }
+
+        public virtual Vector3 HeadOriginPosition
+        {
+            get
+            {
+                return transform.position + Vector3.up * 2;
+            }
+        }
+
+        #endregion
+
         #region Protected variables
 
         protected GlobalEntityCallbacks entityCallbacks;
 
         #endregion
 
-        private void Start()
+        #region IHealable
+
+        public abstract HealableBy HealableBy { get; }
+
+        #endregion
+
+        protected virtual void Start()
         {
             entityCallbacks = gameObject.AddComponent<GlobalEntityCallbacks>();
             entityCallbacks.Initialize(this);
 
             entity.AddEventListener(entityCallbacks);
 
-            entityCallbacks.OnTakeDamage += TakeDamage;
+            entityCallbacks.OnTakeDamage    += TakeDamage;
+            entityCallbacks.OnHeal          += Heal;
+            entityCallbacks.OnEntityRevived += Revive;
+            entityCallbacks.OnEntityDied    += Die;
 
             OnEntityCallbacksReady();
+
+            gameObject.SetActive(!(bool)state.GetDynamic("Dead"));
         }
 
         /// <summary>
@@ -34,21 +73,68 @@ namespace ArenaShooter.Entities
             // Leave blank.
         }
 
+        private void OnEnable()
+        {
+            EntityController.Singleton?.AddEntity(this);
+        }
+
+        private void OnDisable()
+        {
+            EntityController.Singleton?.RemoveEntity(this);
+        }
+
+        private void OnDestroy()
+        {
+            OnDestroyCallback?.Invoke();
+        }
+
         #region IDamagable
 
-        public virtual void TakeDamage(TakeDamageEvent takeDamageEvent)
+        public void TakeDamage(TakeDamageEvent takeDamageEvent)
         {
-            state.SetDynamic("Health", (int)state.GetDynamic("Health") - takeDamageEvent.DamageTaken);
+            state.SetDynamic("Health", Mathf.Clamp((int)state.GetDynamic("Health") - takeDamageEvent.DamageTaken, 0, int.MaxValue));
 
             if ((int)state.GetDynamic("Health") <= 0)
             {
-                Die();
+                var entityDeathEvent = EntityDiedEvent.Create(GlobalTargets.Others, ReliabilityModes.ReliableOrdered);
+                entityDeathEvent.DeadEntity = entity;
+                entityDeathEvent.Send();
+
+                Die(entityDeathEvent);
             }
         }
 
-        public virtual void Die()
+        public virtual void Revive(EntityRevivedEvent @event)
         {
-            BoltNetwork.Destroy(gameObject);
+            gameObject.SetActive(true);
+
+            OnReviveCallback?.Invoke();
+
+            if (entity.IsOwner)
+            {
+                state.SetDynamic("Dead", false);
+            }
+        }
+
+        public virtual void Die(EntityDiedEvent @event)
+        {
+            gameObject.SetActive(false);
+
+            OnDeathCallback?.Invoke();
+
+            if (entity.IsOwner)
+            {
+                state.SetDynamic("Dead", true);
+            }
+        }
+
+        #endregion
+
+        #region IHealable
+
+        public void Heal(HealEvent healEvent)
+        {
+            state.SetDynamic("Health", (int)state.GetDynamic("Health") + healEvent.Heal);
         }
 
         #endregion

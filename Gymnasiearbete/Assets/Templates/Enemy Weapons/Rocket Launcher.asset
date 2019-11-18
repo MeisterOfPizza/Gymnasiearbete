@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c62f5adec85c034e894aa669da785d0, type: 3}
+  m_Name: Rocket Launcher
+  m_EditorClassIdentifier: 
+  templateId: 1
+  mobility: 0
+  accuracy: 0.9
+  damage: 5
+  maxAmmoPerClip: 10
+  ammoPerFire: 1
+  fireCooldown: 0.5
+  reloadTime: 1
+  burstFireInterval: 0.05
+  burstShots: 3
+  range: 10
+  maxDistance: 50
+  firingMode: 0
+  manualAmmoDepletion: 0
+  outputType: 1
+  firePrefab: {fileID: 3848188618349009631, guid: c97a6795a0351784f82084dd1ff7e328,
+    type: 3}
+  modelPrefab: {fileID: 0}

@@ -14,6 +14,7 @@ namespace ArenaShooter.UI
 
         [Header("References")]
         [SerializeField] private TMP_Text healthText;
+        [SerializeField] private TMP_Text ammoText;
 
         #endregion
 
@@ -28,9 +29,14 @@ namespace ArenaShooter.UI
             this.player = player;
         }
 
-        public void UpdateUI()
+        public void UpdateHealthUI()
         {
             healthText.text = "Health: " + player.state.Health;
+        }
+
+        public void UpdateAmmoUI(string ammoFormat)
+        {
+            ammoText.text = "Ammo: " + ammoFormat;
         }
 
     }
