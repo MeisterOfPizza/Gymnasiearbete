@@ -1,7 +1,6 @@
 ﻿using ArenaShooter.Assets.Scripts.UI;
 using ArenaShooter.Extensions;
 using ArenaShooter.Networking;
-using ArenaShooter.Networking.Protocols;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;

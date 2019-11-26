@@ -1,4 +1,5 @@
 ﻿using ArenaShooter.Controllers;
+using ArenaShooter.Entities;
 using ArenaShooter.Extensions.Components;
 using Bolt;
 using UnityEngine;
@@ -15,8 +16,11 @@ namespace ArenaShooter.Player
         #region Editor
 
         [Header("References")]
+        [SerializeField] private HumanoidBody humanoidBody;
+
+        [Space]
         [SerializeField] private CharacterController characterController;
-        [SerializeField] private MeshRenderer        meshRenderer;
+        [SerializeField] private Renderer            meshRenderer;
 
         [Header("Prefabs")]
         [SerializeField] private GameObject cameraFollowPrefab;
@@ -35,7 +39,8 @@ namespace ArenaShooter.Player
 
         #region Private variables
 
-        private CameraFollow cameraFollow;
+        private     FollowAndTrack cameraFollow;
+        private new Camera         camera;
         
         private Color playerColor = Color.black;
 
@@ -56,6 +61,8 @@ namespace ArenaShooter.Player
             }
 
             SetColor(playerColor);
+
+            humanoidBody.SetUpperBodyAsController(transform.forward);
         }
 
         // Start
@@ -71,9 +78,10 @@ namespace ArenaShooter.Player
                 // Deactivate the scene's main camera if it's active (and exists):
                 Camera.main?.gameObject.SetActive(false);
 
-                cameraFollow = Instantiate(cameraFollowPrefab).GetComponent<CameraFollow>();
+                cameraFollow = Instantiate(cameraFollowPrefab).GetComponent<FollowAndTrack>();
                 cameraFollow.Initialize(transform);
-                MainCameraController.Singleton.SetMainCamera(cameraFollow.Camera);
+                camera = cameraFollow.GetComponentInChildren<Camera>();
+                MainCameraController.Singleton.SetMainCamera(camera);
             }
         }
 
@@ -98,10 +106,12 @@ namespace ArenaShooter.Player
 #if UNITY_STANDALONE
                 Vector3 lookAtPoint = GetMouseLookAtPoint();
                 lookAtPoint.y = transform.position.y;
-                
+
                 transform.forward = lookAtPoint - transform.position;
 #elif UNITY_IOS || UNITY_ANDROID
                 Vector3 direction = Controllers.MobileLookController.Singleton.CanLook ? Controllers.MobileLookController.Singleton.GetLookPoint() - transform.position : transform.forward;
+
+                transform.forward = direction;
 #endif
             }
         }
@@ -124,7 +134,7 @@ namespace ArenaShooter.Player
 
         private Vector3 GetMouseLookAtPoint()
         {
-            Ray ray = cameraFollow.Camera.ScreenPointToRay(Input.mousePosition);
+            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
 
             // If the ray hits the plane...
             if (mouseLookAtPlane.Raycast(ray, out float distance))

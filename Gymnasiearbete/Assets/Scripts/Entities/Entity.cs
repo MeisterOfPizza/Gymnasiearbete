@@ -90,14 +90,15 @@ namespace ArenaShooter.Entities
 
         #region IDamagable
 
-        public void TakeDamage(TakeDamageEvent takeDamageEvent)
+        public virtual void TakeDamage(TakeDamageEvent takeDamageEvent)
         {
             state.SetDynamic("Health", Mathf.Clamp((int)state.GetDynamic("Health") - takeDamageEvent.DamageTaken, 0, int.MaxValue));
 
             if ((int)state.GetDynamic("Health") <= 0)
             {
-                var entityDeathEvent = EntityDiedEvent.Create(GlobalTargets.Others, ReliabilityModes.ReliableOrdered);
-                entityDeathEvent.DeadEntity = entity;
+                var entityDeathEvent                          = EntityDiedEvent.Create(GlobalTargets.Others, ReliabilityModes.ReliableOrdered);
+                entityDeathEvent.DeadEntity                   = entity;
+                entityDeathEvent.WeaponPartItemTemplateDropId = -1;
                 entityDeathEvent.Send();
 
                 Die(entityDeathEvent);

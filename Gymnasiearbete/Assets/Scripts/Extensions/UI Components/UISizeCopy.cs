@@ -32,7 +32,15 @@ namespace ArenaShooter.Extensions.UIComponents
             {
                 rectToCopy = transform.parent.GetComponent<RectTransform>();
             }
+        }
 
+        private void OnEnable()
+        {
+            SetSize();
+        }
+
+        private void OnTransformParentChanged()
+        {
             SetSize();
         }
 

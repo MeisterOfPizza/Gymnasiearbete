@@ -105,7 +105,11 @@ namespace ArenaShooter.AI
 
                 if (agent.isStopped)
                 {
-                    agent.transform.rotation = Quaternion.RotateTowards(agent.transform.rotation, Quaternion.LookRotation(currentTarget.BodyOriginPosition - agentEntity.BodyOriginPosition), agentEntity.TurnSpeed);
+                    // Avoid for zero point rotation warning:
+                    if (currentTarget.BodyOriginPosition - agentEntity.BodyOriginPosition != Vector3.zero)
+                    {
+                        agent.transform.rotation = Quaternion.RotateTowards(agent.transform.rotation, Quaternion.LookRotation(currentTarget.BodyOriginPosition - agentEntity.BodyOriginPosition), agentEntity.TurnSpeed);
+                    }
 
                     // Can the AI see the target? If so, turn the upper body:
                     if (CanSeeTarget())

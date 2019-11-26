@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using ArenaShooter.Templates.Items;
+using System.Collections.Generic;
+using UnityEngine;
 
 #pragma warning disable 0649
 
@@ -37,6 +39,19 @@ namespace ArenaShooter.Templates.Weapons
             {
                 return accuracy;
             }
+        }
+
+        #endregion
+
+        #region Helpers
+
+        public override Dictionary<StatType, float> GetStatTypeValues()
+        {
+            return new Dictionary<StatType, float>()
+            {
+                { StatType.Mobility, mobility },
+                { StatType.Accuracy, accuracy }
+            };
         }
 
         #endregion

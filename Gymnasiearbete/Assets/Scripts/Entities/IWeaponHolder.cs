@@ -1,4 +1,5 @@
-﻿using Bolt;
+﻿using ArenaShooter.Combat;
+using Bolt;
 using UnityEngine;
 
 namespace ArenaShooter.Entities
@@ -11,6 +12,7 @@ namespace ArenaShooter.Entities
         Vector3       WeaponForward      { get; }
         LayerMask     WeaponHitLayerMask { get; }
         GlobalTargets WeaponTargets      { get; }
+        Weapon        Weapon             { get; }
 
     }
 

@@ -35,7 +35,7 @@ namespace ArenaShooter.Combat
         protected override void WeaponUpdate()
         {
             // Check if the weapon does not belong to the local client, and if the weapon has received a target:
-            if (!WeaponHolder.entity.IsControllerOrOwner && supportShot.HasValidTargets)
+            if (WeaponHolder.entity.IsAttached && !WeaponHolder.entity.IsControllerOrOwner && supportShot.HasValidTargets)
             {
                 // If so: update the graphics of the effect.
                 supportShot.UpdateSupportShot();

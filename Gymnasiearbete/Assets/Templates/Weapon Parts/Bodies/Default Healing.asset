@@ -16,7 +16,8 @@ MonoBehaviour:
   name: Default Healing Body
   description: 
   outputType: 3
-  weaponPartPrefab: {fileID: 0}
+  weaponPartPrefab: {fileID: 945334509661296513, guid: 772abd546b47d6d4d8d2c4242cfa877f,
+    type: 3}
   damage: 1
   maxAmmoPerClip: 30
   maxAmmoStock: 150
@@ -24,6 +25,9 @@ MonoBehaviour:
   fireCooldown: 0.5
   reloadTime: 1
   fullReloadTime: 1.5
-  firingMode: 2
+  burstFireInterval: 0.05
+  burstShots: 3
+  firingMode: 10
+  manualAmmoDepletion: 0
   firePrefab: {fileID: 2046930185819632498, guid: 605c9ff204190104fa6efc2feb878960,
     type: 3}

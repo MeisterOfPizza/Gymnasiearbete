@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ArenaShooter.Templates.Items;
+using UnityEngine;
 
 #pragma warning disable 0649
 
@@ -6,7 +7,7 @@ namespace ArenaShooter.Templates.Enemies
 {
 
     [CreateAssetMenu(menuName = "Templates/Enemies/Enemy")]
-    sealed class EnemyTemplate : ScriptableObject
+    public sealed class EnemyTemplate : ScriptableObject
     {
 
         #region Editor
@@ -29,6 +30,9 @@ namespace ArenaShooter.Templates.Enemies
         [Header("References")]
         [SerializeField] private EnemyWeaponTemplate[] possibleWeaponTemplates;
 
+        [Space]
+        [SerializeField] public WeaponPartItemDrop[] weaponPartItemDrops = new WeaponPartItemDrop[0];
+
         [Header("Prefabs")]
         [SerializeField] private GameObject enemyPrefab;
 
@@ -41,6 +45,35 @@ namespace ArenaShooter.Templates.Enemies
             Slow   = 5,
             Normal = 3,
             Fast   = 1
+        }
+
+        #endregion
+
+        #region Classes
+
+        [System.Serializable]
+        public class WeaponPartItemDrop
+        {
+
+            [SerializeField]                private WeaponPartItemTemplate weaponPartItemTemplate;
+            [SerializeField, Range(0f, 1f)] private float                  dropChance = 0.5f;
+
+            internal WeaponPartItemTemplate WeaponPartItemTemplate
+            {
+                get
+                {
+                    return weaponPartItemTemplate;
+                }
+            }
+
+            public float DropChance
+            {
+                get
+                {
+                    return dropChance;
+                }
+            }
+
         }
 
         #endregion
@@ -107,7 +140,22 @@ namespace ArenaShooter.Templates.Enemies
 
         #region Helper methods
 
-        public EnemyWeaponTemplate GetEnemyWeaponTemplate()
+        internal WeaponPartItemTemplate GetWeaponPartItemTemplate()
+        {
+            float chance = Random.value;
+
+            for (int i = 0; i < weaponPartItemDrops.Length; i++)
+            {
+                if (chance < weaponPartItemDrops[i].DropChance)
+                {
+                    return weaponPartItemDrops[Random.Range(i, weaponPartItemDrops.Length)].WeaponPartItemTemplate;
+                }
+            }
+
+            return null;
+        }
+
+        internal EnemyWeaponTemplate GetEnemyWeaponTemplate()
         {
             return possibleWeaponTemplates[Random.Range(0, possibleWeaponTemplates.Length)];
         }

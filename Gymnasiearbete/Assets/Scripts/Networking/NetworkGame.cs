@@ -1,4 +1,5 @@
 ﻿using ArenaShooter.Controllers;
+using ArenaShooter.Player;
 using Bolt;
 using UnityEngine.SceneManagement;
 
@@ -22,6 +23,8 @@ namespace ArenaShooter.Networking
             {
                 SceneManager.LoadScene(0);
             }
+
+            Profile.Save();
         }
 
     }

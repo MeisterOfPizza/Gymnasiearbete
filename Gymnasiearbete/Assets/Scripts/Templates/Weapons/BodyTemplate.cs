@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using ArenaShooter.Templates.Items;
+using System.Collections.Generic;
+using UnityEngine;
 
 #pragma warning disable 0649
 
@@ -7,9 +9,9 @@ namespace ArenaShooter.Templates.Weapons
 
     enum FiringMode : byte
     {
-        Single,
-        Burst,
-        Automatic
+        Single    = 0,
+        Burst     = 5,
+        Automatic = 10
     }
 
     [CreateAssetMenu(menuName = "Templates/Weapons/Body")]
@@ -153,6 +155,33 @@ namespace ArenaShooter.Templates.Weapons
             {
                 return firePrefab;
             }
+        }
+
+        #endregion
+
+        #region Helpers
+
+        public override Dictionary<StatType, float> GetStatTypeValues()
+        {
+            var statTypeValues = new Dictionary<StatType, float>()
+            {
+                { StatType.Damage,            damage },
+                { StatType.MaxAmmoPerClip,    maxAmmoPerClip },
+                { StatType.MaxAmmoStock,      maxAmmoStock },
+                { StatType.FireCooldown,      fireCooldown },
+                { StatType.ReloadTime,        reloadTime },
+                { StatType.FullReloadTime,    fullReloadTime }
+            };
+
+            if (firingMode == FiringMode.Burst)
+            {
+                statTypeValues.Add(StatType.BurstFireInterval, burstFireInterval);
+                statTypeValues.Add(StatType.BurstShots, burstShots);
+            }
+
+            statTypeValues.Add(StatType.FiringMode, (byte)firingMode);
+
+            return statTypeValues;
         }
 
         #endregion

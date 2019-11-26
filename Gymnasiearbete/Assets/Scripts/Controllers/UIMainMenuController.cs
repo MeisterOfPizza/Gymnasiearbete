@@ -1,4 +1,5 @@
 ﻿using ArenaShooter.UI;
+using UnityEditor;
 using UnityEngine;
 
 #pragma warning disable 0649
@@ -42,6 +43,20 @@ namespace ArenaShooter.Controllers
         {
             loadingOnlineTextContainer.SetActive(false);
             loadingOnlineLoader.Stop();
+        }
+
+        public void ExitGame()
+        {
+            if (Application.isPlaying && !Application.isEditor)
+            {
+                Application.Quit();
+            }
+            else if (Application.isEditor)
+            {
+#if UNITY_EDITOR
+                EditorApplication.isPlaying = false;
+#endif
+            }
         }
 
     }
