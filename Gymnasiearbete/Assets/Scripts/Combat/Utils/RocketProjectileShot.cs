@@ -1,5 +1,7 @@
-﻿using ArenaShooter.Entities;
+﻿using ArenaShooter.Controllers;
+using ArenaShooter.Entities;
 using ArenaShooter.Extensions;
+using ArenaShooter.Player;
 using Bolt;
 using System.Collections;
 using UnityEngine;
@@ -73,6 +75,14 @@ namespace ArenaShooter.Combat.Utils
 
         private void Hit()
         {
+            // Play camera shake effect with a magnitude based on the distance to the player:
+            // TODO: Replace constant shake effect distance with sound distance.
+            const float maxCameraShakeDistance = 35f;
+            float cameraShakeDistanceFactor = PlayerController.Transform != null ? 
+                Mathf.Clamp01(1f - Vector3.Distance(transform.position, PlayerController.Transform.position) / maxCameraShakeDistance) 
+                : 0f;
+            CameraEffectsController.Singleton.PlayShakeCamera(0.1f, 0.3f * cameraShakeDistanceFactor);
+
             if (clientIsShooter)
             {
                 using (var hits = BoltNetwork.OverlapSphereAll(transform.position, weapon.Stats.Range, BoltNetwork.ServerFrame))

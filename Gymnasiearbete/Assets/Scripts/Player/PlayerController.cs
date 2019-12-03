@@ -28,6 +28,12 @@ namespace ArenaShooter.Player
 
         #endregion
 
+        #region Public properties
+
+        public static Transform Transform { get; private set; }
+
+        #endregion
+
         #region Private variables
 
         private Weapon weapon;
@@ -113,6 +119,8 @@ namespace ArenaShooter.Player
                 state.Weapon.WeaponStockId  = stockId;
                 state.Weapon.WeaponBodyId   = bodyId;
                 state.Weapon.WeaponBarrelId = barrelId;
+
+                Transform = this.transform;
             }
             else
             {
