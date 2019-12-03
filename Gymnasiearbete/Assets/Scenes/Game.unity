@@ -12273,6 +12273,7 @@ GameObject:
   - component: {fileID: 1928587508}
   - component: {fileID: 1928587509}
   - component: {fileID: 1928587510}
+  - component: {fileID: 1928587511}
   m_Layer: 0
   m_Name: Controllers
   m_TagString: Untagged
@@ -12433,6 +12434,18 @@ MonoBehaviour:
   - {fileID: 795096399}
   spawnPointsLargeAmmoBoxes:
   - {fileID: 1740937250}
+--- !u!114 &1928587511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928587500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e427e8df6a409d24c84497b9c8fe51e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2060413742
 GameObject:
   m_ObjectHideFlags: 0
