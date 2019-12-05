@@ -82,6 +82,7 @@ namespace ArenaShooter.Player
                 cameraFollow.Initialize(transform);
                 camera = cameraFollow.GetComponentInChildren<Camera>();
                 MainCameraController.Singleton.SetMainCamera(camera);
+                CameraEffectsController.Singleton.SetEffectsCamera(camera);
             }
         }
 
