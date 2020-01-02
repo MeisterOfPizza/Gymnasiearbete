@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 namespace ArenaShooter.Networking
 {
 
-    [BoltGlobalBehaviour(BoltScenes.Game)]
+    [BoltGlobalBehaviour(BoltScenes.Game, BoltScenes.DesertMap)]
     class NetworkGame : GlobalEventListener
     {
 
