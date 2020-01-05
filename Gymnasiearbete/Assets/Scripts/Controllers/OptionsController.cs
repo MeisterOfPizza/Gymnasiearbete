@@ -55,9 +55,9 @@ namespace ArenaShooter.Controllers
             }
 
             refreshrateDropDown.AddOptions(refreshRates);
-            resolutionsDropDown.RefreshShownValue();
+            refreshrateDropDown.RefreshShownValue();
 
-            resolutions = Screen.resolutions.Where(r => r.refreshRate == 60).ToArray();
+           // resolutions = Screen.resolutions.Where(r => r.refreshRate == 60).ToArray();
             resolutionsDropDown.ClearOptions();
 
             List<string> options = new List<string>();
