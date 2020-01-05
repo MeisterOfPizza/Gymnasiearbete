@@ -974,7 +974,7 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 50304043}
-  mapTemplate: {fileID: 11400000, guid: ea0cc03507b1fac4992040ae18638a19, type: 2}
+  mapTemplate: {fileID: 11400000, guid: 5e49a75a62ea2a54fab53322c08c4503, type: 2}
   onClick:
     m_PersistentCalls:
       m_Calls:
@@ -5296,7 +5296,7 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 427265822}
-  mapTemplate: {fileID: 11400000, guid: ea0cc03507b1fac4992040ae18638a19, type: 2}
+  mapTemplate: {fileID: 11400000, guid: 5e49a75a62ea2a54fab53322c08c4503, type: 2}
   onClick:
     m_PersistentCalls:
       m_Calls:
@@ -16177,7 +16177,7 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 1114600591}
-  mapTemplate: {fileID: 11400000, guid: ea0cc03507b1fac4992040ae18638a19, type: 2}
+  mapTemplate: {fileID: 11400000, guid: 5e49a75a62ea2a54fab53322c08c4503, type: 2}
   onClick:
     m_PersistentCalls:
       m_Calls:
@@ -16564,7 +16564,7 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 1185154267}
-  mapTemplate: {fileID: 11400000, guid: ea0cc03507b1fac4992040ae18638a19, type: 2}
+  mapTemplate: {fileID: 11400000, guid: 5e49a75a62ea2a54fab53322c08c4503, type: 2}
   onClick:
     m_PersistentCalls:
       m_Calls:
@@ -21526,7 +21526,7 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 1665889673}
-  mapTemplate: {fileID: 11400000, guid: ea0cc03507b1fac4992040ae18638a19, type: 2}
+  mapTemplate: {fileID: 11400000, guid: 5e49a75a62ea2a54fab53322c08c4503, type: 2}
   onClick:
     m_PersistentCalls:
       m_Calls:
@@ -26919,7 +26919,7 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 2133087705}
-  mapTemplate: {fileID: 11400000, guid: ea0cc03507b1fac4992040ae18638a19, type: 2}
+  mapTemplate: {fileID: 11400000, guid: 5e49a75a62ea2a54fab53322c08c4503, type: 2}
   onClick:
     m_PersistentCalls:
       m_Calls:

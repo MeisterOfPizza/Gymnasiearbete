@@ -9,9 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bd8bd4ae200cd847bb16c3697a59a88, type: 3}
-  m_Name: TestSmallMedKit
+  m_Script: {fileID: 11500000, guid: 965adfde6fb0b8e49bf749230fa4ac36, type: 3}
+  m_Name: Desert map
   m_EditorClassIdentifier: 
-  spawnCooldown: 15
-  restoredHealth: 25
-  thisType: 0
+  templateId: 1
+  sceneName: DesertMap
+  mapName: Desert map
+  mapDescription: 'Final map for the game set in a desert.
+
+'

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3785c44486aec8e45aa70424e12bbe44, type: 3}
   m_Name: TestAmmoBox
   m_EditorClassIdentifier: 
-  spawnCooldown: 5
-  amountOfClips: 2
+  spawnCooldown: 15
+  amountOfClips: 1
   thisInteractableType: 1
