@@ -9,7 +9,7 @@ namespace ArenaShooter.Templates.Interactable
     {
         #region Editor
 
-        [SerializeField] private int restoredHealth = 50;//PlaceHolder
+        [SerializeField] private int restoredHealth = 50;
 
         #endregion
 
@@ -25,5 +25,6 @@ namespace ArenaShooter.Templates.Interactable
 
         public override InteractableType type => thisType;
     }
+   
 
 }

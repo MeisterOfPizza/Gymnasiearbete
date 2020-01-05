@@ -15,6 +15,7 @@ namespace ArenaShooter.Templates.Interactable
         public abstract InteractableType type { get; }
 
         public abstract void Interact(IEntity entity);
+      
 
     }
 }
