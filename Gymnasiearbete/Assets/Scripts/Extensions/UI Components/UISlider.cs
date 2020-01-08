@@ -17,7 +17,7 @@ namespace ArenaShooter.Extensions.UIComponents
 
         [Header("References")]
         [SerializeField] private RectTransform fillerContainer;
-        [SerializeField] private Image         fillerImage;
+        [SerializeField] private Image fillerImage;
 
         [Header("Values")]
         [SerializeField, Range(0f, 1f)] private float value = 0.0f;
@@ -26,7 +26,32 @@ namespace ArenaShooter.Extensions.UIComponents
         [SerializeField] private bool verticalFill = true;
 
         [Space]
+        [SerializeField] private bool isIntegerSlider = false;
+        [SerializeField] private int maxIntegerValue = 2;
+
+        [Space]
         [SerializeField] private FloatEvent onValueSet;
+        [SerializeField] private IntegerEvent onIntValueSet;
+
+        #endregion
+
+        #region Public properties
+
+        public float FloatValue
+        {
+            get
+            {
+                return value;
+            }
+        }
+
+        public int IntegerValue
+        {
+            get
+            {
+                return Mathf.RoundToInt(value * maxIntegerValue);
+            }
+        }
 
         #endregion
 
@@ -34,6 +59,9 @@ namespace ArenaShooter.Extensions.UIComponents
 
         [Serializable]
         private class FloatEvent : UnityEvent<float> { }
+
+        [Serializable]
+        private class IntegerEvent : UnityEvent<int> { }
 
         #endregion
 
@@ -69,11 +97,25 @@ namespace ArenaShooter.Extensions.UIComponents
 
         private void UpdateFiller(bool sendUpdate)
         {
-            fillerImage.fillAmount = value;
+            if (isIntegerSlider)
+            {
+                fillerImage.fillAmount = Mathf.Round(value * maxIntegerValue) / maxIntegerValue;
+            }
+            else
+            {
+                fillerImage.fillAmount = value;
+            }
 
             if (Application.isPlaying && sendUpdate)
             {
-                onValueSet?.Invoke(value);
+                if (isIntegerSlider)
+                {
+                    onIntValueSet?.Invoke(Mathf.RoundToInt(value * maxIntegerValue));
+                }
+                else
+                {
+                    onValueSet?.Invoke(value);
+                }
             }
         }
 
@@ -90,7 +132,7 @@ namespace ArenaShooter.Extensions.UIComponents
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, dragPosition, canvas.worldCamera, out point);
             }
 
-            float valueBorder     = verticalFill ? fillerContainer.rect.height : fillerContainer.rect.width;
+            float valueBorder = verticalFill ? fillerContainer.rect.height : fillerContainer.rect.width;
             float halfValueBorder = valueBorder / 2f;
 
             float clampedValue = Mathf.Clamp(verticalFill ? point.y : point.x, -halfValueBorder, halfValueBorder);
