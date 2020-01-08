@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
+using ArenaShooter.Extensions.UIComponents;
 
 #pragma warning disable 0649
 
@@ -23,17 +24,23 @@ namespace ArenaShooter.Controllers
         [SerializeField] private AudioMixer   misc;
         [SerializeField] private GameObject   menu;
         [SerializeField] private GameObject   options;
-        [SerializeField] private GameObject   graphicsQuality;
+        [SerializeField] private TMP_Dropdown   graphicsQuality;
         [SerializeField] private GameObject   shadowQuality;
         [SerializeField] private Toggle       fullscreen;
         [SerializeField] private Button       back;
-        
+        [SerializeField] private UISlider masterVolume;
+        [SerializeField] private UISlider musicVolume;
+        [SerializeField] private UISlider miscVolume;
+        [SerializeField] private UISlider sfxVolume;
+
+
         #endregion
 
         #region Private variables
 
         private Resolution[] resolutions;
         private List<string> refreshRates = new List<string>();
+        private Resolution currentRes;
 
         #endregion
 
@@ -57,7 +64,7 @@ namespace ArenaShooter.Controllers
             refreshrateDropDown.AddOptions(refreshRates);
             refreshrateDropDown.RefreshShownValue();
 
-           // resolutions = Screen.resolutions.Where(r => r.refreshRate == 60).ToArray();
+            resolutions = Screen.resolutions.Where(r => r.refreshRate == 60).ToArray();
             resolutionsDropDown.ClearOptions();
 
             List<string> options = new List<string>();
@@ -88,7 +95,9 @@ namespace ArenaShooter.Controllers
 
         public void SetGraphicsQuality(int qualityIndex)
         {
-            QualitySettings.SetQualityLevel(qualityIndex);
+            int quality = graphicsQuality.value;
+            QualitySettings.SetQualityLevel(quality);
+            
         }
 
         public void SetShadowQuality(int qualityIndex)
@@ -98,13 +107,20 @@ namespace ArenaShooter.Controllers
 
         public void FullScreen(bool isFullScreen)
         {
-            Screen.fullScreen = isFullScreen;
+            Screen.fullScreen = fullscreen.isOn;
+            
         }
 
         public void SetResolution(int resolutionIndex)
         {
-            Resolution resolution = resolutions[resolutionIndex];
+            Resolution resolution = resolutions[resolutionsDropDown.value];
             Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+            currentRes = resolution;
+        }
+
+        public void SetRefreshRate(int refresRate)
+        {
+            Screen.SetResolution(currentRes.width, currentRes.height, Screen.fullScreen, int.Parse(refreshRates[refreshrateDropDown.value]));
         }
 
         private void Update()
@@ -123,24 +139,28 @@ namespace ArenaShooter.Controllers
 
         #region Audio mixer methods
 
-        public void SetMasterVolume(float volume)
+        public void SetMasterVolume(float input)
         {
-            master.SetFloat(("volume"), -80 + 100 * volume);
+            float volume = masterVolume.FloatValue;
+            master.SetFloat(("Volume"), -80 + 100 * volume);
         }
 
-        public void SetMusicVolume(float volume)
+        public void SetMusicVolume(float input)
         {
-            music.SetFloat("volume", -80 + 100 * volume);
+            float volume = musicVolume.FloatValue;
+            music.SetFloat("Volume", -80 + 100 * volume);
         }
 
-        public void SetSFXVolume(float volume)
+        public void SetSFXVolume(float input)
         {
-            sfx.SetFloat("volume", -80 + 100 * volume);
+            float volume = sfxVolume.FloatValue;
+            sfx.SetFloat("Volume", -80 + 100 * volume);
         }
 
-        public void SetMiscVolume(float volume)
+        public void SetMiscVolume(float input)
         {
-            misc.SetFloat("volume", -80 + 100 * volume);
+            float volume = miscVolume.FloatValue;
+            misc.SetFloat("Volume", -80 + 100 * volume);
         }
 
         #endregion
