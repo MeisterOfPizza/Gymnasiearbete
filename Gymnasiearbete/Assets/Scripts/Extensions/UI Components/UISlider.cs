@@ -26,7 +26,32 @@ namespace ArenaShooter.Extensions.UIComponents
         [SerializeField] private bool verticalFill = true;
 
         [Space]
-        [SerializeField] private FloatEvent onValueSet;
+        [SerializeField] private bool isIntegerSlider = false;
+        [SerializeField] private int  maxIntegerValue = 2;
+
+        [Space]
+        [SerializeField] private FloatEvent   onValueSet;
+        [SerializeField] private IntegerEvent onIntValueSet;
+
+        #endregion
+
+        #region Public properties
+
+        public float FloatValue
+        {
+            get
+            {
+                return value;
+            }
+        }
+
+        public int IntegerValue
+        {
+            get
+            {
+                return Mathf.RoundToInt(value * maxIntegerValue);
+            }
+        }
 
         #endregion
 
@@ -34,6 +59,9 @@ namespace ArenaShooter.Extensions.UIComponents
 
         [Serializable]
         private class FloatEvent : UnityEvent<float> { }
+
+        [Serializable]
+        private class IntegerEvent : UnityEvent<int> { }
 
         #endregion
 
@@ -69,11 +97,25 @@ namespace ArenaShooter.Extensions.UIComponents
 
         private void UpdateFiller(bool sendUpdate)
         {
-            fillerImage.fillAmount = value;
+            if (isIntegerSlider)
+            {
+                fillerImage.fillAmount = Mathf.Round(value * maxIntegerValue) / maxIntegerValue;
+            }
+            else
+            {
+                fillerImage.fillAmount = value;
+            }
 
             if (Application.isPlaying && sendUpdate)
             {
-                onValueSet?.Invoke(value);
+                if (isIntegerSlider)
+                {
+                    onIntValueSet?.Invoke(Mathf.RoundToInt(value * maxIntegerValue));
+                }
+                else
+                {
+                    onValueSet?.Invoke(value);
+                }
             }
         }
 

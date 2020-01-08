@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 965adfde6fb0b8e49bf749230fa4ac36, type: 3}
-  m_Name: Desert
+  m_Name: Test Map
   m_EditorClassIdentifier: 
   templateId: 0
   sceneName: Game
-  mapName: Desert
-  mapDescription: Desert description here.
+  mapName: Test Map
+  mapDescription: Test Map

@@ -73,7 +73,7 @@ namespace ArenaShooter.Combat.Utils
             origin = transform.position;
         }
 
-        private void Hit()
+        private void Hit(bool useServerFrame = true)
         {
             // Play camera shake effect with a magnitude based on the distance to the player:
             // TODO: Replace constant shake effect distance with sound distance.
@@ -85,7 +85,10 @@ namespace ArenaShooter.Combat.Utils
 
             if (clientIsShooter)
             {
-                using (var hits = BoltNetwork.OverlapSphereAll(transform.position, weapon.Stats.Range, BoltNetwork.ServerFrame))
+                Debug.DrawRay(transform.position, transform.forward * weapon.Stats.Range, Color.green, 5f);
+                using (var hits = useServerFrame ? 
+                    BoltNetwork.OverlapSphereAll(transform.position, weapon.Stats.Range, BoltNetwork.ServerFrame) : 
+                    BoltNetwork.OverlapSphereAll(transform.position, weapon.Stats.Range))
                 {
                     for (int i = 0; i < hits.count; i++)
                     {
@@ -130,7 +133,7 @@ namespace ArenaShooter.Combat.Utils
         {
             if (Vector3.Distance(origin, transform.position) > weapon.Stats.MaxDistance && isAlive)
             {
-                Hit();
+                Hit(false); // Avoid using server frames as they do not work with fixed updates.
             }
         }
 

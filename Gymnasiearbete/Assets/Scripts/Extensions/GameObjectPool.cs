@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -51,6 +52,14 @@ namespace ArenaShooter.Extensions
         private List<T>  activeItems;
         private Queue<T> pooledItems;
 
+        private Action<T, bool> itemActivationMethod;
+
+        #endregion
+
+        #region Public classes
+
+        public delegate C SpawnMethod<C>(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent) where C : Component;
+
         #endregion
 
         #region Constructors
@@ -65,7 +74,24 @@ namespace ArenaShooter.Extensions
             for (int i = 0; i < prefabInstances; i++)
             {
                 GameObject go = GameObject.Instantiate(prefab, parent);
-                go.SetActive(false);
+                SetActive(go.GetComponent<T>(), false);
+                pooledItems.Enqueue(go.GetComponent<T>());
+            }
+        }
+
+        public GameObjectPool(Transform parent, GameObject prefab, int prefabInstances, SpawnMethod<T> spawnMethod, Action<T, bool> itemActivationMethod)
+        {
+            activeItems = new List<T>(prefabInstances + 5);
+            pooledItems = new Queue<T>(prefabInstances + 5);
+
+            itemCount = prefabInstances;
+
+            this.itemActivationMethod = itemActivationMethod;
+
+            for (int i = 0; i < prefabInstances; i++)
+            {
+                GameObject go = spawnMethod.Invoke(prefab, Vector3.zero, Quaternion.identity, parent).gameObject;
+                SetActive(go.GetComponent<T>(), false);
                 pooledItems.Enqueue(go.GetComponent<T>());
             }
         }
@@ -79,7 +105,7 @@ namespace ArenaShooter.Extensions
 
             foreach (var item in gameObjects)
             {
-                item.SetActive(false);
+                SetActive(item.GetComponent<T>(), false);
             }
         }
 
@@ -91,7 +117,7 @@ namespace ArenaShooter.Extensions
         {
             activeItems.Remove(item);
             pooledItems.Enqueue(item);
-            item.gameObject.SetActive(false);
+            SetActive(item, false);
         }
 
         public T GetItem()
@@ -100,7 +126,7 @@ namespace ArenaShooter.Extensions
             {
                 T item = pooledItems.Dequeue();
                 activeItems.Add(item);
-                item.gameObject.SetActive(true);
+                SetActive(item, true);
 
                 return item;
             }
@@ -113,10 +139,26 @@ namespace ArenaShooter.Extensions
             foreach (var item in activeItems.ToList())
             {
                 pooledItems.Enqueue(item);
-                item.gameObject.SetActive(false);
+                SetActive(item, false);
             }
 
             activeItems.Clear();
+        }
+
+        #endregion
+
+        #region Helpers
+
+        private void SetActive(T item, bool active)
+        {
+            if (itemActivationMethod != null)
+            {
+                itemActivationMethod.Invoke(item, active);
+            }
+            else
+            {
+                item.gameObject.SetActive(active);
+            }
         }
 
         #endregion

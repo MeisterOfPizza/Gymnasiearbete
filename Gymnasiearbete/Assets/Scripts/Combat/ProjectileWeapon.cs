@@ -29,10 +29,10 @@ namespace ArenaShooter.Combat
 
         protected override void OnFire()
         {
-            var fireEvent      = WeaponFireEffectEvent.Create(WeaponHolder.entity, EntityTargets.EveryoneExceptOwner);
-            fireEvent.Shooter  = WeaponHolder.entity;
-            fireEvent.Point    = WeaponHolder.WeaponFirePosition;
-            fireEvent.Forward  = WeaponHolder.WeaponForward;
+            var fireEvent     = WeaponFireEffectEvent.Create(WeaponHolder.entity, EntityTargets.EveryoneExceptOwner);
+            fireEvent.Shooter = WeaponHolder.entity;
+            fireEvent.Point   = WeaponHolder.WeaponFirePosition;
+            fireEvent.Forward = WeaponHolder.WeaponForward;
             fireEvent.Send();
 
             OnEvent(fireEvent);

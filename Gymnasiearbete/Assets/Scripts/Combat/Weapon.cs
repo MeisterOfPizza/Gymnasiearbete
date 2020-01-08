@@ -120,7 +120,7 @@ namespace ArenaShooter.Combat
 
         public virtual int CalculateDamage(float range)
         {
-            return Mathf.CeilToInt((Damage * (1 - Mathf.Clamp01(range / weaponStats.Range))));
+            return Mathf.CeilToInt(Damage * (1 - Mathf.Clamp01(range / weaponStats.Range)));
         }
 
         #endregion
@@ -418,11 +418,13 @@ namespace ArenaShooter.Combat
 
         public void RefillAmmo(int amountOfClips)
         {
-            this.AmmoLeftInStock += amountOfClips * weaponStats.MaxAmmoPerClip;
-            if(this.AmmoLeftInStock > this.weaponStats.MaxAmmoStock)
+            AmmoLeftInStock = Mathf.Clamp(AmmoLeftInStock + amountOfClips * weaponStats.MaxAmmoPerClip, 0, weaponStats.MaxAmmoStock);
+
+            if (AmmoLeftInClip == 0)
             {
-                this.AmmoLeftInStock = this.weaponStats.MaxAmmoStock;
+                Reload();
             }
+
             OnAmmoChangedCallback.Invoke(FormatAmmoLeft());
         }
 

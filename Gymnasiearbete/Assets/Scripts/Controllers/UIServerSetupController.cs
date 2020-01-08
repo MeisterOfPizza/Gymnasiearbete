@@ -1,6 +1,7 @@
-﻿using ArenaShooter.Assets.Scripts.UI;
-using ArenaShooter.Extensions;
+﻿using ArenaShooter.Extensions;
+using ArenaShooter.Extensions.UIComponents;
 using ArenaShooter.Networking;
+using ArenaShooter.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -27,6 +28,8 @@ namespace ArenaShooter.Controllers
         [SerializeField] private TMP_InputField serverPasswordInputField;
         [SerializeField] private UIMapSelect    defaultMapSelect;
         [SerializeField] private Toggle         serverIsInviteOnlyToggle;
+        [SerializeField] private TMP_Text       difficultySliderText;
+        [SerializeField] private UISlider       difficultySlider;
 
         #endregion
 
@@ -61,6 +64,11 @@ namespace ArenaShooter.Controllers
             currentlySelectedMap.Select();
         }
 
+        public void SetDifficulty(int value)
+        {
+            difficultySliderText.text = ((ServerDifficulty)value).ToString();
+        }
+
         #endregion
 
         public void OpenServerSetup()
@@ -86,13 +94,14 @@ namespace ArenaShooter.Controllers
 
         public void CreateServer()
         {
-            if (ServerSetupSettingsAreValid())
+            if (ServerSetupSettingsAreValid() && !BoltNetwork.IsRunning)
             {
                 canvasGroup.interactable = false;
 
                 ServerUtils.CurrentServerHostInfo.SetServerName(serverNameInputField.text);
                 ServerUtils.CurrentServerHostInfo.SetServerPassword(serverPasswordInputField.text);
                 ServerUtils.CurrentServerHostInfo.SetServerInviteOnly(serverIsInviteOnlyToggle.isOn);
+                //ServerUtils.CurrentServerHostInfo.SetServerDifficulty((ServerDifficulty)difficultySlider.IntegerValue); // TODO: Introduce server difficulty (uncomment this line)
                 ServerUtils.CurrentServerHostInfo.ServerMapTemplate = currentlySelectedMap.MapTemplate;
 
                 NetworkController.Singleton.StartServer();

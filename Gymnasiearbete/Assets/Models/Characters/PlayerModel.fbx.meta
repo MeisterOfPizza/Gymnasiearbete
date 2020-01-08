@@ -1,34 +1,24 @@
 fileFormatVersion: 2
-guid: 890d67d6bd3f6934d85166dacbb7082a
+guid: 1901637ee223f14439bb6d77782a18ed
 ModelImporter:
   serializedVersion: 26
-  internalIDToNameTable: []
-  externalObjects:
+  internalIDToNameTable:
   - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Bottle
-    second: {fileID: 2100000, guid: ce7a9bce65d2533479e9558813c4cc9e, type: 2}
+      74: 4781951162920444690
+    second: Armature|ArmatureAction
   - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Bottle top
-    second: {fileID: 2100000, guid: 5adcc6eb928557a4f81b0277c838724b, type: 2}
+      74: 6093225430303232669
+    second: Armature|ArmatureAction.002
   - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Small Medkit Bottle
-    second: {fileID: 2100000, guid: ce7a9bce65d2533479e9558813c4cc9e, type: 2}
+      74: -3828583913261678786
+    second: Armature|Running
   - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Small Medkit Bottle Top
-    second: {fileID: 2100000, guid: 5adcc6eb928557a4f81b0277c838724b, type: 2}
+      74: 5652224888921960405
+    second: Armature|Running.001
   - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Small Medkit Bottle top
-    second: {fileID: 2100000, guid: 5adcc6eb928557a4f81b0277c838724b, type: 2}
+      74: -5067842053152960447
+    second: Armature|Running.003
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
@@ -112,7 +102,7 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
   userData: 

@@ -43,14 +43,28 @@ namespace ArenaShooter.AI
             agent.speed          = agentBehaviourEntity.MovementSpeed;
             searchTrigger.radius = agentBehaviourEntity.SearchThreshold;
 
-            InvokeRepeating("Search", 0f, agentBehaviourEntity.SearchInterval);
-
             isInitialized = true;
         }
 
         #endregion
 
         #region AI
+
+        public void StartAI()
+        {
+            if (isInitialized)
+            {
+                InvokeRepeating("Search", 0f, agentEntity.SearchInterval);
+            }
+        }
+
+        public void StopAI()
+        {
+            if (isInitialized)
+            {
+                CancelInvoke("Search");
+            }
+        }
 
         private void Search()
         {
@@ -241,40 +255,43 @@ namespace ArenaShooter.AI
             IEntity selectedEntity  = null;
             float   minPathDistance = float.MaxValue;
 
-            var allTargets = EntityController.Singleton.GetEntitiesOfTeam(agentEntity.SearchTargetTeam);
-
-            // Check if there's only one target, to save computation power.
-            if (allTargets.Length == 1 && allTargets[0] != agentEntity)
+            if (EntityController.Singleton != null)
             {
-                return allTargets[0];
-            }
+                var allTargets = EntityController.Singleton.GetEntitiesOfTeam(agentEntity.SearchTargetTeam);
 
-            // Loop through all potential targets:
-            foreach (var target in allTargets)
-            {
-                if (target != agentEntity)
+                // Check if there's only one target, to save computation power.
+                if (allTargets.Length == 1 && allTargets[0] != agentEntity)
                 {
-                    NavMeshPath path = new NavMeshPath();
+                    return allTargets[0];
+                }
 
-                    // Calculate the path that the agent needs to take:
-                    if (NavMesh.CalculatePath(agentEntity.BodyOriginPosition, target.BodyOriginPosition, agent.areaMask, path))
+                // Loop through all potential targets:
+                foreach (var target in allTargets)
+                {
+                    if (target != agentEntity)
                     {
-                        Vector3[] corners      = path.corners; // Get all the corners.
-                        Vector3   lastCorner   = target.BodyOriginPosition; // Set the first last corner as the target position.
-                        float     pathDistance = 0f;
+                        NavMeshPath path = new NavMeshPath();
 
-                        // Total the path travel distance:
-                        for (int i = 0; i < corners.Length; i++)
+                        // Calculate the path that the agent needs to take:
+                        if (NavMesh.CalculatePath(agentEntity.BodyOriginPosition, target.BodyOriginPosition, agent.areaMask, path))
                         {
-                            pathDistance += Vector3.Distance(lastCorner, corners[i]);
-                            lastCorner    = corners[i];
-                        }
+                            Vector3[] corners      = path.corners; // Get all the corners.
+                            Vector3   lastCorner   = target.BodyOriginPosition; // Set the first last corner as the target position.
+                            float     pathDistance = 0f;
 
-                        // If the new path distance is shorter than the selected one, update the references and values:
-                        if (pathDistance < minPathDistance)
-                        {
-                            selectedEntity  = target;
-                            minPathDistance = pathDistance;
+                            // Total the path travel distance:
+                            for (int i = 0; i < corners.Length; i++)
+                            {
+                                pathDistance += Vector3.Distance(lastCorner, corners[i]);
+                                lastCorner    = corners[i];
+                            }
+
+                            // If the new path distance is shorter than the selected one, update the references and values:
+                            if (pathDistance < minPathDistance)
+                            {
+                                selectedEntity  = target;
+                                minPathDistance = pathDistance;
+                            }
                         }
                     }
                 }
