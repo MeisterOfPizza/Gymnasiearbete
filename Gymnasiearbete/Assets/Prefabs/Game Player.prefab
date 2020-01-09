@@ -404,11 +404,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c873ee817ca49b4da546ab3fb3ee42c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  renderer: {fileID: 9215509780160404128}
-  hitboxBody: {fileID: 2155667655157586868}
-  colliders:
-  - {fileID: 2326099022610999344}
-  aiAgent: {fileID: 0}
   rightHand: {fileID: 4386951118316927766}
   laserSight: {fileID: 5054372337525939280}
   hitLayerMask:
