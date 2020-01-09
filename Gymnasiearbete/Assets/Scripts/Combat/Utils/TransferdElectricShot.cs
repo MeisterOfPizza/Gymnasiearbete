@@ -56,19 +56,25 @@ namespace ArenaShooter.Combat.Utils
         /// </summary>
         public override List<IEntity> GetTargets()
         {
-            int           shotsLeft     = weapon.AmmoLeftInClip;
-            Vector3       position      = weapon.WeaponHolder.WeaponFirePosition;
-            List<IEntity> targets       = new List<IEntity>();
-            IEntity       currentEntity = EntityController.Singleton.GetClosestEntity(position, weapon.Stats.MaxDistance, targets, weapon.Stats.TargetEntityTeam);
+            int           shotsLeft      = weapon.AmmoLeftInClip;
+            Vector3       position       = weapon.WeaponHolder.WeaponFirePosition;
+            List<IEntity> targets        = new List<IEntity>();
+            List<IEntity> checkedTargets = new List<IEntity>();
+            IEntity       currentEntity  = EntityController.Singleton.GetClosestEntity(position, weapon.Stats.MaxDistance, targets, weapon.Stats.TargetEntityTeam);
 
             while (shotsLeft > 0 && currentEntity != null)
             {
-                shotsLeft -= weapon.Stats.AmmoPerFire;
+                var hit = Extensions.Utils.Raycast(new Ray(position, (currentEntity.BodyOriginPosition - position).normalized), weapon.Stats.Range, weapon.WeaponHolder.WeaponHitLayerMask, currentEntity.gameObject, QueryTriggerInteraction.Ignore);
+                if(!hit.WorldHit)
+                {
+                    shotsLeft -= weapon.Stats.AmmoPerFire;
 
-                position = currentEntity.BodyOriginPosition;
-                targets.Add(currentEntity);
+                    position = currentEntity.BodyOriginPosition;
+                    targets.Add(currentEntity);
+                }
+                checkedTargets.Add(currentEntity);
 
-                currentEntity = EntityController.Singleton.GetClosestEntity(position, weapon.Stats.Range, targets, weapon.Stats.TargetEntityTeam);
+                currentEntity = EntityController.Singleton.GetClosestEntity(position, weapon.Stats.Range, checkedTargets, weapon.Stats.TargetEntityTeam);
             }
 
             weapon.DepleteAmmo(weapon.AmmoLeftInClip - shotsLeft);
