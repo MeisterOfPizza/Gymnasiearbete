@@ -14,23 +14,28 @@ namespace ArenaShooter.Player
     sealed class PlayerController : Entity<IPlayerState>, IWeaponHolder
     {
 
+        #region Public constants
+
+        public const int PLAYER_MAX_HEALTH = 100;
+
+        #endregion
+
         #region Editor
 
         [Header("References")]
         [SerializeField] private Transform    rightHand;
         [SerializeField] private LineRenderer laserSight;
 
-        [Header("Values")]
-        [SerializeField] private int startHealth = 100;  // TEST DATA
 
-        [Space]
+        [Header("Values")]
         [SerializeField] private LayerMask hitLayerMask;
 
         #endregion
 
         #region Public properties
 
-        public static Transform Transform { get; private set; }
+        public static PlayerController Singleton { get; private set; }
+        public static Transform        Transform { get; private set; }
 
         #endregion
 
@@ -120,6 +125,7 @@ namespace ArenaShooter.Player
                 state.Weapon.WeaponBodyId   = bodyId;
                 state.Weapon.WeaponBarrelId = barrelId;
 
+                Singleton = this;
                 Transform = this.transform;
             }
             else
@@ -147,7 +153,7 @@ namespace ArenaShooter.Player
         {
             if (entity.IsOwner)
             {
-                state.Health = startHealth;
+                state.Health = PLAYER_MAX_HEALTH;
 
                 uiPlayerGameStats = UIPlayerGameStatsController.Singleton.UIPlayerGameStats;
                 uiPlayerGameStats.Initialize(this);
@@ -167,6 +173,26 @@ namespace ArenaShooter.Player
             }
 
             UpdateLaserSight();
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            Singleton = null;
+            Transform = null;
+        }
+
+        public override void Revive(EntityRevivedEvent @event)
+        {
+            base.Revive(@event);
+
+            if (entity.IsOwner)
+            {
+                state.Health = PLAYER_MAX_HEALTH;
+
+                weapon.RefillAmmo(int.MaxValue);
+            }
         }
 
         #region OnEvents
@@ -189,7 +215,7 @@ namespace ArenaShooter.Player
 
         public override void OnEvent(RefillAmmoEvent evnt)
         {
-            if(evnt.Target == entity && entity.IsOwner)
+            if (evnt.Target == entity && entity.IsOwner)
             {
                 weapon.RefillAmmo(evnt.AmountOfClips);
             }

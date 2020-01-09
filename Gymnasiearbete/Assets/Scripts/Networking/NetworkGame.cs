@@ -27,6 +27,53 @@ namespace ArenaShooter.Networking
             Profile.Save();
         }
 
+        public override void OnEvent(WaveStartEvent evnt)
+        {
+            base.OnEvent(evnt);
+
+            if (UIWaveController.Singleton != null)
+            {
+                UIWaveController.Singleton.WaveStartEvent(evnt);
+            }
+        }
+
+        public override void OnEvent(WaveEndEvent evnt)
+        {
+            base.OnEvent(evnt);
+
+            if (UIWaveController.Singleton != null)
+            {
+                UIWaveController.Singleton.WaveEndEvent(evnt);
+            }
+
+            if (PlayerController.Singleton != null)
+            {
+                PlayerController.Singleton.Revive(null);
+
+                SetEntityActive setEntityActive = SetEntityActive.Create(GlobalTargets.Others);
+                setEntityActive.Entity          = PlayerController.Singleton.entity;
+                setEntityActive.Active          = true;
+                setEntityActive.Send();
+            }
+        }
+
+        public override void OnEvent(WaveCountdownEvent evnt)
+        {
+            base.OnEvent(evnt);
+
+            if (UIWaveController.Singleton != null)
+            {
+                UIWaveController.Singleton.WaveCountdownEvent(evnt);
+            }
+        }
+
+        public override void OnEvent(SetEntityActive evnt)
+        {
+            base.OnEvent(evnt);
+
+            evnt.Entity.gameObject.SetActive(evnt.Active);
+        }
+
     }
 
 }

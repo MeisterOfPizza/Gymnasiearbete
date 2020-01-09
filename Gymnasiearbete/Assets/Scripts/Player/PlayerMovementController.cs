@@ -83,6 +83,11 @@ namespace ArenaShooter.Player
                 camera = cameraFollow.GetComponentInChildren<Camera>();
                 MainCameraController.Singleton.SetMainCamera(camera);
                 CameraEffectsController.Singleton.SetEffectsCamera(camera);
+
+                if (BoltNetwork.IsServer)
+                {
+                    WaveController.Singleton.BeginWaveController();
+                }
             }
         }
 
@@ -127,7 +132,10 @@ namespace ArenaShooter.Player
                 Vector3 movement = Controllers.MobileMovementController.Singleton.GetMovement();
 #endif
 
-                characterController.Move(movement * moveSpeed * BoltNetwork.FrameDeltaTime);
+                if (characterController.enabled)
+                {
+                    characterController.Move(movement * moveSpeed * BoltNetwork.FrameDeltaTime);
+                }
             }
         }
 

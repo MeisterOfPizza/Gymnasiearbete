@@ -3,9 +3,11 @@ using Bolt;
 using System;
 using UnityEngine;
 
+#pragma warning disable 0649
+
 namespace ArenaShooter.Entities
 {
-    
+
     [RequireComponent(typeof(BoltEntity))]
     abstract class Entity<T> : EntityEventListener<T>, IEntity where T : IState
     {
@@ -73,17 +75,17 @@ namespace ArenaShooter.Entities
             // Leave blank.
         }
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             EntityController.Singleton?.AddEntity(this);
         }
 
-        private void OnDisable()
+        protected virtual void OnDisable()
         {
             EntityController.Singleton?.RemoveEntity(this);
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             OnDestroyCallback?.Invoke();
         }

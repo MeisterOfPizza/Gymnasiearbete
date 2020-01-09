@@ -17,6 +17,13 @@ namespace ArenaShooter.Networking
         InLobby = 4
     }
 
+    internal enum ServerDifficulty : byte
+    {
+        Easy   = 0,
+        Normal = 1,
+        Hard   = 2
+    }
+
     #endregion
 
     /// <summary>
@@ -27,10 +34,11 @@ namespace ArenaShooter.Networking
 
         #region Public properties
 
-        public string      ServerName        { get; private set; }
-        public string      ServerPassword    { get; private set; }
-        public ServerFlags Flags             { get; private set; }
-        public MapTemplate ServerMapTemplate { get; set; }
+        public string           ServerName        { get; private set; }
+        public string           ServerPassword    { get; private set; }
+        public ServerFlags      Flags             { get; private set; }
+        public ServerDifficulty Difficulty        { get; private set; }
+        public MapTemplate      ServerMapTemplate { get; set; }
 
         public bool ServerHasPassword
         {
@@ -63,6 +71,7 @@ namespace ArenaShooter.Networking
             this.ServerName        = ServerUtils.DEFAULT_SERVER_NAME + UnityEngine.Random.Range(0, 10).ToString() + UnityEngine.Random.Range(0, 10).ToString() + UnityEngine.Random.Range(0, 10).ToString();
             this.ServerPassword    = "";
             this.Flags             = ServerFlags.InLobby;
+            this.Difficulty        = ServerDifficulty.Normal;
             this.ServerMapTemplate = serverMapTemplate;
         }
 
@@ -113,6 +122,11 @@ namespace ArenaShooter.Networking
             {
                 Flags &= ~ServerFlags.InLobby;
             }
+        }
+
+        public void SetServerDifficulty(ServerDifficulty difficulty)
+        {
+            this.Difficulty = difficulty;
         }
 
         #endregion

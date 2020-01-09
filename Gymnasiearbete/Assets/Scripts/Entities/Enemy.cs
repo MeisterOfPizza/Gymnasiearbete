@@ -21,11 +21,9 @@ namespace ArenaShooter.Entities
         #region Editor
 
         [Header("References")]
-        [SerializeField] private AIAgent aiAgent;
-        [SerializeField] private Body    body;
-
-        [Space]
-        [SerializeField] private Transform renderTransform;
+        [SerializeField] private Transform rendererTransform;
+        [SerializeField] private AIAgent   aiAgent;
+        [SerializeField] private Body      body;
 
         [Header("Values")]
         [SerializeField] private LayerMask weaponHitLayerMask;
@@ -159,12 +157,26 @@ namespace ArenaShooter.Entities
 
         #endregion
 
+        #region Public properties
+
+        public EnemyTemplate EnemyTemplate
+        {
+            get
+            {
+                return enemyTemplate;
+            }
+        }
+
+        #endregion
+
         #region Protected variables
 
         protected EnemyTemplate enemyTemplate;
         protected Weapon        weapon;
 
         protected UIEnemyGameStats uiEnemyGameStats;
+
+        protected bool isOwner;
 
         #endregion
 
@@ -173,14 +185,15 @@ namespace ArenaShooter.Entities
         /// <summary>
         /// Initializes the enemy which references a template (using <paramref name="enemyTemplateId"/>) and creates the enemy's weapon.
         /// </summary>
-        public void Initialize(ushort enemyTemplateId)
+        public void Initialize(EnemyTemplate enemyTemplate)
         {
-            this.enemyTemplate    = EnemyTemplateController.Singleton.GetEnemyTemplate((ushort)state.EnemyTemplateId);
-            this.weapon           = WeaponController.Singleton.CreateWeapon(enemyTemplate.GetEnemyWeaponTemplate(), transform);
+            this.enemyTemplate = enemyTemplate;
+            this.weapon        = WeaponController.Singleton.CreateWeapon(enemyTemplate.GetEnemyWeaponTemplate(), transform);
 
             state.Health           = enemyTemplate.Health;
-            state.EnemyTemplateId  = enemyTemplateId;
+            state.EnemyTemplateId  = enemyTemplate.TemplateId;
             state.WeaponTemplateId = weapon.Stats.GetEnemyWeaponTemplateId();
+            state.Dead             = true;
 
             aiAgent.Initialize(this);
         }
@@ -203,8 +216,9 @@ namespace ArenaShooter.Entities
             uiEnemyGameStats = Instantiate(uiEnemyGameStatsPrefab, UIGameController.Singleton.EnemyOverlayContainer).GetComponent<UIEnemyGameStats>();
             uiEnemyGameStats.Initialize(this);
             uiEnemyGameStats.transform.position = MainCameraController.MainCamera.WorldToScreenPoint(transform.position);
+            uiEnemyGameStats.gameObject.SetActive(!state.Dead);
 
-            state.SetTransforms(state.Transform, transform, renderTransform);
+            state.SetTransforms(state.Transform, transform, rendererTransform);
 
             if (entity.IsOwner)
             {
@@ -218,6 +232,40 @@ namespace ArenaShooter.Entities
             state.AddCallback("Health", uiEnemyGameStats.UpdateUI);
 
             body.ManualControls = !entity.IsOwner;
+
+            this.isOwner = entity.IsOwner;
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            if (aiAgent != null && isOwner)
+            {
+                aiAgent.StopAI();
+            }
+
+            if (uiEnemyGameStats != null)
+            {
+                uiEnemyGameStats.gameObject.SetActive(false);
+            }
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+
+            if (aiAgent != null && isOwner)
+            {
+                aiAgent.StartAI();
+            }
+
+            if (uiEnemyGameStats != null)
+            {
+                uiEnemyGameStats.gameObject.SetActive(true);
+                uiEnemyGameStats.UpdateUI();
+                Update();
+            }
         }
 
         #endregion
@@ -237,7 +285,7 @@ namespace ArenaShooter.Entities
 
         private void FixedUpdate()
         {
-            if (entity.IsOwner)
+            if (entity.IsOwner && !state.Dead)
             {
                 CheckForTargets();
             }
@@ -253,8 +301,10 @@ namespace ArenaShooter.Entities
 
         #region Destroying
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
+
             if (uiEnemyGameStats != null)
             {
                 Destroy(uiEnemyGameStats.gameObject);
@@ -285,12 +335,13 @@ namespace ArenaShooter.Entities
             if (entity.IsOwner)
             {
                 state.Health = enemyTemplate.Health;
-
+                
                 // TODO: Reset weapon and reload it instantly.
             }
 
             uiEnemyGameStats.gameObject.SetActive(true);
             uiEnemyGameStats.UpdateUI();
+            Update();
         }
 
         public override void Die(EntityDiedEvent @event)
@@ -302,6 +353,11 @@ namespace ArenaShooter.Entities
             if (@event.WeaponPartItemTemplateDropId != -1)
             {
                 WeaponPartItemController.Singleton.SpawnWeaponPartItemDrop(BodyOriginPosition, WeaponPartItemController.Singleton.GetWeaponPartItemTemplate(@event.WeaponPartItemTemplateDropId));
+            }
+
+            if (WaveController.Singleton != null)
+            {
+                WaveController.Singleton.DespawnEnemy(this);
             }
         }
 

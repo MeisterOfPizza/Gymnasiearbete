@@ -17,7 +17,7 @@ namespace ArenaShooter.Extensions.UIComponents
 
         [Header("References")]
         [SerializeField] private RectTransform fillerContainer;
-        [SerializeField] private Image fillerImage;
+        [SerializeField] private Image         fillerImage;
 
         [Header("Values")]
         [SerializeField, Range(0f, 1f)] private float value = 0.0f;
@@ -27,10 +27,10 @@ namespace ArenaShooter.Extensions.UIComponents
 
         [Space]
         [SerializeField] private bool isIntegerSlider = false;
-        [SerializeField] private int maxIntegerValue = 2;
+        [SerializeField] private int  maxIntegerValue = 2;
 
         [Space]
-        [SerializeField] private FloatEvent onValueSet;
+        [SerializeField] private FloatEvent   onValueSet;
         [SerializeField] private IntegerEvent onIntValueSet;
 
         #endregion
@@ -132,7 +132,7 @@ namespace ArenaShooter.Extensions.UIComponents
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, dragPosition, canvas.worldCamera, out point);
             }
 
-            float valueBorder = verticalFill ? fillerContainer.rect.height : fillerContainer.rect.width;
+            float valueBorder     = verticalFill ? fillerContainer.rect.height : fillerContainer.rect.width;
             float halfValueBorder = valueBorder / 2f;
 
             float clampedValue = Mathf.Clamp(verticalFill ? point.y : point.x, -halfValueBorder, halfValueBorder);

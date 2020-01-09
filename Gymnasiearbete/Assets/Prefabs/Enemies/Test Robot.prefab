@@ -194,9 +194,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b173483dc55be84685b1187bbd75d21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rendererTransform: {fileID: 7168816730017891093}
   aiAgent: {fileID: 3584478159782930002}
   body: {fileID: 5331017148058546324}
-  renderTransform: {fileID: 7168816730017891093}
   weaponHitLayerMask:
     serializedVersion: 2
     m_Bits: 67108865

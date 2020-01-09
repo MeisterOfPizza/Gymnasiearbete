@@ -24,7 +24,7 @@ namespace ArenaShooter.Networking
         }
 
         public void StartServer()
-        {  
+        {
             if (!BoltNetwork.IsRunning)
             {
                 ServerUtils.ClearInvitedUsers();

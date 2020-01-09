@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -53,6 +54,12 @@ namespace ArenaShooter.Extensions
 
         #endregion
 
+        #region Public classes
+
+        public delegate C SpawnMethod<C>(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent) where C : Component;
+
+        #endregion
+
         #region Constructors
 
         public GameObjectPool(Transform parent, GameObject prefab, int prefabInstances)
@@ -70,6 +77,21 @@ namespace ArenaShooter.Extensions
             }
         }
 
+        public GameObjectPool(Transform parent, GameObject prefab, int prefabInstances, SpawnMethod<T> spawnMethod)
+        {
+            activeItems = new List<T>(prefabInstances + 5);
+            pooledItems = new Queue<T>(prefabInstances + 5);
+
+            itemCount = prefabInstances;
+
+            for (int i = 0; i < prefabInstances; i++)
+            {
+                GameObject go = spawnMethod.Invoke(prefab, Vector3.zero, Quaternion.identity, parent).gameObject;
+                go.SetActive(false);
+                pooledItems.Enqueue(go.GetComponent<T>());
+            }
+        }
+
         public GameObjectPool(params GameObject[] gameObjects)
         {
             activeItems = new List<T>(gameObjects.Length + 5);
@@ -77,9 +99,9 @@ namespace ArenaShooter.Extensions
 
             itemCount = gameObjects.Length;
 
-            foreach (var item in gameObjects)
+            foreach (var go in gameObjects)
             {
-                item.SetActive(false);
+                go.SetActive(false);
             }
         }
 

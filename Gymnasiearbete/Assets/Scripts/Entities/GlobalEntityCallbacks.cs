@@ -4,20 +4,23 @@ using System;
 namespace ArenaShooter.Entities
 {
     
-    class GlobalEntityCallbacks : GlobalEventListener
+    class GlobalEntityCallbacks : GlobalEventListener, IEventListener
     {
 
         #region Event callbacks
 
-        public Action<TakeDamageEvent>           OnTakeDamage    { get; set; }
-        public Action<HealEvent>                 OnHeal          { get; set; }
-        public Action<EntityRevivedEvent>        OnEntityRevived { get; set; }
-        public Action<EntityDiedEvent>           OnEntityDied    { get; set; }
-        public Action<RefillAmmoEvent>           OnAmmoRefill    { get; set; }   
+        public Action<TakeDamageEvent>    OnTakeDamage    { get; set; }
+        public Action<HealEvent>          OnHeal          { get; set; }
+        public Action<EntityRevivedEvent> OnEntityRevived { get; set; }
+        public Action<EntityDiedEvent>    OnEntityDied    { get; set; }
+        public Action<RefillAmmoEvent>    OnAmmoRefill    { get; set; }
         
         #endregion
 
         public IEntity Entity { get; private set; }
+
+        public bool InvokeIfDisabled             { get { return true; } }
+        public bool InvokeIfGameObjectIsInactive { get { return true; } }
 
         public void Initialize(IEntity entity)
         {
@@ -60,7 +63,7 @@ namespace ArenaShooter.Entities
 
         public override void OnEvent(RefillAmmoEvent evnt)
         {
-            if(evnt.Target == Entity.entity)
+            if (evnt.Target == Entity.entity)
             {
                 OnAmmoRefill?.Invoke(evnt);
             }

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 #pragma warning disable 0649
 
-namespace ArenaShooter.Assets.Scripts.UI
+namespace ArenaShooter.UI
 {
 
     [RequireComponent(typeof(Image))]

@@ -4152,17 +4152,16 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 427265822}
-  mapTemplate: {fileID: 11400000, guid: 5e49a75a62ea2a54fab53322c08c4503, type: 2}
+  mapTemplate: {fileID: 11400000, guid: ea0cc03507b1fac4992040ae18638a19, type: 2}
   onClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1738527125}
+      - m_Target: {fileID: 1738527123}
         m_MethodName: SetSelectedMap
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 427265821}
-          m_ObjectArgumentAssemblyTypeName: ArenaShooter.Assets.Scripts.UI.UIMapSelect,
-            Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: ArenaShooter.UI.UIMapSelect, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -12792,7 +12791,7 @@ MonoBehaviour:
   onClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1738527125}
+      - m_Target: {fileID: 1738527123}
         m_MethodName: SetSelectedMap
         m_Mode: 2
         m_Arguments:
@@ -17267,13 +17266,12 @@ MonoBehaviour:
   onClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1738527125}
+      - m_Target: {fileID: 1738527123}
         m_MethodName: SetSelectedMap
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1665889672}
-          m_ObjectArgumentAssemblyTypeName: ArenaShooter.Assets.Scripts.UI.UIMapSelect,
-            Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: ArenaShooter.UI.UIMapSelect, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -18197,6 +18195,8 @@ MonoBehaviour:
   singleplayerSetupMenu: {fileID: 1064892703}
   canvasGroup: {fileID: 1441832667}
   defaultMapSelect: {fileID: 427265821}
+  difficultySliderText: {fileID: 0}
+  difficultySlider: {fileID: 0}
 --- !u!114 &1738527124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18234,6 +18234,8 @@ MonoBehaviour:
   serverPasswordInputField: {fileID: 4278577866610835668}
   defaultMapSelect: {fileID: 50304045}
   serverIsInviteOnlyToggle: {fileID: 141699869}
+  difficultySliderText: {fileID: 0}
+  difficultySlider: {fileID: 0}
 --- !u!114 &1738527126
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21777,8 +21779,7 @@ MonoBehaviour:
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 2133087704}
-          m_ObjectArgumentAssemblyTypeName: ArenaShooter.Assets.Scripts.UI.UIMapSelect,
-            Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: ArenaShooter.UI.UIMapSelect, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

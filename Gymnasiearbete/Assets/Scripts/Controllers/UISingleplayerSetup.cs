@@ -1,6 +1,8 @@
-﻿using ArenaShooter.Assets.Scripts.UI;
-using ArenaShooter.Extensions;
+﻿using ArenaShooter.Extensions;
+using ArenaShooter.Extensions.UIComponents;
 using ArenaShooter.Networking;
+using ArenaShooter.UI;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -25,6 +27,10 @@ namespace ArenaShooter.Controllers
         [Space]
         [SerializeField] private UIMapSelect defaultMapSelect;
 
+        [Space]
+        [SerializeField] private TMP_Text difficultySliderText;
+        [SerializeField] private UISlider difficultySlider;
+
         #endregion
 
         #region Private variables
@@ -41,6 +47,11 @@ namespace ArenaShooter.Controllers
 
             currentlySelectedMap = uiMapSelect;
             currentlySelectedMap.Select();
+        }
+
+        public void SetDifficulty(int value)
+        {
+            difficultySliderText.text = ((ServerDifficulty)value).ToString();
         }
 
         #endregion
@@ -70,6 +81,7 @@ namespace ArenaShooter.Controllers
             ServerUtils.CurrentServerHostInfo.SetServerPassword("0");
             ServerUtils.CurrentServerHostInfo.SetServerInviteOnly(false);
             ServerUtils.CurrentServerHostInfo.SetServerInLobby(false);
+            //ServerUtils.CurrentServerHostInfo.SetServerDifficulty((ServerDifficulty)difficultySlider.IntegerValue); // TODO: Introduce server difficulty (uncomment this line)
             ServerUtils.CurrentServerHostInfo.ServerMapTemplate = currentlySelectedMap.MapTemplate;
 
             BoltNetwork.LoadScene(ServerUtils.CurrentServerHostInfo.ServerMapTemplate.SceneName);

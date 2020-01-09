@@ -14,6 +14,21 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: Bottle top
     second: {fileID: 2100000, guid: 5adcc6eb928557a4f81b0277c838724b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Small Medkit Bottle
+    second: {fileID: 2100000, guid: ce7a9bce65d2533479e9558813c4cc9e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Small Medkit Bottle Top
+    second: {fileID: 2100000, guid: 5adcc6eb928557a4f81b0277c838724b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Small Medkit Bottle top
+    second: {fileID: 2100000, guid: 5adcc6eb928557a4f81b0277c838724b, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

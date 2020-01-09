@@ -406,7 +406,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rightHand: {fileID: 4386951118316927766}
   laserSight: {fileID: 5054372337525939280}
-  startHealth: 100
   hitLayerMask:
     serializedVersion: 2
     m_Bits: 134217729
