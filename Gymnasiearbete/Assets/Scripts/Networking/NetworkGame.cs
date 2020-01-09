@@ -48,14 +48,12 @@ namespace ArenaShooter.Networking
 
             if (PlayerController.Singleton != null)
             {
-                /*
-                */
-                EntityRevivedEvent @event = EntityRevivedEvent.Create(GlobalTargets.Others);
-                //EntityRevivedEvent @event = EntityRevivedEvent.Create(PlayerController.Singleton.entity, EntityTargets.Everyone);
-                @event.RevivedEntity      = PlayerController.Singleton.entity;
-                @event.Send();
+                PlayerController.Singleton.Revive(null);
 
-                PlayerController.Singleton.Revive(@event);
+                SetEntityActive setEntityActive = SetEntityActive.Create(GlobalTargets.Others);
+                setEntityActive.Entity          = PlayerController.Singleton.entity;
+                setEntityActive.Active          = true;
+                setEntityActive.Send();
             }
         }
 
@@ -67,6 +65,13 @@ namespace ArenaShooter.Networking
             {
                 UIWaveController.Singleton.WaveCountdownEvent(evnt);
             }
+        }
+
+        public override void OnEvent(SetEntityActive evnt)
+        {
+            base.OnEvent(evnt);
+
+            evnt.Entity.gameObject.SetActive(evnt.Active);
         }
 
     }

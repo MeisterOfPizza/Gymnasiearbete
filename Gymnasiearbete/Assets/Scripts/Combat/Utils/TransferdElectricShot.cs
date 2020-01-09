@@ -34,6 +34,13 @@ namespace ArenaShooter.Combat.Utils
             pool = new GameObjectPool<LineRenderer>(transform, electricShotPrefab, weapon.Stats.MaxAmmoPerClip * 2);
         }
 
+        private void OnDisable()
+        {
+            StopAllCoroutines();
+
+            pool.PoolAllItems();
+        }
+
         private IEnumerator DespawnCooldown(LineRenderer effect)
         {
             float timeLeft = effectTime;

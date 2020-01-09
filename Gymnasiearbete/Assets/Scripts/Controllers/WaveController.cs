@@ -48,10 +48,25 @@ namespace ArenaShooter.Controllers
         private int  currentWave = 0;
         private bool waveIsOngoing;
 
+        /// <summary>
+        /// How many enemies are currently spawned and roaming the map?
+        /// </summary>
         private int spawnedEnemiesCount;
 
-        private int currentSpawnCount;
-        private int maxSpawnCount;
+        /// <summary>
+        /// How many enemies can at a maximum be roaming the map at the same time during this wave?
+        /// </summary>
+        private int spawnedEnemiesLimit;
+
+        /// <summary>
+        /// How many enemies have we spawned this wave so far?
+        /// </summary>
+        private int currentSpawns;
+
+        /// <summary>
+        /// How many enemies should we spawn during this wave?
+        /// </summary>
+        private int targetSpawns;
 
         #endregion
 
@@ -68,12 +83,13 @@ namespace ArenaShooter.Controllers
             waveIsOngoing = true;
 
             spawnedEnemiesCount = 0;
-            currentSpawnCount   = 0;
-            maxSpawnCount       = CalculateMaxEnemyCount();
+            spawnedEnemiesLimit = CalculateMaxEnemyCount();
+            currentSpawns       = 0;
+            targetSpawns        = CalculateEnemySpawnCount();
 
             WaveStartEvent waveStartEvent = WaveStartEvent.Create(GlobalTargets.Everyone);
             waveStartEvent.WaveNumber     = currentWave;
-            waveStartEvent.EnemyCount     = maxSpawnCount;
+            waveStartEvent.EnemyCount     = targetSpawns;
             waveStartEvent.Send();
 
             StartCoroutine("WaveUpdate");
@@ -124,9 +140,12 @@ namespace ArenaShooter.Controllers
                 yield return new WaitForEndOfFrame();
             }
 
-            while (waveIsOngoing && currentSpawnCount < maxSpawnCount && spawnedEnemiesCount < MAX_ENEMIES_ON_MAP)
+            while (waveIsOngoing && currentSpawns < targetSpawns)
             {
-                SpawnEnemy();
+                if (spawnedEnemiesCount < spawnedEnemiesLimit)
+                {
+                    SpawnEnemy();
+                }
 
                 yield return new WaitForSeconds(CalculateEnemySpawnCooldown());
             }
@@ -157,14 +176,17 @@ namespace ArenaShooter.Controllers
             {
                 var spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
 
-                currentSpawnCount++;
+                currentSpawns++;
 
                 var enemy = enemyPools[template].GetItem();
                 enemy.transform.position = spawnPoint.position;
 
-                EntityRevivedEvent @event = EntityRevivedEvent.Create(enemy.entity, EntityTargets.Everyone);
-                @event.RevivedEntity      = enemy.entity;
-                @event.Send();
+                enemy.Revive(null);
+
+                SetEntityActive setEntityActive = SetEntityActive.Create(GlobalTargets.AllClients);
+                setEntityActive.Entity = enemy.entity;
+                setEntityActive.Active = true;
+                setEntityActive.Send();
 
                 spawnedEnemiesCount++;
             }
@@ -190,8 +212,7 @@ namespace ArenaShooter.Controllers
                 var pool = new GameObjectPool<Enemy>(null,
                                                      template.EnemyPrefab,
                                                      ENEMIES_IN_POOLS,
-                                                     EntitySpawnController.Singleton.SpawnEntityOnServer<Enemy>,
-                                                     Enemy.SetEntityActive);
+                                                     EntitySpawnController.Singleton.SpawnEntityOnServer<Enemy>);
 
                 enemyPools.Add(template, pool);
 

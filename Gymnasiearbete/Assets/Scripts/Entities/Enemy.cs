@@ -5,7 +5,6 @@ using ArenaShooter.Extensions;
 using ArenaShooter.Templates.Enemies;
 using ArenaShooter.UI;
 using Bolt;
-using System;
 using UnityEngine;
 
 #pragma warning disable 0649
@@ -22,11 +21,9 @@ namespace ArenaShooter.Entities
         #region Editor
 
         [Header("References")]
-        [SerializeField] private AIAgent aiAgent;
-        [SerializeField] private Body    body;
-
-        [Space]
-        [SerializeField] private Transform renderTransform;
+        [SerializeField] private Transform rendererTransform;
+        [SerializeField] private AIAgent   aiAgent;
+        [SerializeField] private Body      body;
 
         [Header("Values")]
         [SerializeField] private LayerMask weaponHitLayerMask;
@@ -219,9 +216,9 @@ namespace ArenaShooter.Entities
             uiEnemyGameStats = Instantiate(uiEnemyGameStatsPrefab, UIGameController.Singleton.EnemyOverlayContainer).GetComponent<UIEnemyGameStats>();
             uiEnemyGameStats.Initialize(this);
             uiEnemyGameStats.transform.position = MainCameraController.MainCamera.WorldToScreenPoint(transform.position);
-            uiEnemyGameStats.gameObject.SetActive(false);
+            uiEnemyGameStats.gameObject.SetActive(!state.Dead);
 
-            state.SetTransforms(state.Transform, transform, renderTransform);
+            state.SetTransforms(state.Transform, transform, rendererTransform);
 
             if (entity.IsOwner)
             {
@@ -237,6 +234,38 @@ namespace ArenaShooter.Entities
             body.ManualControls = !entity.IsOwner;
 
             this.isOwner = entity.IsOwner;
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            if (aiAgent != null && isOwner)
+            {
+                aiAgent.StopAI();
+            }
+
+            if (uiEnemyGameStats != null)
+            {
+                uiEnemyGameStats.gameObject.SetActive(false);
+            }
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+
+            if (aiAgent != null && isOwner)
+            {
+                aiAgent.StartAI();
+            }
+
+            if (uiEnemyGameStats != null)
+            {
+                uiEnemyGameStats.gameObject.SetActive(true);
+                uiEnemyGameStats.UpdateUI();
+                Update();
+            }
         }
 
         #endregion
@@ -313,11 +342,6 @@ namespace ArenaShooter.Entities
             uiEnemyGameStats.gameObject.SetActive(true);
             uiEnemyGameStats.UpdateUI();
             Update();
-
-            if (aiAgent != null && isOwner)
-            {
-                aiAgent.StartAI();
-            }
         }
 
         public override void Die(EntityDiedEvent @event)
@@ -334,11 +358,6 @@ namespace ArenaShooter.Entities
             if (WaveController.Singleton != null)
             {
                 WaveController.Singleton.DespawnEnemy(this);
-            }
-
-            if (aiAgent != null && isOwner)
-            {
-                aiAgent.StopAI();
             }
         }
 

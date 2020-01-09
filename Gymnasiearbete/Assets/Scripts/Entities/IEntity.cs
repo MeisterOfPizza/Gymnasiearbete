@@ -24,8 +24,6 @@ namespace ArenaShooter.Entities
 
         GameObject gameObject { get; }
 
-        void SetEntityVisible(bool visible);
-
     }
 
 }

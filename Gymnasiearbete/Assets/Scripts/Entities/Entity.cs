@@ -3,21 +3,14 @@ using Bolt;
 using System;
 using UnityEngine;
 
+#pragma warning disable 0649
+
 namespace ArenaShooter.Entities
 {
-    
+
     [RequireComponent(typeof(BoltEntity))]
     abstract class Entity<T> : EntityEventListener<T>, IEntity where T : IState
     {
-
-        #region Editor
-
-        [Header("References - Entity")]
-        [SerializeField] private new GameObject     renderer;
-        [SerializeField] private     BoltHitboxBody hitboxBody;
-        [SerializeField] private     Collider[]     colliders;
-
-        #endregion
 
         #region Public properties
 
@@ -116,7 +109,7 @@ namespace ArenaShooter.Entities
 
         public virtual void Revive(EntityRevivedEvent @event)
         {
-            SetEntityVisible(true);
+            gameObject.SetActive(true);
 
             OnReviveCallback?.Invoke();
 
@@ -128,7 +121,7 @@ namespace ArenaShooter.Entities
 
         public virtual void Die(EntityDiedEvent @event)
         {
-            SetEntityVisible(false);
+            gameObject.SetActive(false);
 
             OnDeathCallback?.Invoke();
 
@@ -145,33 +138,6 @@ namespace ArenaShooter.Entities
         public void Heal(HealEvent healEvent)
         {
             state.SetDynamic("Health", (int)state.GetDynamic("Health") + healEvent.Heal);
-        }
-
-        #endregion
-
-        #region Helpers
-
-        /// <summary>
-        /// Sets the entity visible in the scene by activating/deactivating hitboxes, colliders and renderers.
-        /// </summary>
-        public void SetEntityVisible(bool visible)
-        {
-            renderer.SetActive(visible);
-            hitboxBody.enabled = visible;
-
-            foreach (Collider collider in colliders)
-            {
-                collider.enabled = visible;
-            }
-        }
-
-        #endregion
-
-        #region Static helpers
-
-        public static void SetEntityActive<E>(E entity, bool active) where E : IEntity
-        {
-            entity.SetEntityVisible(active);
         }
 
         #endregion
