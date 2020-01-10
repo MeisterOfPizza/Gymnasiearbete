@@ -315,6 +315,11 @@ namespace ArenaShooter.Entities
 
         #region Life
 
+        public override void Heal(HealEvent healEvent)
+        {
+            state.SetDynamic("Health", Mathf.Clamp((int)state.GetDynamic("Health") + healEvent.Heal, 0, enemyTemplate.Health));
+        }
+
         public override void TakeDamage(TakeDamageEvent takeDamageEvent)
         {
             state.SetDynamic("Health", Mathf.Clamp((int)state.GetDynamic("Health") - takeDamageEvent.DamageTaken, 0, int.MaxValue));

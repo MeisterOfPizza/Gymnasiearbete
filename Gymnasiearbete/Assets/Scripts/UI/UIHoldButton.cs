@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 #pragma warning disable 0649
 
-namespace FlyBit.UI
+namespace ArenaShooter.UI
 {
 
     sealed class UIHoldButton : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler

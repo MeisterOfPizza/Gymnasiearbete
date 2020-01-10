@@ -17,10 +17,10 @@ namespace ArenaShooter.Combat
 
         // Callbacks //
 
-        public Action<string> OnAmmoChangedCallback    { get; set; }
-        public Action         OnReloadBegunCallback    { get; set; }
-        public Action         OnReloadFinishedCallback { get; set; }
-        public Action         OnReloadCanceledCallback { get; set; }
+        public Action<AmmoStatus> OnAmmoChangedCallback    { get; set; }
+        public Action             OnReloadBegunCallback    { get; set; }
+        public Action             OnReloadFinishedCallback { get; set; }
+        public Action             OnReloadCanceledCallback { get; set; }
 
         // Pre-use calculations done to increase execution times //
 
@@ -71,6 +71,31 @@ namespace ArenaShooter.Combat
 
         #endregion
 
+        #region Structs
+
+        public struct AmmoStatus
+        {
+
+            public int ammoLeftInClip;
+            public int maxAmmoPerClip;
+            public int ammoLeftInStock;
+
+            public AmmoStatus(int ammoLeftInClip, int maxAmmoPerClip, int ammoLeftInStock)
+            {
+                this.ammoLeftInClip  = ammoLeftInClip;
+                this.maxAmmoPerClip  = maxAmmoPerClip;
+                this.ammoLeftInStock = ammoLeftInStock;
+            }
+
+            public string FormatAmmoStatus()
+            {
+                return string.Format("{0}/{1} | {2}", ammoLeftInClip, maxAmmoPerClip, ammoLeftInStock);
+            }
+
+        }
+
+        #endregion
+
         #region Initializing
 
         public void Initialize(WeaponStats weaponStats)
@@ -103,6 +128,15 @@ namespace ArenaShooter.Combat
             // Leave blank.
         }
 
+        private void OnEnable()
+        {
+            // Reset asynchronous values to avoid bugs whenever the player / enemy gets killed.
+
+            CancelReload();
+            weaponIsFiring = false;
+            isBurstFiring  = false;
+        }
+
         #endregion
 
         #region Equipping
@@ -111,7 +145,7 @@ namespace ArenaShooter.Combat
         {
             this.WeaponHolder = weaponHolder;
 
-            OnAmmoChangedCallback?.Invoke(FormatAmmoLeft());
+            OnAmmoChangedCallback?.Invoke(new AmmoStatus(this.AmmoLeftInClip, this.weaponStats.MaxAmmoPerClip, this.AmmoLeftInStock));
         }
 
         #endregion
@@ -194,7 +228,7 @@ namespace ArenaShooter.Combat
 
                 isReloading = false;
 
-                OnAmmoChangedCallback?.Invoke(FormatAmmoLeft());
+                OnAmmoChangedCallback?.Invoke(new AmmoStatus(this.AmmoLeftInClip, this.weaponStats.MaxAmmoPerClip, this.AmmoLeftInStock));
                 OnReloadFinishedCallback?.Invoke();
             }
         }
@@ -301,8 +335,8 @@ namespace ArenaShooter.Combat
                     OnFire();
 
                     // Invoke ammo spent callback for UI:
-                    OnAmmoChangedCallback?.Invoke(FormatAmmoLeft());
-                    
+                    OnAmmoChangedCallback?.Invoke(new AmmoStatus(this.AmmoLeftInClip, this.weaponStats.MaxAmmoPerClip, this.AmmoLeftInStock));
+
                     if (AmmoLeftInClip <= 0)
                     {
                         Reload();
@@ -405,15 +439,6 @@ namespace ArenaShooter.Combat
 
         #endregion
 
-        #region Helpers
-
-        protected virtual string FormatAmmoLeft()
-        {
-            return string.Format("{0}/{1} | {2}", AmmoLeftInClip, weaponStats.MaxAmmoPerClip, AmmoLeftInStock);
-        }
-
-        #endregion
-
         #region Refilling Ammo
 
         public void RefillAmmo(int amountOfClips)
@@ -425,7 +450,7 @@ namespace ArenaShooter.Combat
                 Reload();
             }
 
-            OnAmmoChangedCallback.Invoke(FormatAmmoLeft());
+            OnAmmoChangedCallback?.Invoke(new AmmoStatus(this.AmmoLeftInClip, this.weaponStats.MaxAmmoPerClip, this.AmmoLeftInStock));
         }
 
         #endregion

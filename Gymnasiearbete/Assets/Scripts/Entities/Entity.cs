@@ -135,10 +135,7 @@ namespace ArenaShooter.Entities
 
         #region IHealable
 
-        public void Heal(HealEvent healEvent)
-        {
-            state.SetDynamic("Health", (int)state.GetDynamic("Health") + healEvent.Heal);
-        }
+        public abstract void Heal(HealEvent healEvent);
 
         #endregion
 

@@ -1,5 +1,6 @@
 ﻿using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 #pragma warning disable 0649
 
@@ -12,10 +13,27 @@ namespace ArenaShooter.Controllers
         #region References
 
         [Header("UI Refereneces")]
+        [SerializeField] private Image waveProgressBar;
+
+        [Space]
         [SerializeField] private Animator waveTextAnimator;
         [SerializeField] private TMP_Text waveText;
 
+        [Header("Values")]
+        [SerializeField] private float waveProgressBarFillSpeed = 10f;
+
         #endregion
+
+        #region Private variables
+
+        private float targetWaveProgressBarFillAmount;
+
+        #endregion
+
+        private void Update()
+        {
+            waveProgressBar.fillAmount = Mathf.Lerp(waveProgressBar.fillAmount, targetWaveProgressBarFillAmount, waveProgressBarFillSpeed * Time.deltaTime);
+        }
 
         public void WaveStartEvent(WaveStartEvent @event)
         {
@@ -46,6 +64,21 @@ namespace ArenaShooter.Controllers
             {
                 waveTextAnimator.Play("Pulse");
             }
+        }
+
+        public void WaveNumberEvent(WaveNumberEvent @event)
+        {
+            waveText.text = "Wave " + @event.Wave;
+
+            if (!waveTextAnimator.GetCurrentAnimatorStateInfo(0).IsName("Appear"))
+            {
+                waveTextAnimator.SetTrigger("Appear");
+            }
+        }
+
+        public void WaveProgressEvent(WaveProgressEvent @event)
+        {
+            targetWaveProgressBarFillAmount = @event.Progress;
         }
 
     }

@@ -6163,7 +6163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8b104b6e6fe2f94db411eb09dd2424a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthText: {fileID: 221597156}
+  healthBar: {fileID: 0}
   ammoText: {fileID: 1518470018}
 --- !u!1 &1594480865
 GameObject:
@@ -7482,7 +7482,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2062062628}
-  - component: {fileID: 2062062627}
   - component: {fileID: 2062062630}
   - component: {fileID: 2062062629}
   m_Layer: 0
@@ -7492,19 +7491,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2062062627
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2062062626}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59b98bd6f2d453e45bdd8d3a27a05969, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  uiPlayerGameStats: {fileID: 1556599682}
 --- !u!4 &2062062628
 Transform:
   m_ObjectHideFlags: 0
@@ -7533,6 +7519,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyOverlayContainer: {fileID: 1449956274}
   interactableOverlayContainer: {fileID: 216358416}
+  uiPlayerGameStats: {fileID: 0}
 --- !u!114 &2062062630
 MonoBehaviour:
   m_ObjectHideFlags: 0

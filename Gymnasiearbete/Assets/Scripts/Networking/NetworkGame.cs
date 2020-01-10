@@ -1,4 +1,5 @@
 ﻿using ArenaShooter.Controllers;
+using ArenaShooter.Extensions;
 using ArenaShooter.Player;
 using Bolt;
 using UnityEngine.SceneManagement;
@@ -13,6 +14,10 @@ namespace ArenaShooter.Networking
         public override void SceneLoadLocalDone(string scene)
         {
             BoltNetwork.Instantiate(BoltPrefabs.Game_Player);
+
+            GameLogMessageEvent playerJoinedMessageEvent = GameLogMessageEvent.Create(GlobalTargets.Others);
+            playerJoinedMessageEvent.Message             = $"{UserUtils.GetUsername()} connected";
+            playerJoinedMessageEvent.Send();
         }
 
         public override void BoltShutdownBegin(AddCallback registerDoneCallback)
@@ -50,9 +55,10 @@ namespace ArenaShooter.Networking
             {
                 PlayerController.Singleton.Revive(null);
 
-                SetEntityActive setEntityActive = SetEntityActive.Create(GlobalTargets.Others);
-                setEntityActive.Entity          = PlayerController.Singleton.entity;
-                setEntityActive.Active          = true;
+                SetEntityActiveEvent setEntityActive = SetEntityActiveEvent.Create(GlobalTargets.Others);
+                setEntityActive.Entity               = PlayerController.Singleton.entity;
+                setEntityActive.Active               = true;
+                setEntityActive.Position             = PlayerController.Transform.position;
                 setEntityActive.Send();
             }
         }
@@ -67,11 +73,42 @@ namespace ArenaShooter.Networking
             }
         }
 
-        public override void OnEvent(SetEntityActive evnt)
+        public override void OnEvent(WaveNumberEvent evnt)
+        {
+            base.OnEvent(evnt);
+
+            if (UIWaveController.Singleton != null)
+            {
+                UIWaveController.Singleton.WaveNumberEvent(evnt);
+            }
+        }
+
+        public override void OnEvent(WaveProgressEvent evnt)
+        {
+            base.OnEvent(evnt);
+
+            if (UIWaveController.Singleton != null)
+            {
+                UIWaveController.Singleton.WaveProgressEvent(evnt);
+            }
+        }
+
+        public override void OnEvent(SetEntityActiveEvent evnt)
         {
             base.OnEvent(evnt);
 
             evnt.Entity.gameObject.SetActive(evnt.Active);
+            evnt.Entity.transform.position = evnt.Position;
+        }
+
+        public override void OnEvent(GameLogMessageEvent evnt)
+        {
+            base.OnEvent(evnt);
+
+            if (UIGameController.Singleton != null)
+            {
+                UIGameController.Singleton.GameLogMessageEvent(evnt);
+            }
         }
 
     }
