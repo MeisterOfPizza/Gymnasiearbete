@@ -19,6 +19,8 @@ namespace ArenaShooter.UI
         [SerializeField] private RectTransform healthBarRect;
         [SerializeField] private Image         healthBar;
         [SerializeField] private TMP_Text      ammoText;
+        [SerializeField] private TMP_Text      killsText;
+        [SerializeField] private TMP_Text      deathsText;
 
         [Header("Values")]
         [SerializeField] private Gradient healthGradient;
@@ -54,6 +56,16 @@ namespace ArenaShooter.UI
         public void UpdateAmmoUI(AmmoStatus ammoStatus)
         {
             ammoText.text = ammoStatus.FormatAmmoStatus();
+        }
+
+        public void UpdateKillsUI()
+        {
+            killsText.text = player.state.Kills.ToString();
+        }
+
+        public void UpdateDeathsUI()
+        {
+            deathsText.text = player.state.Deaths.ToString();
         }
 
         public void UpdateUsernameUI()

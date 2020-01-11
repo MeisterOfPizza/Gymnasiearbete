@@ -111,6 +111,16 @@ namespace ArenaShooter.Networking
             }
         }
 
+        public override void OnEvent(PlayerKilledEnemyEvent evnt)
+        {
+            base.OnEvent(evnt);
+
+            if (PlayerController.Singleton != null)
+            {
+                PlayerController.Singleton.PlayerKilledEnemyEvent(evnt);
+            }
+        }
+
     }
 
 }

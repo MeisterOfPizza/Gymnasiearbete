@@ -18,6 +18,7 @@ namespace ArenaShooter.Combat
         // Callbacks //
 
         public Action<AmmoStatus> OnAmmoChangedCallback    { get; set; }
+        public Action             OnFireCallback           { get; set; }
         public Action             OnReloadBegunCallback    { get; set; }
         public Action             OnReloadFinishedCallback { get; set; }
         public Action             OnReloadCanceledCallback { get; set; }
@@ -176,7 +177,7 @@ namespace ArenaShooter.Combat
         /// </summary>
         public void Reload()
         {
-            if (!isReloading)
+            if (!isReloading && AmmoLeftInClip != Stats.MaxAmmoPerClip)
             {
                 isReloading = true;
 
@@ -222,9 +223,9 @@ namespace ArenaShooter.Combat
 
             if (isReloading)
             {
-                int unsedAmmo   = AmmoLeftInClip;
-                AmmoLeftInClip  = Mathf.Min(weaponStats.MaxAmmoPerClip, AmmoLeftInStock);
-                AmmoLeftInStock = Mathf.Clamp(AmmoLeftInStock - weaponStats.MaxAmmoPerClip - unsedAmmo, 0, weaponStats.MaxAmmoStock);
+                int unusedAmmo  = AmmoLeftInClip;
+                AmmoLeftInClip  = Mathf.Min(weaponStats.MaxAmmoPerClip, AmmoLeftInStock + unusedAmmo);
+                AmmoLeftInStock = Mathf.Clamp(AmmoLeftInStock - (weaponStats.MaxAmmoPerClip - unusedAmmo), 0, weaponStats.MaxAmmoStock);
 
                 isReloading = false;
 
@@ -266,6 +267,13 @@ namespace ArenaShooter.Combat
                         shouldFire = Input.GetMouseButton(0);
                         break;
                 }
+
+                if (Input.GetKeyDown(KeyCode.R) && !weaponIsFiring)
+                {
+                    Reload();
+
+                    return;
+                }
 #elif UNITY_IOS || UNITY_ANDROID
 
 #endif
@@ -299,6 +307,8 @@ namespace ArenaShooter.Combat
 
         private void TryFiring()
         {
+            OnFireCallback?.Invoke();
+
             if (weaponStats.FiringMode == FiringMode.Burst)
             {
                 StartCoroutine("TryBurstFiring");

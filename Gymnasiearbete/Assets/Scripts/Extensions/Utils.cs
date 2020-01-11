@@ -1,5 +1,6 @@
 ﻿using ArenaShooter.Entities;
 using Bolt.LagCompensation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -301,11 +302,6 @@ namespace ArenaShooter.Extensions
         /// </summary>
         public static string Clamp(this string value, int minLength, int maxLength, string replacement = "")
         {
-            if (string.IsNullOrEmpty(value))
-            {
-                return value;
-            }
-
             if (value.Length < minLength)
             {
                 int charsToAdd = minLength - value.Length;
@@ -325,16 +321,85 @@ namespace ArenaShooter.Extensions
 
         #endregion
 
+        #region TimeSpans
+
+        /// <summary>
+        /// Returns a nicely formatted string from a total set of seconds.
+        /// </summary>
+        public static string GetSecondsFormatted(double totalSeconds)
+        {
+            if ((int)totalSeconds == 0)
+            {
+                return "0 seconds";
+            }
+            else
+            {
+                int hours   = (int)Math.Floor(totalSeconds / 3600d);
+                int minutes = (int)Math.Floor((totalSeconds - hours * 3600d) / 60d);
+                int seconds = (int)Math.Round(totalSeconds - hours * 3600d - minutes * 60d, 0, MidpointRounding.AwayFromZero);
+
+                string output = "";
+
+                if (hours > 0)
+                {
+                    output += hours + " hour";
+
+                    if (hours > 1)
+                    {
+                        output += "s";
+                    }
+                }
+
+                if (minutes > 0)
+                {
+                    if (seconds > 0)
+                    {
+                        output += hours > 0 ? ", " : "";
+                    }
+                    else
+                    {
+                        output += hours > 0 ? " and " : "";
+                    }
+
+                    output += minutes + " minute";
+
+                    if (minutes > 1)
+                    {
+                        output += "s";
+                    }
+                }
+
+                if (seconds > 0)
+                {
+                    if (hours > 0 || minutes > 0)
+                    {
+                        output += " and ";
+                    }
+
+                    output += seconds + " second";
+
+                    if (seconds > 1)
+                    {
+                        output += "s";
+                    }
+                }
+
+                return output;
+            }
+        }
+
+        #endregion
+
         #region Lists
 
         public static T TakeRandom<T>(this IList<T> list)
         {
-            return list[Random.Range(0, list.Count)];
+            return list[UnityEngine.Random.Range(0, list.Count)];
         }
 
         public static T TakeRandom<T>(this IEnumerable<T> enumerable)
         {
-            return enumerable.ElementAt(Random.Range(0, enumerable.Count()));
+            return enumerable.ElementAt(UnityEngine.Random.Range(0, enumerable.Count()));
         }
 
         #endregion

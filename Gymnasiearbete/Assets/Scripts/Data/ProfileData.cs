@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ArenaShooter.Player;
+using System;
 
 namespace ArenaShooter.Data
 {
@@ -7,6 +8,7 @@ namespace ArenaShooter.Data
     sealed class ProfileData
     {
 
+        public string username    = Profile.DEFAULT_USERNAME;
         public int    totalKills  = 0;
         public int    totalDeaths = 0;
         public int    totalShots  = 0;
@@ -15,8 +17,9 @@ namespace ArenaShooter.Data
         public InventoryData inventoryData;
         public int           selectedLoadoutSlotIndex = 0;
 
-        public ProfileData(int totalKills, int totalDeaths, int totalShots, double timePlayed, InventoryData inventoryData, int selectedLoadoutSlotIndex)
+        public ProfileData(string username, int totalKills, int totalDeaths, int totalShots, double timePlayed, InventoryData inventoryData, int selectedLoadoutSlotIndex)
         {
+            this.username                 = username;
             this.totalKills               = totalKills;
             this.totalDeaths              = totalDeaths;
             this.totalShots               = totalShots;

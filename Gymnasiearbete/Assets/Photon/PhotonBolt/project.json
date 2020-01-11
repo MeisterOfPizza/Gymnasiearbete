@@ -2107,6 +2107,18 @@
           }
         },
         {
+          "Name": "Shooter",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeEntity, bolt.compiler"
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        },
+        {
           "Name": "DamageTaken",
           "Enabled": true,
           "ReplicationMode": 1,
@@ -2216,6 +2228,18 @@
       "Properties": [
         {
           "Name": "DeadEntity",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeEntity, bolt.compiler"
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        },
+        {
+          "Name": "KillerEntity",
           "Enabled": true,
           "ReplicationMode": 1,
           "Priority": 1,
@@ -2691,6 +2715,30 @@
       "GlobalSenders": 1,
       "Name": "WaveNumberEvent",
       "Guid": "07344aa5-29db-4f9a-951a-85e3363f4f5e",
+      "Groups": [
+        "samples"
+      ]
+    },
+    {
+      "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
+      "Properties": [
+        {
+          "Name": "Killer",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeEntity, bolt.compiler"
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        }
+      ],
+      "EntitySenders": 3,
+      "GlobalSenders": 1,
+      "Name": "PlayerKilledEnemyEvent",
+      "Guid": "233cd1f6-3d3f-45f5-9df2-71033f87d5f5",
       "Groups": [
         "samples"
       ]

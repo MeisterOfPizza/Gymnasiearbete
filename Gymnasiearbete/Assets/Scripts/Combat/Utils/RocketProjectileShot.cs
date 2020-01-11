@@ -98,6 +98,7 @@ namespace ArenaShooter.Combat.Utils
                         {
                             var takeDamageEvent         = TakeDamageEvent.Create(GlobalTargets.Everyone, ReliabilityModes.ReliableOrdered);
                             takeDamageEvent.Target      = hit.body.GetComponent<IEntity>().entity;
+                            takeDamageEvent.Shooter     = weapon.WeaponHolder.entity;
                             takeDamageEvent.DamageTaken = weapon.CalculateDamage(hit.distance);
                             takeDamageEvent.Send();
                         }

@@ -153,14 +153,18 @@ namespace ArenaShooter.Player
 
             if (entity.IsOwner)
             {
-                // Add callback to the UI:
-                weapon.OnAmmoChangedCallback += uiPlayerGameStats.UpdateAmmoUI;
-
-                // Add callback to the state weapon object (networking):
+                // Add callback to the state weapon object (networking) and ammo UI:
                 weapon.OnAmmoChangedCallback += (AmmoStatus ammoStatus) =>
                 {
+                    uiPlayerGameStats.UpdateAmmoUI(ammoStatus);
+
                     state.Weapon.AmmoLeftInClip  = ammoStatus.ammoLeftInClip;
                     state.Weapon.AmmoLeftInStock = ammoStatus.ammoLeftInStock;
+                };
+
+                weapon.OnFireCallback += () =>
+                {
+                    Profile.TotalShots++;
                 };
             }
             else
@@ -194,8 +198,18 @@ namespace ArenaShooter.Player
 
                 state.AddCallback("Name", uiPlayerGameStats.UpdateUsernameUI);
             }
+
+            state.AddCallback("Kills", uiPlayerGameStats.UpdateKillsUI);
+            state.AddCallback("Deaths", uiPlayerGameStats.UpdateDeathsUI);
         }
-        
+
+        public override void SimulateOwner()
+        {
+            base.SimulateOwner();
+
+            Profile.TimePlayed += Time.deltaTime;
+        }
+
         private void Update()
         {
             if (entity.IsControllerOrOwner)
@@ -253,6 +267,18 @@ namespace ArenaShooter.Player
                 playerDeathEvent.Send();
 
                 state.Deaths++;
+
+                Profile.TotalDeaths++;
+            }
+        }
+
+        public void PlayerKilledEnemyEvent(PlayerKilledEnemyEvent @event)
+        {
+            if (@event.Killer == entity && entity.IsOwner)
+            {
+                state.Kills++;
+
+                Profile.TotalKills++;
             }
         }
 

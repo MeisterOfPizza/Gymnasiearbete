@@ -98,12 +98,13 @@ namespace ArenaShooter.Entities
 
             if ((int)state.GetDynamic("Health") <= 0)
             {
-                var entityDeathEvent                          = EntityDiedEvent.Create(GlobalTargets.Others, ReliabilityModes.ReliableOrdered);
-                entityDeathEvent.DeadEntity                   = entity;
-                entityDeathEvent.WeaponPartItemTemplateDropId = -1;
-                entityDeathEvent.Send();
+                var entityDiedEvent                          = EntityDiedEvent.Create(GlobalTargets.Others, ReliabilityModes.ReliableOrdered);
+                entityDiedEvent.DeadEntity                   = entity;
+                entityDiedEvent.KillerEntity                 = takeDamageEvent.Shooter;
+                entityDiedEvent.WeaponPartItemTemplateDropId = -1;
+                entityDiedEvent.Send();
 
-                Die(entityDeathEvent);
+                Die(entityDiedEvent);
             }
         }
 

@@ -13,6 +13,12 @@ namespace ArenaShooter.Drops
     sealed class WeaponPartItemDrop : MonoBehaviour
     {
 
+        #region Private statics
+
+        private static string playerNameHTMLColor = ColorUtility.ToHtmlStringRGBA(new Color(1f, 0.5744222f, 0f));
+
+        #endregion
+
         #region Editor
 
         [Header("References")]
@@ -71,7 +77,7 @@ namespace ArenaShooter.Drops
                 if (item != null)
                 {
                     GameLogMessageEvent itemDropEvent = GameLogMessageEvent.Create(GlobalTargets.Everyone);
-                    itemDropEvent.Message             = $"{UserUtils.GetUsername()} picked up {item.GetRarityFormatted()}";
+                    itemDropEvent.Message             = $"<color=#{playerNameHTMLColor}>{UserUtils.GetUsername()}</color> picked up {item.GetRarityFormatted()}";
                     itemDropEvent.Send();
 
                     Profile.Inventory.WeaponPartItems.Add(item);
