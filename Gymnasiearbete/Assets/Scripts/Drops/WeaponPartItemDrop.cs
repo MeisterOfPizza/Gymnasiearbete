@@ -1,6 +1,8 @@
 ﻿using ArenaShooter.Combat;
+using ArenaShooter.Extensions;
 using ArenaShooter.Player;
 using ArenaShooter.Templates.Items;
+using Bolt;
 using UnityEngine;
 
 #pragma warning disable 0649
@@ -10,6 +12,12 @@ namespace ArenaShooter.Drops
 
     sealed class WeaponPartItemDrop : MonoBehaviour
     {
+
+        #region Private statics
+
+        private static string playerNameHTMLColor = ColorUtility.ToHtmlStringRGBA(new Color(1f, 0.5744222f, 0f));
+
+        #endregion
 
         #region Editor
 
@@ -68,6 +76,10 @@ namespace ArenaShooter.Drops
 
                 if (item != null)
                 {
+                    GameLogMessageEvent itemDropEvent = GameLogMessageEvent.Create(GlobalTargets.Everyone);
+                    itemDropEvent.Message             = $"<color=#{playerNameHTMLColor}>{UserUtils.GetUsername()}</color> picked up {item.GetRarityFormatted()}";
+                    itemDropEvent.Send();
+
                     Profile.Inventory.WeaponPartItems.Add(item);
                 }
 

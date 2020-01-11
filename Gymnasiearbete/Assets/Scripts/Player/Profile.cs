@@ -8,6 +8,9 @@ namespace ArenaShooter.Player
     static class Profile
     {
 
+        public const string DEFAULT_USERNAME = "Guest User";
+
+        public static string Username    = DEFAULT_USERNAME;
         public static int    TotalKills  = 0;
         public static int    TotalDeaths = 0;
         public static int    TotalShots  = 0;
@@ -18,7 +21,8 @@ namespace ArenaShooter.Player
 
         public static void Save()
         {
-            ProfileData profileData = new ProfileData(TotalKills, 
+            ProfileData profileData = new ProfileData(Username,
+                                                      TotalKills, 
                                                       TotalDeaths, 
                                                       TotalShots, 
                                                       TimePlayed, 
@@ -37,6 +41,7 @@ namespace ArenaShooter.Player
             if (profileData != null)
             {
                 // It does. Load it:
+                Username            = profileData.username;
                 TotalKills          = profileData.totalKills;
                 TotalDeaths         = profileData.totalDeaths;
                 TotalShots          = profileData.totalShots;
@@ -47,6 +52,7 @@ namespace ArenaShooter.Player
             else
             {
                 // Create a new profile:
+                Username            = DEFAULT_USERNAME;
                 TotalKills          = 0;
                 TotalDeaths         = 0;
                 TotalShots          = 0;

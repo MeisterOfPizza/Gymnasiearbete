@@ -125,11 +125,11 @@ namespace ArenaShooter.Controllers
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape) && menu != null && menu.activeInHierarchy == false && options.activeInHierarchy == false)
+            if (Input.GetKeyDown(KeyCode.Escape) && menu != null && !menu.activeInHierarchy && !options.activeInHierarchy)
             {
                 menu.SetActive(true);
             }
-            else if(Input.GetKeyDown(KeyCode.Escape) && menu != null && menu.activeInHierarchy == true)
+            else if (Input.GetKeyDown(KeyCode.Escape) && menu != null && menu.activeInHierarchy)
             {
                 menu.SetActive(false);
             }

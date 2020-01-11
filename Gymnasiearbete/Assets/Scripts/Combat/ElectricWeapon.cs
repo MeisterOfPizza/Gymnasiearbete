@@ -35,6 +35,7 @@ namespace ArenaShooter.Combat
 
                 var takeDamageEvent         = TakeDamageEvent.Create(GlobalTargets.Everyone, ReliabilityModes.ReliableOrdered);
                 takeDamageEvent.Target      = targets[i].entity;
+                takeDamageEvent.Shooter     = WeaponHolder.entity;
                 takeDamageEvent.DamageTaken = Damage;
                 takeDamageEvent.Send();
             }

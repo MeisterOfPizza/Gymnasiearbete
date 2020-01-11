@@ -1,6 +1,8 @@
 ﻿using ArenaShooter.Player;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using static ArenaShooter.Combat.Weapon;
 
 #pragma warning disable 0649
 
@@ -13,8 +15,18 @@ namespace ArenaShooter.UI
         #region Editor
 
         [Header("References")]
-        [SerializeField] private TMP_Text healthText;
-        [SerializeField] private TMP_Text ammoText;
+        [SerializeField] private TMP_Text      playerNameText;
+        [SerializeField] private RectTransform healthBarRect;
+        [SerializeField] private Image         healthBar;
+        [SerializeField] private TMP_Text      ammoText;
+        [SerializeField] private TMP_Text      killsText;
+        [SerializeField] private TMP_Text      deathsText;
+
+        [Header("Values")]
+        [SerializeField] private Gradient healthGradient;
+
+        [Space]
+        [SerializeField] private float healthBarUpdateSpeed = 10f;
 
         #endregion
 
@@ -27,16 +39,41 @@ namespace ArenaShooter.UI
         public void Initialize(PlayerController player)
         {
             this.player = player;
+
+            UpdateUsernameUI();
         }
 
-        public void UpdateHealthUI()
+        private void Update()
         {
-            healthText.text = "Health: " + player.state.Health;
+            if (player != null && player.entity.IsAttached && BoltNetwork.IsRunning)
+            {
+                healthBarRect.localPosition = Vector3.Lerp(healthBarRect.localPosition, Vector3.right * healthBarRect.rect.width * (1f - player.state.Health / (float)PlayerController.PLAYER_MAX_HEALTH), healthBarUpdateSpeed * Time.deltaTime);
+
+                healthBar.color = healthGradient.Evaluate(player.state.Health / (float)PlayerController.PLAYER_MAX_HEALTH);
+            }
         }
 
-        public void UpdateAmmoUI(string ammoFormat)
+        public void UpdateAmmoUI(AmmoStatus ammoStatus)
         {
-            ammoText.text = "Ammo: " + ammoFormat;
+            ammoText.text = ammoStatus.FormatAmmoStatus();
+        }
+
+        public void UpdateKillsUI()
+        {
+            killsText.text = player.state.Kills.ToString();
+        }
+
+        public void UpdateDeathsUI()
+        {
+            deathsText.text = player.state.Deaths.ToString();
+        }
+
+        public void UpdateUsernameUI()
+        {
+            if (playerNameText != null)
+            {
+                playerNameText.text = player.state.Name;
+            }
         }
 
     }

@@ -315,6 +315,11 @@ namespace ArenaShooter.Entities
 
         #region Life
 
+        public override void Heal(HealEvent healEvent)
+        {
+            state.SetDynamic("Health", Mathf.Clamp((int)state.GetDynamic("Health") + healEvent.Heal, 0, enemyTemplate.Health));
+        }
+
         public override void TakeDamage(TakeDamageEvent takeDamageEvent)
         {
             state.SetDynamic("Health", Mathf.Clamp((int)state.GetDynamic("Health") - takeDamageEvent.DamageTaken, 0, int.MaxValue));
@@ -323,6 +328,7 @@ namespace ArenaShooter.Entities
             {
                 var entityDeathEvent                          = EntityDiedEvent.Create(GlobalTargets.Everyone, ReliabilityModes.ReliableOrdered);
                 entityDeathEvent.DeadEntity                   = entity;
+                entityDeathEvent.KillerEntity                 = takeDamageEvent.Shooter;
                 entityDeathEvent.WeaponPartItemTemplateDropId = enemyTemplate.GetWeaponPartItemTemplate()?.Id ?? -1;
                 entityDeathEvent.Send();
             }
@@ -350,11 +356,22 @@ namespace ArenaShooter.Entities
 
             uiEnemyGameStats.gameObject.SetActive(false);
 
+            // Check if this enemy should spawn an item drop:
             if (@event.WeaponPartItemTemplateDropId != -1)
             {
                 WeaponPartItemController.Singleton.SpawnWeaponPartItemDrop(BodyOriginPosition, WeaponPartItemController.Singleton.GetWeaponPartItemTemplate(@event.WeaponPartItemTemplateDropId));
             }
 
+            // Send an event to notify the player that killed the enemy.
+            // First check if the killed isn't null (in-case they left the game) and check if the killer entity is a player.
+            if (entity.IsOwner && @event.KillerEntity != null && @event.KillerEntity.TryFindState(out IPlayerState playerState))
+            {
+                PlayerKilledEnemyEvent playerKilledEnemyEvent = PlayerKilledEnemyEvent.Create(GlobalTargets.Everyone);
+                playerKilledEnemyEvent.Killer = @event.KillerEntity;
+                playerKilledEnemyEvent.Send();
+            }
+
+            // Despawn the enemy:
             if (WaveController.Singleton != null)
             {
                 WaveController.Singleton.DespawnEnemy(this);

@@ -5,6 +5,7 @@ using ArenaShooter.Extensions;
 using ArenaShooter.UI;
 using Bolt;
 using UnityEngine;
+using static ArenaShooter.Combat.Weapon;
 
 #pragma warning disable 0649
 
@@ -17,6 +18,13 @@ namespace ArenaShooter.Player
         #region Public constants
 
         public const int PLAYER_MAX_HEALTH = 100;
+
+        #endregion
+
+        #region Private statics
+
+        private static string playerReviveMessageHTMLColor = ColorUtility.ToHtmlStringRGBA(new Color(0.62f, 1f, 0.32f));
+        private static string playerDeathMessageHTMLColor  = ColorUtility.ToHtmlStringRGBA(new Color(1f, 0.24f, 0.22f));
 
         #endregion
 
@@ -121,9 +129,14 @@ namespace ArenaShooter.Player
                 BuiltWeapon.AssembleWeapon(Profile.SelectedLoadoutSlot.Loadout, rightHand).transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
 
                 weapon.Stats.GetWeaponPartTemplateIds(out ushort stockId, out ushort bodyId, out ushort barrelId);
-                state.Weapon.WeaponStockId  = stockId;
-                state.Weapon.WeaponBodyId   = bodyId;
-                state.Weapon.WeaponBarrelId = barrelId;
+                state.Weapon.WeaponStockId   = stockId;
+                state.Weapon.WeaponBodyId    = bodyId;
+                state.Weapon.WeaponBarrelId  = barrelId;
+                state.Weapon.AmmoLeftInClip  = weapon.AmmoLeftInClip;
+                state.Weapon.MaxAmmoPerClip  = weapon.AmmoLeftInClip;
+                state.Weapon.AmmoLeftInStock = weapon.AmmoLeftInStock;
+
+                state.Name = UserUtils.GetUsername();
 
                 Singleton = this;
                 Transform = this.transform;
@@ -140,8 +153,27 @@ namespace ArenaShooter.Player
 
             if (entity.IsOwner)
             {
-                // Adding callbacks to the UI:
-                weapon.OnAmmoChangedCallback += uiPlayerGameStats.UpdateAmmoUI;
+                // Add callback to the state weapon object (networking) and ammo UI:
+                weapon.OnAmmoChangedCallback += (AmmoStatus ammoStatus) =>
+                {
+                    uiPlayerGameStats.UpdateAmmoUI(ammoStatus);
+
+                    state.Weapon.AmmoLeftInClip  = ammoStatus.ammoLeftInClip;
+                    state.Weapon.AmmoLeftInStock = ammoStatus.ammoLeftInStock;
+                };
+
+                weapon.OnFireCallback += () =>
+                {
+                    Profile.TotalShots++;
+                };
+            }
+            else
+            {
+                // Add callback from foreign player controller:
+                state.AddCallback("Weapon", () =>
+                {
+                    uiPlayerGameStats.UpdateAmmoUI(new AmmoStatus(state.Weapon.AmmoLeftInClip, state.Weapon.MaxAmmoPerClip, state.Weapon.AmmoLeftInStock));
+                });
             }
 
             weapon.EquipWeapon(this);
@@ -155,16 +187,29 @@ namespace ArenaShooter.Player
             {
                 state.Health = PLAYER_MAX_HEALTH;
 
-                uiPlayerGameStats = UIPlayerGameStatsController.Singleton.UIPlayerGameStats;
+                uiPlayerGameStats = UIGameController.Singleton.UIPlayerGameStats;
                 uiPlayerGameStats.Initialize(this);
-
-                // Adding callbacks to the UI:
-                state.AddCallback("Health", uiPlayerGameStats.UpdateHealthUI);
 
                 entity.TakeControl();
             }
+            else
+            {
+                uiPlayerGameStats = UIGameController.Singleton.RegisterForeignPlayerControllerForUI(this);
+
+                state.AddCallback("Name", uiPlayerGameStats.UpdateUsernameUI);
+            }
+
+            state.AddCallback("Kills", uiPlayerGameStats.UpdateKillsUI);
+            state.AddCallback("Deaths", uiPlayerGameStats.UpdateDeathsUI);
         }
-        
+
+        public override void SimulateOwner()
+        {
+            base.SimulateOwner();
+
+            Profile.TimePlayed += Time.deltaTime;
+        }
+
         private void Update()
         {
             if (entity.IsControllerOrOwner)
@@ -179,19 +224,61 @@ namespace ArenaShooter.Player
         {
             base.OnDestroy();
 
+            if (UIGameController.Singleton != null)
+            {
+                UIGameController.Singleton.UnregisterForeignPlayerControllerForUI(this);
+            }
+
             Singleton = null;
             Transform = null;
         }
 
         public override void Revive(EntityRevivedEvent @event)
         {
+            bool wasDead = state.Dead;
+
             base.Revive(@event);
+
+            if (entity.IsOwner && wasDead)
+            {
+                state.Health = PLAYER_MAX_HEALTH / 4;
+
+                weapon.RefillAmmo(int.MaxValue);
+
+                GameLogMessageEvent playerDeathEvent = GameLogMessageEvent.Create(GlobalTargets.Everyone);
+                playerDeathEvent.Message             = $"<color=#{playerReviveMessageHTMLColor}>{UserUtils.GetUsername()} is back in the fight!";
+                playerDeathEvent.Send();
+            }
+        }
+
+        public override void Heal(HealEvent healEvent)
+        {
+            state.SetDynamic("Health", Mathf.Clamp((int)state.GetDynamic("Health") + healEvent.Heal, 0, PLAYER_MAX_HEALTH));
+        }
+
+        public override void Die(EntityDiedEvent @event)
+        {
+            base.Die(@event);
 
             if (entity.IsOwner)
             {
-                state.Health = PLAYER_MAX_HEALTH;
+                GameLogMessageEvent playerDeathEvent = GameLogMessageEvent.Create(GlobalTargets.Everyone);
+                playerDeathEvent.Message             = $"<color=#{playerDeathMessageHTMLColor}>{UserUtils.GetUsername()} died";
+                playerDeathEvent.Send();
 
-                weapon.RefillAmmo(int.MaxValue);
+                state.Deaths++;
+
+                Profile.TotalDeaths++;
+            }
+        }
+
+        public void PlayerKilledEnemyEvent(PlayerKilledEnemyEvent @event)
+        {
+            if (@event.Killer == entity && entity.IsOwner)
+            {
+                state.Kills++;
+
+                Profile.TotalKills++;
             }
         }
 

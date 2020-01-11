@@ -1,4 +1,9 @@
-﻿using ArenaShooter.UI;
+﻿using ArenaShooter.Extensions;
+using ArenaShooter.Player;
+using ArenaShooter.UI;
+using System;
+using System.Globalization;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 
@@ -16,10 +21,31 @@ namespace ArenaShooter.Controllers
         [SerializeField] private GameObject mainMenu;
 
         [Space]
+        [SerializeField] private TMP_InputField profileUsernameInputField;
+        [SerializeField] private TMP_Text       profileTotalKillsText;
+        [SerializeField] private TMP_Text       profileTotalDeathsText;
+        [SerializeField] private TMP_Text       profileTotalShotsText;
+        [SerializeField] private TMP_Text       profileTimePlayedText;
+
+        [Space]
         [SerializeField] private GameObject loadingOnlineTextContainer;
         [SerializeField] private UILoader   loadingOnlineLoader;
 
+        [Header("Values")]
+        [SerializeField] private Color profileStatsColor = Color.white;
+
         #endregion
+
+        private void Start()
+        {
+            profileUsernameInputField.onSubmit.AddListener((string input) => profileUsernameInputField.SetTextWithoutNotify(UserUtils.SetUsername(input)));
+            profileUsernameInputField.characterLimit      = UserUtils.MAX_USERNAME_LENGTH;
+            profileUsernameInputField.characterValidation = TMP_InputField.CharacterValidation.Name;
+            profileUsernameInputField.keyboardType        = TouchScreenKeyboardType.ASCIICapable;
+            profileUsernameInputField.contentType         = TMP_InputField.ContentType.Name;
+
+            UpdateProfileUI();
+        }
 
         public void OpenMainMenu()
         {
@@ -57,6 +83,17 @@ namespace ArenaShooter.Controllers
                 EditorApplication.isPlaying = false;
 #endif
             }
+        }
+
+        private void UpdateProfileUI()
+        {
+            string htmlColor = ColorUtility.ToHtmlStringRGBA(profileStatsColor);
+
+            profileUsernameInputField.text = UserUtils.GetUsername();
+            profileTotalKillsText.text     = $"<color=#{htmlColor}>{Profile.TotalKills}</color> confirmed kills";
+            profileTotalDeathsText.text    = $"<color=#{htmlColor}>{Profile.TotalDeaths}</color> deaths";
+            profileTotalShotsText.text     = $"<color=#{htmlColor}>{Profile.TotalShots}</color> shots fired";
+            profileTimePlayedText.text     = $"<color=#{htmlColor}>{Utils.GetSecondsFormatted(Profile.TimePlayed)}</color> spent in-game";
         }
 
     }

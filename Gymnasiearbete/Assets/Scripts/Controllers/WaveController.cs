@@ -17,9 +17,10 @@ namespace ArenaShooter.Controllers
 
         #region Public constants
 
-        public const float WAVE_COUNTDOWN_TIME  = 3f;
-        public const float WAVE_START_WAIT_TIME = 3f;
-        public const float WAVE_END_WAIT_TIME   = 3f;
+        public const float WAVE_COUNTDOWN_TIME         = 3f;
+        public const float WAVE_START_WAIT_TIME        = 3f;
+        public const float WAVE_END_WAIT_TIME          = 3f;
+        public const float WAVE_RESET_NUMBER_WAIT_TIME = 1.5f;
 
         #endregion
 
@@ -68,6 +69,11 @@ namespace ArenaShooter.Controllers
         /// </summary>
         private int targetSpawns;
 
+        /// <summary>
+        /// The number of killed entities this wave.
+        /// </summary>
+        private int killedEnemies;
+
         #endregion
 
         public void BeginWaveController()
@@ -86,11 +92,16 @@ namespace ArenaShooter.Controllers
             spawnedEnemiesLimit = CalculateMaxEnemyCount();
             currentSpawns       = 0;
             targetSpawns        = CalculateEnemySpawnCount();
+            killedEnemies       = 0;
 
             WaveStartEvent waveStartEvent = WaveStartEvent.Create(GlobalTargets.Everyone);
             waveStartEvent.WaveNumber     = currentWave;
             waveStartEvent.EnemyCount     = targetSpawns;
             waveStartEvent.Send();
+
+            WaveProgressEvent waveProgressEvent = WaveProgressEvent.Create(GlobalTargets.Everyone);
+            waveProgressEvent.Progress          = 0f;
+            waveProgressEvent.Send();
 
             StartCoroutine("WaveUpdate");
         }
@@ -102,6 +113,10 @@ namespace ArenaShooter.Controllers
             WaveEndEvent waveEndEvent = WaveEndEvent.Create(GlobalTargets.Everyone);
             waveEndEvent.WaveNumber   = currentWave;
             waveEndEvent.Send();
+
+            WaveProgressEvent waveProgressEvent = WaveProgressEvent.Create(GlobalTargets.Everyone);
+            waveProgressEvent.Progress          = 1f;
+            waveProgressEvent.Send();
         }
 
         public void ResetWaves()
@@ -139,6 +154,12 @@ namespace ArenaShooter.Controllers
 
                 yield return new WaitForEndOfFrame();
             }
+
+            yield return new WaitForSecondsRealtime(WAVE_RESET_NUMBER_WAIT_TIME);
+
+            WaveNumberEvent waveNumberEvent = WaveNumberEvent.Create(GlobalTargets.Everyone);
+            waveNumberEvent.Wave            = currentWave;
+            waveNumberEvent.Send();
 
             while (waveIsOngoing && currentSpawns < targetSpawns)
             {
@@ -183,9 +204,10 @@ namespace ArenaShooter.Controllers
 
                 enemy.Revive(null);
 
-                SetEntityActive setEntityActive = SetEntityActive.Create(GlobalTargets.AllClients);
-                setEntityActive.Entity = enemy.entity;
-                setEntityActive.Active = true;
+                SetEntityActiveEvent setEntityActive = SetEntityActiveEvent.Create(GlobalTargets.AllClients);
+                setEntityActive.Entity               = enemy.entity;
+                setEntityActive.Active               = true;
+                setEntityActive.Position             = spawnPoint.position;
                 setEntityActive.Send();
 
                 spawnedEnemiesCount++;
@@ -197,6 +219,12 @@ namespace ArenaShooter.Controllers
             enemyPools[enemy.EnemyTemplate].PoolItem(enemy);
 
             spawnedEnemiesCount--;
+
+            killedEnemies++;
+
+            WaveProgressEvent waveProgressEvent = WaveProgressEvent.Create(GlobalTargets.Everyone);
+            waveProgressEvent.Progress          = Mathf.Clamp01(killedEnemies / (float)targetSpawns);
+            waveProgressEvent.Send();
         }
 
         #endregion
