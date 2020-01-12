@@ -4,6 +4,7 @@ using ArenaShooter.Networking.Protocols;
 using Bolt;
 using Bolt.Matchmaking;
 using System;
+using System.Linq;
 using UdpKit;
 
 namespace ArenaShooter.Networking
@@ -199,9 +200,9 @@ namespace ArenaShooter.Networking
         public override void SceneLoadLocalBegin(string scene)
         {
             /// This method exists because constructor <see cref="BoltGlobalBehaviourAttribute.BoltGlobalBehaviourAttribute(string[])"/> does not work when already in scene.
-            /// We want wait for a scene to load, and when: check <see cref="isInGame"/> and destroy this script to avoid null reference errors.
+            /// We want to wait for a scene to load, and when: check <see cref="isInGame"/> and destroy this script to avoid null reference errors.
             /// This is because <see cref="NetworkLobby"/> should only exist when starting a server, client or singleplayer game from the main menu, where we don't load any new scenes.
-            if (scene == BoltScenes.Lobby || scene == BoltScenes.Game)
+            if (BoltScenes.AllScenes.Contains(scene))
             {
                 isInGame = true;
 
