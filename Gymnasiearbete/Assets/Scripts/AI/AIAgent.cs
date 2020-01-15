@@ -329,8 +329,8 @@ namespace ArenaShooter.AI
             {
                 Ray ray = new Ray(agentEntity.BodyOriginPosition, currentTarget.BodyOriginPosition - agentEntity.BodyOriginPosition);
                 var hit = Utils.Raycast(ray, agentEntity.SearchThreshold, Physics.AllLayers, agentEntity.gameObject, QueryTriggerInteraction.Ignore);
-                
-                return hit.NetworkHit && hit.Body.gameObject == currentTarget.gameObject;
+
+                return hit.GameObject == currentTarget.gameObject;
             }
             else
             {

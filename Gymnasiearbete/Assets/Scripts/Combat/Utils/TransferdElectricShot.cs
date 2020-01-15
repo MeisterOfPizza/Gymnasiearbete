@@ -72,13 +72,15 @@ namespace ArenaShooter.Combat.Utils
             while (shotsLeft > 0 && currentEntity != null)
             {
                 var hit = Extensions.Utils.Raycast(new Ray(position, (currentEntity.BodyOriginPosition - position).normalized), weapon.Stats.Range, weapon.WeaponHolder.WeaponHitLayerMask, currentEntity.gameObject, QueryTriggerInteraction.Ignore);
-                if(!hit.WorldHit)
+                
+                if (!hit.WorldHit)
                 {
                     shotsLeft -= weapon.Stats.AmmoPerFire;
 
                     position = currentEntity.BodyOriginPosition;
                     targets.Add(currentEntity);
                 }
+
                 checkedTargets.Add(currentEntity);
 
                 currentEntity = EntityController.Singleton.GetClosestEntity(position, weapon.Stats.Range, checkedTargets, weapon.Stats.TargetEntityTeam);
