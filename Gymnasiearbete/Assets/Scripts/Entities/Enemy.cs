@@ -5,6 +5,8 @@ using ArenaShooter.Extensions;
 using ArenaShooter.Templates.Enemies;
 using ArenaShooter.UI;
 using Bolt;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 #pragma warning disable 0649
@@ -31,6 +33,9 @@ namespace ArenaShooter.Entities
         [Header("Prefabs")]
         [SerializeField] private GameObject uiEnemyGameStatsPrefab;
 
+        [Space]
+        [SerializeField] private GameObject selfDestructionEffectPrefab;
+
         #endregion
 
         #region IEntity
@@ -47,7 +52,7 @@ namespace ArenaShooter.Entities
         {
             get
             {
-                return HealableBy.Enemy;
+                return weapon.Stats.WeaponOutputType == Templates.Weapons.WeaponOutputType.Support ? HealableBy.None : HealableBy.Enemy;
             }
         }
 
@@ -180,6 +185,12 @@ namespace ArenaShooter.Entities
 
         #endregion
 
+        #region Private variables
+
+        private ParticleSystem selfDestructionEffect;
+
+        #endregion
+
         #region Initializing
 
         /// <summary>
@@ -209,6 +220,8 @@ namespace ArenaShooter.Entities
             }
 
             this.weapon.EquipWeapon(this);
+
+            selfDestructionEffect = Instantiate(selfDestructionEffectPrefab).GetComponent<ParticleSystem>();
         }
 
         public override void Attached()
@@ -401,6 +414,19 @@ namespace ArenaShooter.Entities
 
         #endregion
 
+        #region Effects (vfx)
+
+        /// <summary>
+        /// Makes the enemy self destroy like a robot while playing an animation and particle effect.
+        /// </summary>
+        private void SelfDestroy()
+        {
+            selfDestructionEffect.transform.position = transform.position;
+            selfDestructionEffect.Play();
+        }
+
+        #endregion
+
         #region OnEvent
 
         public override void OnEvent(WeaponFireEffectEvent evnt)
@@ -416,6 +442,61 @@ namespace ArenaShooter.Entities
             if (evnt.Shooter == entity)
             {
                 weapon?.OnEvent(evnt);
+            }
+        }
+
+        public override void OnEvent(EntityEffectEvent evnt)
+        {
+            if ((EntityEffect)evnt.EffectID == EntityEffect.SelfDestroy)
+            {
+                SelfDestroy();
+
+                if (entity.IsOwner)
+                {
+                    TakeDamageEvent takeDamageEvent = TakeDamageEvent.Create(GlobalTargets.Everyone, ReliabilityModes.ReliableOrdered);
+                    takeDamageEvent.Target          = entity;
+                    takeDamageEvent.Shooter         = null;
+                    takeDamageEvent.DamageTaken     = int.MaxValue;
+                    takeDamageEvent.Send();
+                }
+            }
+        }
+
+        #endregion
+
+        #region IAIAgentBehaviour
+
+        public bool FilterTarget(IEntity target)
+        {
+            if (weapon.Stats.WeaponOutputType == Templates.Weapons.WeaponOutputType.Support)
+            {
+                return target.HealableBy != HealableBy.None;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public IEnumerable<IEntity> FilterTargets(IEnumerable<IEntity> targets)
+        {
+            if (weapon.Stats.WeaponOutputType == Templates.Weapons.WeaponOutputType.Support)
+            {
+                return targets.Where(t => t.HealableBy != HealableBy.None);
+            }
+            else
+            {
+                return targets;
+            }
+        }
+
+        public void NoTargetsFound(float searchTimeDelta)
+        {
+            if (!WaveController.Singleton.EnemiesCanSpawn && weapon.Stats.WeaponOutputType == Templates.Weapons.WeaponOutputType.Support)
+            {
+                EntityEffectEvent selfDestroyEvent = EntityEffectEvent.Create(entity, EntityTargets.Everyone);
+                selfDestroyEvent.EffectID          = (int)EntityEffect.SelfDestroy;
+                selfDestroyEvent.Send();
             }
         }
 

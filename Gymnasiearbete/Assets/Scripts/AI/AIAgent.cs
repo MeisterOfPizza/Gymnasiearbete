@@ -1,6 +1,7 @@
 ﻿using ArenaShooter.Controllers;
 using ArenaShooter.Entities;
 using ArenaShooter.Extensions;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -91,6 +92,11 @@ namespace ArenaShooter.AI
                 }
 
                 lastPositionOfTarget = !currentTarget.IsNull() ? currentTarget.BodyOriginPosition : lastPositionOfTarget;
+
+                if (currentTarget.IsNull())
+                {
+                    agentEntity.NoTargetsFound(agentEntity.SearchInterval);
+                }
             }
         }
 
@@ -197,7 +203,7 @@ namespace ArenaShooter.AI
             {
                 var entity = other.GetComponent<IEntity>();
 
-                if (!entity.IsSame(agentEntity) && entity.EntityTeam == agentEntity.SearchTargetTeam)
+                if (!entity.IsSame(agentEntity) && entity.EntityTeam == agentEntity.SearchTargetTeam && agentEntity.FilterTarget(entity))
                 {
                     // Check if the entered entity is closer than the last potential target:
                     if (!potentialTarget.IsNull() && Vector3.Distance(potentialTarget.BodyOriginPosition, agentEntity.BodyOriginPosition) > Vector3.Distance(entity.BodyOriginPosition, agentEntity.BodyOriginPosition))
@@ -218,7 +224,7 @@ namespace ArenaShooter.AI
             {
                 var entity = other.GetComponent<IEntity>();
 
-                if (!entity.IsSame(agentEntity) && entity.EntityTeam == agentEntity.SearchTargetTeam)
+                if (!entity.IsSame(agentEntity) && entity.EntityTeam == agentEntity.SearchTargetTeam && agentEntity.FilterTarget(entity))
                 {
                     // Check if the entity that stayed is not the same as potential entity but also if it's closer than potential target:
                     if (!entity.IsSame(potentialTarget) && !potentialTarget.IsNull() && Vector3.Distance(potentialTarget.BodyOriginPosition, agentEntity.BodyOriginPosition) > Vector3.Distance(entity.BodyOriginPosition, agentEntity.BodyOriginPosition))
@@ -258,15 +264,16 @@ namespace ArenaShooter.AI
             if (EntityController.Singleton != null)
             {
                 var allTargets = EntityController.Singleton.GetEntitiesOfTeam(agentEntity.SearchTargetTeam);
+                var targets    = agentEntity.FilterTargets(allTargets).ToArray();
 
                 // Check if there's only one target, to save computation power.
-                if (allTargets.Length == 1 && allTargets[0] != agentEntity)
+                if (targets.Length == 1 && targets[0] != agentEntity)
                 {
-                    return allTargets[0];
+                    return targets[0];
                 }
 
                 // Loop through all potential targets:
-                foreach (var target in allTargets)
+                foreach (var target in targets)
                 {
                     if (target != agentEntity)
                     {
