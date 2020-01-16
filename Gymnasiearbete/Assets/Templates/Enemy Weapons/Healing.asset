@@ -24,7 +24,7 @@ MonoBehaviour:
   burstShots: 3
   range: 10
   maxDistance: 25
-  firingMode: 2
+  firingMode: 10
   manualAmmoDepletion: 0
   outputType: 3
   firePrefab: {fileID: 2046930185819632498, guid: 605c9ff204190104fa6efc2feb878960,
