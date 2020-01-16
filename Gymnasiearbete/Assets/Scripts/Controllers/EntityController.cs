@@ -40,9 +40,9 @@ namespace ArenaShooter.Controllers
             entityTeams[entity.EntityTeam].Remove(entity);
         }
 
-        public IEntity[] GetEntitiesOfTeam(EntityTeam entityTeam)
+        public IEnumerable<IEntity> GetEntitiesOfTeam(EntityTeam entityTeam)
         {
-            return entityTeams[entityTeam].ToArray();
+            return entityTeams[entityTeam];
         }
 
         public IEntity FindEntityWithBoltEntity(BoltEntity boltEntity)

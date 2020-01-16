@@ -1,7 +1,7 @@
 ﻿namespace ArenaShooter.Entities
 {
 
-    enum HealableBy
+    enum HealableBy : byte
     {
         None,
         Player,

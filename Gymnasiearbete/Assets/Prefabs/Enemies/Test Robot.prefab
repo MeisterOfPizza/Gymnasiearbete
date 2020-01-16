@@ -202,6 +202,8 @@ MonoBehaviour:
     m_Bits: 67108865
   uiEnemyGameStatsPrefab: {fileID: 547309706915499341, guid: 2bafda0c6c45fa54ebea8ecfa36b43f1,
     type: 3}
+  selfDestructionEffectPrefab: {fileID: 2666111351735457144, guid: 92eb7904d9f3a6c438fa4e55ac4481b4,
+    type: 3}
 --- !u!114 &866174922270184739
 MonoBehaviour:
   m_ObjectHideFlags: 0

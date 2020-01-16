@@ -1,4 +1,5 @@
 ﻿using ArenaShooter.Entities;
+using System.Collections.Generic;
 
 namespace ArenaShooter.AI
 {
@@ -13,6 +14,10 @@ namespace ArenaShooter.AI
         float      MovementSpeed    { get; }
         float      TurnSpeed        { get; }
         Body       Body             { get; }
+
+        bool                 FilterTarget(IEntity target);
+        IEnumerable<IEntity> FilterTargets(IEnumerable<IEntity> targets);
+        void                 NoTargetsFound(float searchTimeDelta);
 
     }
 

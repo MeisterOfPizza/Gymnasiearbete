@@ -42,6 +42,21 @@ namespace ArenaShooter.Controllers
 
         #endregion
 
+        #region Public properties
+
+        /// <summary>
+        /// Can more enemies still spawn?
+        /// </summary>
+        public bool EnemiesCanSpawn
+        {
+            get
+            {
+                return currentSpawns != targetSpawns;
+            }
+        }
+
+        #endregion
+
         #region Private variables
 
         private Dictionary<EnemyTemplate, GameObjectPool<Enemy>> enemyPools = new Dictionary<EnemyTemplate, GameObjectPool<Enemy>>();
