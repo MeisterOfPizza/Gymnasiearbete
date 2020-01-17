@@ -142,7 +142,7 @@ namespace ArenaShooter.Combat
 
         #region Equipping
 
-        public void EquipWeapon(IWeaponHolder weaponHolder)
+        public virtual void EquipWeapon(IWeaponHolder weaponHolder)
         {
             this.WeaponHolder = weaponHolder;
 
@@ -307,8 +307,6 @@ namespace ArenaShooter.Combat
 
         private void TryFiring()
         {
-            OnFireCallback?.Invoke();
-
             if (weaponStats.FiringMode == FiringMode.Burst)
             {
                 StartCoroutine("TryBurstFiring");
@@ -343,6 +341,9 @@ namespace ArenaShooter.Combat
 
                     // Make the weapon actually fire:
                     OnFire();
+
+                    // Invoke the OnFire callback:
+                    OnFireCallback?.Invoke();
 
                     // Invoke ammo spent callback for UI:
                     OnAmmoChangedCallback?.Invoke(new AmmoStatus(this.AmmoLeftInClip, this.weaponStats.MaxAmmoPerClip, this.AmmoLeftInStock));

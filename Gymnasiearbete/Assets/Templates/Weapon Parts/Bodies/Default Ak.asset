@@ -29,5 +29,5 @@ MonoBehaviour:
   burstShots: 3
   firingMode: 5
   manualAmmoDepletion: 0
-  firePrefab: {fileID: 2666111351735457144, guid: 4e7646c61010c11458ac398ca936fc08,
+  firePrefab: {fileID: 2666111351735457144, guid: f5c2c0b1a9cfb6d4db3b3545960afb20,
     type: 3}
