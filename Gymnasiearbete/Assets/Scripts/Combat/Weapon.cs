@@ -142,7 +142,7 @@ namespace ArenaShooter.Combat
 
         #region Equipping
 
-        public void EquipWeapon(IWeaponHolder weaponHolder)
+        public virtual void EquipWeapon(IWeaponHolder weaponHolder)
         {
             this.WeaponHolder = weaponHolder;
 
