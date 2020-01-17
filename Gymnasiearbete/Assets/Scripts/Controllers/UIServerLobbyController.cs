@@ -156,8 +156,11 @@ namespace ArenaShooter.Controllers
         /// </summary>
         public void ToggleReady()
         {
-            lobbyPlayer.ToggleReady();
-            readyButtonText.text = lobbyPlayer.state.Ready ? "Unready" : "Ready up";
+            if (lobbyPlayer != null)
+            {
+                lobbyPlayer.ToggleReady();
+                readyButtonText.text = lobbyPlayer.state.Ready ? "Unready" : "Ready up";
+            }
         }
 
         public void UpdateLoadout(Loadout loadout)
