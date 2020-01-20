@@ -15389,6 +15389,21 @@ PrefabInstance:
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 4483683499173347250, guid: 45c87f627aab3314090ddaaa7c491044,
+        type: 3}
+      propertyPath: m_Options.m_Options.Array.data[0].m_Text
+      value: Low
+      objectReference: {fileID: 0}
+    - target: {fileID: 4483683499173347250, guid: 45c87f627aab3314090ddaaa7c491044,
+        type: 3}
+      propertyPath: m_Options.m_Options.Array.data[1].m_Text
+      value: Medium
+      objectReference: {fileID: 0}
+    - target: {fileID: 4483683499173347250, guid: 45c87f627aab3314090ddaaa7c491044,
+        type: 3}
+      propertyPath: m_Options.m_Options.Array.data[2].m_Text
+      value: High
+      objectReference: {fileID: 0}
     - target: {fileID: 4483683499173347249, guid: 45c87f627aab3314090ddaaa7c491044,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -15670,6 +15685,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 4483683499173347250, guid: 45c87f627aab3314090ddaaa7c491044,
+        type: 3}
+      propertyPath: m_Options.m_Options.Array.data[0].m_Text
+      value: Low
+      objectReference: {fileID: 0}
+    - target: {fileID: 4483683499173347250, guid: 45c87f627aab3314090ddaaa7c491044,
+        type: 3}
+      propertyPath: m_Options.m_Options.Array.data[1].m_Text
+      value: Medium
+      objectReference: {fileID: 0}
+    - target: {fileID: 4483683499173347250, guid: 45c87f627aab3314090ddaaa7c491044,
+        type: 3}
+      propertyPath: m_Options.m_Options.Array.data[2].m_Text
+      value: High
       objectReference: {fileID: 0}
     - target: {fileID: 4483683499173347249, guid: 45c87f627aab3314090ddaaa7c491044,
         type: 3}
