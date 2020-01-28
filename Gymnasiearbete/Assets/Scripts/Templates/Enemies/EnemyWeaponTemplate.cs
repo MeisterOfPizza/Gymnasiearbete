@@ -16,8 +16,9 @@ namespace ArenaShooter.Templates.Enemies
         [SerializeField] private ushort templateId;
 
         [Header("Stats")]
-        [SerializeField]                private float mobility;
-        [SerializeField, Range(0f, 1f)] private float accuracy = 0.75f;
+        [SerializeField]                 private float mobility;
+        [SerializeField, Range(0f, 1f)]  private float accuracy       = 0.75f;
+        [SerializeField, Range(0f, 90f)] private float maxAngleOffset = 5f;
 
         [Space]
         [SerializeField] private ushort damage         = 10;
@@ -91,6 +92,14 @@ NOTE: The enemy will only try to engage players that are within range (the varia
             get
             {
                 return accuracy;
+            }
+        }
+
+        public float MaxAngleOffset
+        {
+            get
+            {
+                return maxAngleOffset;
             }
         }
 

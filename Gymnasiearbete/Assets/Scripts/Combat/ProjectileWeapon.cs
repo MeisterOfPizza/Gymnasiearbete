@@ -2,6 +2,7 @@
 using ArenaShooter.Controllers;
 using ArenaShooter.Extensions;
 using Bolt;
+using UnityEngine;
 
 #pragma warning disable 0649
 
@@ -44,8 +45,13 @@ namespace ArenaShooter.Combat
 
             if (projectile != null)
             {
+                float offset = Random.Range(-1f, 1f) * (1 - Stats.Accuracy) * Mathf.PI * Stats.MaxAngleOffset / 180f;
+
+
+                float angle = 450f - Quaternion.LookRotation(WeaponHolder.WeaponForward).eulerAngles.y;//360 - y + 90
+                Vector3 dir = new Vector3(Mathf.Cos(angle * Mathf.PI / 180f + offset), 0f, Mathf.Sin(angle * Mathf.PI / 180f + offset));
                 projectile.transform.position = @event.Point;
-                projectile.transform.forward  = @event.Forward;
+                projectile.transform.forward = dir;
                 projectile.FireProjectile(@event.Shooter.NetworkId.Equals(WeaponHolder.entity.NetworkId)); // Check if the shooter is the local client.
             }
         }

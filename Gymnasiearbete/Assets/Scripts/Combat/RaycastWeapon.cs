@@ -2,6 +2,7 @@
 using Bolt;
 using UnityEngine;
 
+
 #pragma warning disable 0649
 
 namespace ArenaShooter.Combat
@@ -31,7 +32,16 @@ namespace ArenaShooter.Combat
 
         protected override void OnFire()
         {
-            var hit = Extensions.Utils.Raycast(new Ray(WeaponHolder.WeaponFirePosition, WeaponHolder.WeaponForward), Stats.Range, WeaponHolder.WeaponHitLayerMask, WeaponHolder.gameObject, QueryTriggerInteraction.Ignore);
+            
+            float offset = Random.Range(-1f, 1f) * (1-Stats.Accuracy) * Mathf.PI * Stats.MaxAngleOffset / 180f;
+
+           
+            float angle = 450f - Quaternion.LookRotation(WeaponHolder.WeaponForward).eulerAngles.y;//360 - y + 90
+            Vector3 dir = new Vector3(Mathf.Cos(angle * Mathf.PI / 180f + offset), 0f, Mathf.Sin(angle * Mathf.PI / 180f + offset));
+           
+            var ray = new Ray(WeaponHolder.WeaponFirePosition,dir);
+            var hit = Extensions.Utils.Raycast(ray, Stats.Range, WeaponHolder.WeaponHitLayerMask, WeaponHolder.gameObject, QueryTriggerInteraction.Ignore);
+
             
             if (hit.NetworkHit)
             {
@@ -44,8 +54,8 @@ namespace ArenaShooter.Combat
 
             var fireEvent     = WeaponFireEffectEvent.Create(WeaponHolder.entity, EntityTargets.EveryoneExceptOwner);
             fireEvent.Shooter = WeaponHolder.entity;
-            fireEvent.Point   = WeaponHolder.WeaponFirePosition;
-            fireEvent.Forward = WeaponHolder.WeaponForward;
+            fireEvent.Point   = ray.origin;
+            fireEvent.Forward = ray.direction;
             fireEvent.Send();
 
             OnEvent(fireEvent);

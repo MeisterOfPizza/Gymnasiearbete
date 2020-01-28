@@ -27,6 +27,14 @@ namespace ArenaShooter.Combat
             }
         }
 
+        public override float MaxAngleOffset
+        {
+            get
+            {
+                return stockPartItem.GetFloat(StatType.MaxAngleOffset);
+            }
+        }
+
         public override ushort Damage
         {
             get

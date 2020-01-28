@@ -12,8 +12,9 @@ namespace ArenaShooter.Templates.Weapons
     {
 
         [Header("Stats")]
-        [SerializeField]                private float mobility;
-        [SerializeField, Range(0f, 1f)] private float accuracy = 0.75f;
+        [SerializeField]                 private float mobility;
+        [SerializeField, Range(0f, 1f)]  private float accuracy       = 0.75f;
+        [SerializeField, Range(0f, 90f)] private float maxAngleOffset = 5f;
 
         #region Getters
 
@@ -41,6 +42,14 @@ namespace ArenaShooter.Templates.Weapons
             }
         }
 
+        public float MaxAngleOffset
+        {
+            get
+            {
+                return maxAngleOffset;
+            }
+        }
+
         #endregion
 
         #region Helpers
@@ -50,7 +59,8 @@ namespace ArenaShooter.Templates.Weapons
             return new Dictionary<StatType, float>()
             {
                 { StatType.Mobility, mobility },
-                { StatType.Accuracy, accuracy }
+                { StatType.Accuracy, accuracy },
+                { StatType.MaxAngleOffset, maxAngleOffset }
             };
         }
 

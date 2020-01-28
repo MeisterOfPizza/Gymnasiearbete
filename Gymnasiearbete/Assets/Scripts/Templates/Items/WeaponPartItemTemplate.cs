@@ -61,6 +61,7 @@ namespace ArenaShooter.Templates.Items
         Mobility          = 2048,
         Accuracy          = 4096,
         FiringMode        = 8192,
+        MaxAngleOffset    = 16384,
         Everything        = ~0
     }
     
