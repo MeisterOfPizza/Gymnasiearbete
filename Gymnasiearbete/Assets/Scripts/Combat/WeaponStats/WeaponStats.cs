@@ -12,6 +12,7 @@ namespace ArenaShooter.Combat
 
         public abstract float      Mobility            { get; }
         public abstract float      Accuracy            { get; }
+        public abstract float      MaxAngleOffset      { get; }
         public abstract ushort     Damage              { get; }
         public abstract short      MaxAmmoPerClip      { get; }
         public abstract short      MaxAmmoStock        { get; }

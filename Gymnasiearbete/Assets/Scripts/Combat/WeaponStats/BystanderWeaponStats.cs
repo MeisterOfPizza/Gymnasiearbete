@@ -18,6 +18,7 @@ namespace ArenaShooter.Combat
 
         public override float            Mobility                { get { return stockTemplate.Mobility; } }
         public override float            Accuracy                { get { return stockTemplate.Accuracy; } }
+        public override float            MaxAngleOffset          { get { return stockTemplate.MaxAngleOffset; } }
         public override ushort           Damage                  { get { return bodyTemplate.Damage; } }
         public override short            MaxAmmoPerClip          { get { return bodyTemplate.MaxAmmoPerClip; } }
         public override short            MaxAmmoStock            { get { return bodyTemplate.MaxAmmoStock; } }
