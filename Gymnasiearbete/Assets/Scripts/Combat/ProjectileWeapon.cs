@@ -48,10 +48,10 @@ namespace ArenaShooter.Combat
                 float offset = Random.Range(-1f, 1f) * (1 - Stats.Accuracy) * Mathf.PI * Stats.MaxAngleOffset / 180f;
 
 
-                float angle = 450f - Quaternion.LookRotation(WeaponHolder.WeaponForward).eulerAngles.y;//360 - y + 90
-                Vector3 dir = new Vector3(Mathf.Cos(angle * Mathf.PI / 180f + offset), 0f, Mathf.Sin(angle * Mathf.PI / 180f + offset));
+                float angle                   = 450f - Quaternion.LookRotation(WeaponHolder.WeaponForward).eulerAngles.y;//360 - y + 90
+                Vector3 dir                   = new Vector3(Mathf.Cos(angle * Mathf.PI / 180f + offset), 0f, Mathf.Sin(angle * Mathf.PI / 180f + offset));
                 projectile.transform.position = @event.Point;
-                projectile.transform.forward = dir;
+                projectile.transform.forward  = dir;
                 projectile.FireProjectile(@event.Shooter.NetworkId.Equals(WeaponHolder.entity.NetworkId)); // Check if the shooter is the local client.
             }
         }
