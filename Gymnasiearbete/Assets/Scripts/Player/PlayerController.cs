@@ -140,6 +140,7 @@ namespace ArenaShooter.Player
 
                 Singleton = this;
                 Transform = this.transform;
+                PlayerMovementController.MovementSpeed = Weapon.Stats.Mobility;
             }
             else
             {

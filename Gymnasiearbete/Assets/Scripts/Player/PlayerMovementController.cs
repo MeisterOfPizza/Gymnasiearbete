@@ -26,7 +26,7 @@ namespace ArenaShooter.Player
         [SerializeField] private GameObject cameraFollowPrefab;
 
         [Header("Values")]
-        [SerializeField] private float moveSpeed = 10f;
+        [SerializeField] private static float moveSpeed = 10f;
 
         [Space]
         [SerializeField] private LayerMask lookRayLayerMask;
@@ -169,6 +169,12 @@ namespace ArenaShooter.Player
         {
             Destroy(materialClone);
         }
+
+        #endregion
+
+        #region Attributes
+
+        public static float MovementSpeed { get { return moveSpeed; } set { moveSpeed = value; } }
 
         #endregion
 
