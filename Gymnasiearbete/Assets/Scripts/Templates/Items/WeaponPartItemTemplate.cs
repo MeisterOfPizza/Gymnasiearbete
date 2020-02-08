@@ -165,28 +165,69 @@ namespace ArenaShooter.Templates.Items
                 return changeType == ChangeType.Addition ? baseValue + Random.Range(minValue, maxValue) : baseValue * Random.Range(minValue, maxValue);
             }
 
+            public WeaponPartTemplateType GetWeaponPartTemplateType()
+            {
+                switch (statType)
+                {
+                    case StatType.Range:
+                        return WeaponPartTemplateType.Barrel;
+                    case StatType.MaxDistance:
+                        return WeaponPartTemplateType.Barrel;
+                    case StatType.DamageMultiplier:
+                        return WeaponPartTemplateType.Barrel;
+                    case StatType.Damage:
+                        return WeaponPartTemplateType.Body;
+                    case StatType.MaxAmmoPerClip:
+                        return WeaponPartTemplateType.Body;
+                    case StatType.MaxAmmoStock:
+                        return WeaponPartTemplateType.Body;
+                    case StatType.FireCooldown:
+                        return WeaponPartTemplateType.Body;
+                    case StatType.ReloadTime:
+                        return WeaponPartTemplateType.Body;
+                    case StatType.FullReloadTime:
+                        return WeaponPartTemplateType.Body;
+                    case StatType.BurstFireInterval:
+                        return WeaponPartTemplateType.Body;
+                    case StatType.BurstShots:
+                        return WeaponPartTemplateType.Body;
+                    case StatType.Mobility:
+                        return WeaponPartTemplateType.Stock;
+                    case StatType.Accuracy:
+                        return WeaponPartTemplateType.Stock;
+                    case StatType.FiringMode:
+                        return WeaponPartTemplateType.Body;
+                    case StatType.MaxAngleOffset:
+                        return WeaponPartTemplateType.Stock;
+                    case StatType.None:
+                    case StatType.Everything:
+                    default:
+                        return WeaponPartTemplateType.Stock;
+                }
+            }
+
         }
 
         #endregion
 
         public WeaponPartItem<T> CreateWeaponPartItem<T>() where T : WeaponPartTemplate
         {
-            List<StatChange> statChangesPool   = statChanges.ToList();
-            StatChange[]     chosenStatChanges = new StatChange[Random.Range(Mathf.Min(1, statChanges.Length), Mathf.Min(statChangesToApply, statChanges.Length))];
-
-            for (int i = 0; i < chosenStatChanges.Length; i++)
-            {
-                int index = Random.Range(0, statChangesPool.Count);
-
-                chosenStatChanges[i] = statChangesPool[index];
-                statChangesPool.RemoveAt(index);
-            }
-
             var templatePool = possibleWeaponPartTemplates.Where(p => p.GetType() == typeof(T));
 
             if (templatePool.Count() > 0)
             {
                 WeaponPartItem<T> weaponPartItem = new WeaponPartItem<T>(rarity, (T)templatePool.ElementAt(Random.Range(0, templatePool.Count())));
+
+                List<StatChange> statChangesPool   = statChanges.Where(s => s.GetWeaponPartTemplateType() == weaponPartItem.BaseTemplate.Type).ToList();
+                StatChange[]     chosenStatChanges = new StatChange[Random.Range(Mathf.Min(1, statChanges.Length), Mathf.Min(statChangesToApply, statChanges.Length))];
+
+                for (int i = 0; i < chosenStatChanges.Length; i++)
+                {
+                    int index = Random.Range(0, statChangesPool.Count);
+
+                    chosenStatChanges[i] = statChangesPool[index];
+                    statChangesPool.RemoveAt(index);
+                }
 
                 var statTypeValues = weaponPartItem.StatTypeValues.ToDictionary(s => s.Key, s => s.Value);
 
@@ -209,7 +250,9 @@ namespace ArenaShooter.Templates.Items
 
         public WeaponPartItemWrapper CreateRandomWeaponPartItem()
         {
-            List<StatChange> statChangesPool   = statChanges.ToList();
+            WeaponPartTemplate template = possibleWeaponPartTemplates[Random.Range(0, possibleWeaponPartTemplates.Length)];
+
+            List<StatChange> statChangesPool   = statChanges.Where(s => s.GetWeaponPartTemplateType() == template.Type).ToList();
             StatChange[]     chosenStatChanges = new StatChange[Random.Range(Mathf.Min(1, statChanges.Length), Mathf.Min(statChangesToApply, statChanges.Length))];
 
             for (int i = 0; i < chosenStatChanges.Length; i++)
@@ -219,8 +262,6 @@ namespace ArenaShooter.Templates.Items
                 chosenStatChanges[i] = statChangesPool[index];
                 statChangesPool.RemoveAt(index);
             }
-
-            WeaponPartTemplate template = possibleWeaponPartTemplates[Random.Range(0, possibleWeaponPartTemplates.Length)];
 
             WeaponPartItemWrapper weaponPartItem = null;
 
