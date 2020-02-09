@@ -1,25 +1,41 @@
-﻿using System.Collections;
+﻿using ArenaShooter.Templates.Items;
 using System.Collections.Generic;
 using UnityEngine;
 
+#pragma warning disable 0649
+
 namespace ArenaShooter.Templates.Weapons
 {
-    [CreateAssetMenu(menuName = "Templates/Weapons/Barrel")]
 
+    [CreateAssetMenu(menuName = "Templates/Weapons/Barrel")]
     class BarrelTemplate : WeaponPartTemplate
     {
-        [Header("Stats")]
-        [SerializeField] private ushort range;
-        [SerializeField] private ushort accuracy;
 
-        public override WeaponTemplateType type
+        [Header("Stats")]
+        [Help(@"range and maxDistance has different uses depending on what type of weapon you're using:
+
+* If you're using a raycast weapon, only the range is used.
+* Projectile weapons can shoot projectiles up to maxDistance but the explosion radius is only as wide as range.
+* Electric weapons can hit its first target at the distance of maxDistance but only jump from target to target that are within range.
+* Support weapons can only support targets that are within range."
+)]
+
+        [SerializeField] private float range       = 10f;
+        [SerializeField] private float maxDistance = 50f;
+
+        [SerializeField] private float damageMulitplier = 1f;
+
+        #region Getters
+
+        public override WeaponPartTemplateType Type
         {
             get
             {
-                return WeaponTemplateType.barrel;
+                return WeaponPartTemplateType.Barrel;
             }
         }
-        public ushort Range
+
+        public float Range
         {
             get
             {
@@ -27,14 +43,39 @@ namespace ArenaShooter.Templates.Weapons
             }
         }
 
-        public ushort Accuracy
+        public float MaxDistance
         {
             get
             {
-                return accuracy;
+                return maxDistance;
+            }
+               
+        }
+        
+        public float DamageMultiplier
+        {
+            get
+            {
+                return damageMulitplier;
             }
         }
 
-    }
-}
+        #endregion
 
+        #region Helpers
+
+        public override Dictionary<StatType, float> GetStatTypeValues()
+        {
+            return new Dictionary<StatType, float>()
+            {
+                { StatType.Range,            range },
+                { StatType.MaxDistance,      maxDistance },
+                { StatType.DamageMultiplier, damageMulitplier }
+            };
+        }
+
+        #endregion
+
+    }
+
+}

@@ -1,4 +1,6 @@
-﻿using ArenaShooter.Extensions.Components;
+﻿using ArenaShooter.Controllers;
+using ArenaShooter.Entities;
+using ArenaShooter.Extensions.Components;
 using Bolt;
 using UnityEngine;
 
@@ -14,8 +16,11 @@ namespace ArenaShooter.Player
         #region Editor
 
         [Header("References")]
+        [SerializeField] private HumanoidBody humanoidBody;
+
+        [Space]
         [SerializeField] private CharacterController characterController;
-        [SerializeField] private MeshRenderer        meshRenderer;
+        [SerializeField] private Renderer            meshRenderer;
 
         [Header("Prefabs")]
         [SerializeField] private GameObject cameraFollowPrefab;
@@ -34,13 +39,31 @@ namespace ArenaShooter.Player
 
         #region Private variables
 
-        private CameraFollow cameraFollow;
+        private     FollowAndTrack cameraFollow;
+        private new Camera         camera;
         
         private Color playerColor = Color.black;
 
         private Material materialClone;
 
+        // Create a plane at 0,0,0 whose normal points to +Y to be used by the raycast look at for standalone builds.
+#if UNITY_STANDALONE
+        private Plane mouseLookAtPlane = new Plane(Vector3.up, Vector3.zero);
+#endif
+
         #endregion
+
+        private void Start()
+        {
+            if (!entity.IsOwner)
+            {
+                playerColor = state.Color;
+            }
+
+            SetColor(playerColor);
+
+            humanoidBody.SetUpperBodyAsController(transform.forward);
+        }
 
         // Start
         public override void Attached()
@@ -50,12 +73,21 @@ namespace ArenaShooter.Player
             if (entity.IsOwner)
             {
                 playerColor = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
+                state.Color = playerColor;
 
                 // Deactivate the scene's main camera if it's active (and exists):
                 Camera.main?.gameObject.SetActive(false);
 
-                cameraFollow = Instantiate(cameraFollowPrefab).GetComponent<CameraFollow>();
+                cameraFollow = Instantiate(cameraFollowPrefab).GetComponent<FollowAndTrack>();
                 cameraFollow.Initialize(transform);
+                camera = cameraFollow.GetComponentInChildren<Camera>();
+                MainCameraController.Singleton.SetMainCamera(camera);
+                CameraEffectsController.Singleton.SetEffectsCamera(camera);
+
+                if (BoltNetwork.IsServer)
+                {
+                    WaveController.Singleton.BeginWaveController();
+                }
             }
         }
 
@@ -78,19 +110,15 @@ namespace ArenaShooter.Player
             if (canLook)
             {
 #if UNITY_STANDALONE
-                Vector3 direction = transform.forward;
-                Ray ray = cameraFollow.Camera.ScreenPointToRay(Input.mousePosition);
+                Vector3 lookAtPoint = GetMouseLookAtPoint();
+                lookAtPoint.y = transform.position.y;
 
-                if (Physics.Raycast(ray, out RaycastHit hit, 100f, lookRayLayerMask, QueryTriggerInteraction.Ignore))
-                {
-                    direction = hit.point - transform.position;
-                    direction.y = 0;
-                }
+                transform.forward = lookAtPoint - transform.position;
 #elif UNITY_IOS || UNITY_ANDROID
-                Vector3 direction = MobileLookController.Singleton.GetLookDirection();
-#endif
+                Vector3 direction = Controllers.MobileLookController.Singleton.CanLook ? Controllers.MobileLookController.Singleton.GetLookPoint() - transform.position : transform.forward;
 
                 transform.forward = direction;
+#endif
             }
         }
 
@@ -101,14 +129,31 @@ namespace ArenaShooter.Player
 #if UNITY_STANDALONE
                 Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
 #elif UNITY_IOS || UNITY_ANDROID
-                Vector3 movement = MobileMovementController.Singleton.GetMovement();
+                Vector3 movement = Controllers.MobileMovementController.Singleton.GetMovement();
 #endif
 
-                characterController.Move(movement * moveSpeed * BoltNetwork.FrameDeltaTime);
+                if (characterController.enabled)
+                {
+                    characterController.Move(movement * moveSpeed * BoltNetwork.FrameDeltaTime);
+                }
             }
         }
 
         #region Helper methods
+
+        private Vector3 GetMouseLookAtPoint()
+        {
+            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+
+            // If the ray hits the plane...
+            if (mouseLookAtPlane.Raycast(ray, out float distance))
+            {
+                // Get the hit point:
+                return ray.GetPoint(distance);
+            }
+
+            return Vector3.zero;
+        }
 
         private void SetColor(Color color)
         {

@@ -1,36 +1,71 @@
-﻿using UnityEngine;
+﻿using ArenaShooter.Templates.Items;
+using System.Collections.Generic;
+using UnityEngine;
+
+#pragma warning disable 0649
 
 namespace ArenaShooter.Templates.Weapons
 {
-   [CreateAssetMenu(menuName = "Templates/Weapons/Stock")]
+
+    [CreateAssetMenu(menuName = "Templates/Weapons/Stock")]
     class StockTemplate : WeaponPartTemplate
     {
+
         [Header("Stats")]
-        [SerializeField] private ushort movementSpeed;
-        [SerializeField] private ushort stability;
+        [SerializeField]                 private float mobility;
+        [SerializeField, Range(0f, 1f)]  private float accuracy       = 0.75f;
+        [SerializeField, Range(0f, 90f)] private float maxAngleOffset = 5f;
 
-        public override WeaponTemplateType type
+        #region Getters
+
+        public override WeaponPartTemplateType Type
         {
             get
             {
-                return WeaponTemplateType.stock;
-            }
-        }
-        public ushort MovmentSpeed
-        {
-            get
-            {
-                return movementSpeed;
+                return WeaponPartTemplateType.Stock;
             }
         }
 
-        public ushort Stability
+        public float Mobility
         {
             get
             {
-                return stability;
+                return mobility;
             }
         }
+
+        public float Accuracy
+        {
+            get
+            {
+                return accuracy;
+            }
+        }
+
+        public float MaxAngleOffset
+        {
+            get
+            {
+                return maxAngleOffset;
+            }
+        }
+
+        #endregion
+
+        #region Helpers
+
+        public override Dictionary<StatType, float> GetStatTypeValues()
+        {
+            return new Dictionary<StatType, float>()
+            {
+                { StatType.Mobility, mobility },
+                { StatType.Accuracy, accuracy },
+                { StatType.MaxAngleOffset, maxAngleOffset }
+            };
+        }
+
+        #endregion
+
     }
-}
 
+}

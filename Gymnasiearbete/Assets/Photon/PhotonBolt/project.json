@@ -94,13 +94,30 @@
           "Priority": 1,
           "PropertyType": {
             "$type": "Bolt.Compiler.PropertyTypeString, bolt.compiler",
-            "MaxLength": 16
+            "MaxLength": 16,
+            "Encoding": 1
           },
           "AssetSettings": {
             "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
             "ExtrapolationErrorTolerance": 0.1,
             "_ExtrapolationCorrectionFrames": 3,
             "ExtrapolationMaxFrames": 9
+          }
+        },
+        {
+          "Name": "Color",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeColor32, bolt.compiler"
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
+            "ExtrapolationErrorTolerance": 0.25,
+            "_ExtrapolationCorrectionFrames": 6,
+            "ExtrapolationMaxFrames": 9,
+            "SnapMagnitude": 10.0
           }
         },
         {
@@ -564,7 +581,6 @@
         {
           "Name": "Message",
           "Enabled": true,
-          "Expanded": true,
           "Comment": "",
           "PropertyType": {
             "$type": "Bolt.Compiler.PropertyTypeString, bolt.compiler",
@@ -578,6 +594,7 @@
         {
           "Name": "NetworkId",
           "Enabled": true,
+          "Expanded": true,
           "Comment": "",
           "PropertyType": {
             "$type": "Bolt.Compiler.PropertyTypeNetworkId, bolt.compiler"
@@ -590,164 +607,6 @@
       "Name": "LogEvent",
       "Guid": "010f4a6f-f158-45b4-a28e-a5e85b4ee04d",
       "Comment": "\t\t",
-      "Groups": [
-        "samples"
-      ]
-    },
-    {
-      "$type": "Bolt.Compiler.StateDefinition, bolt.compiler",
-      "Properties": [
-        {
-          "Name": "Transform",
-          "Enabled": true,
-          "Expanded": true,
-          "Comment": "",
-          "Priority": 1,
-          "PropertyType": {
-            "$type": "Bolt.Compiler.PropertyTypeTransform, bolt.compiler",
-            "PositionSelection": 14,
-            "RotationSelection": 14,
-            "PositionCompression": [
-              {
-                "MinValue": -1024,
-                "MaxValue": 1024,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "Shift": 1024.0,
-                "BitsRequired": 18
-              },
-              {
-                "MinValue": -1024,
-                "MaxValue": 1024,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "Shift": 1024.0,
-                "BitsRequired": 18
-              },
-              {
-                "MinValue": -1024,
-                "MaxValue": 1024,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "Shift": 1024.0,
-                "BitsRequired": 18
-              }
-            ],
-            "RotationCompression": [
-              {
-                "MaxValue": 360,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "BitsRequired": 16
-              },
-              {
-                "MaxValue": 360,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "BitsRequired": 16
-              },
-              {
-                "MaxValue": 360,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "BitsRequired": 16
-              }
-            ],
-            "RotationCompressionQuaternion": {
-              "MinValue": -1,
-              "MaxValue": 1,
-              "Accuracy": 0.01,
-              "Pack": 100.0,
-              "Read": 0.01,
-              "Shift": 1.0,
-              "BitsRequired": 8
-            }
-          },
-          "AssetSettings": {
-            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
-            "SmoothingAlgorithm": 1,
-            "ExtrapolationErrorTolerance": 0.25,
-            "_ExtrapolationCorrectionFrames": 6,
-            "ExtrapolationMaxFrames": 9,
-            "SnapMagnitude": 1.0
-          }
-        }
-      ],
-      "PacketMaxBits": 512,
-      "PacketMaxProperties": 16,
-      "InitialPositionCompression": {
-        "Compression": [
-          {
-            "MinValue": -1024,
-            "MaxValue": 1024,
-            "Accuracy": 0.01,
-            "Pack": 100.0,
-            "Read": 0.01,
-            "Shift": 1024.0,
-            "BitsRequired": 18
-          },
-          {
-            "MinValue": -1024,
-            "MaxValue": 1024,
-            "Accuracy": 0.01,
-            "Pack": 100.0,
-            "Read": 0.01,
-            "Shift": 1024.0,
-            "BitsRequired": 18
-          },
-          {
-            "MinValue": -1024,
-            "MaxValue": 1024,
-            "Accuracy": 0.01,
-            "Pack": 100.0,
-            "Read": 0.01,
-            "Shift": 1024.0,
-            "BitsRequired": 18
-          }
-        ]
-      },
-      "InitialRotationCompression": {
-        "EulerCompression": [
-          {
-            "MaxValue": 360,
-            "Accuracy": 1.0,
-            "Pack": 1.0,
-            "Read": 1.0,
-            "BitsRequired": 9
-          },
-          {
-            "MaxValue": 360,
-            "Accuracy": 1.0,
-            "Pack": 1.0,
-            "Read": 1.0,
-            "BitsRequired": 9
-          },
-          {
-            "MaxValue": 360,
-            "Accuracy": 1.0,
-            "Pack": 1.0,
-            "Read": 1.0,
-            "BitsRequired": 9
-          }
-        ],
-        "QuaternionCompression": {
-          "MinValue": -1,
-          "MaxValue": 1,
-          "Accuracy": 0.01,
-          "Pack": 100.0,
-          "Read": 0.01,
-          "Shift": 1.0,
-          "BitsRequired": 8
-        }
-      },
-      "Name": "BuildingState",
-      "Guid": "9057449a-9b39-4c74-a467-9798e650ff20",
       "Groups": [
         "samples"
       ]
@@ -1401,89 +1260,8 @@
       "$type": "Bolt.Compiler.StateDefinition, bolt.compiler",
       "Properties": [
         {
-          "Name": "Transform",
-          "Enabled": true,
-          "ReplicationMode": 1,
-          "Priority": 1,
-          "PropertyType": {
-            "$type": "Bolt.Compiler.PropertyTypeTransform, bolt.compiler",
-            "PositionSelection": 14,
-            "RotationSelection": 14,
-            "PositionCompression": [
-              {
-                "MinValue": -1024,
-                "MaxValue": 1024,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "Shift": 1024.0,
-                "BitsRequired": 18
-              },
-              {
-                "MinValue": -1024,
-                "MaxValue": 1024,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "Shift": 1024.0,
-                "BitsRequired": 18
-              },
-              {
-                "MinValue": -1024,
-                "MaxValue": 1024,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "Shift": 1024.0,
-                "BitsRequired": 18
-              }
-            ],
-            "RotationCompression": [
-              {
-                "MaxValue": 360,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "BitsRequired": 16
-              },
-              {
-                "MaxValue": 360,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "BitsRequired": 16
-              },
-              {
-                "MaxValue": 360,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "BitsRequired": 16
-              }
-            ],
-            "RotationCompressionQuaternion": {
-              "MinValue": -1,
-              "MaxValue": 1,
-              "Accuracy": 0.01,
-              "Pack": 100.0,
-              "Read": 0.01,
-              "Shift": 1.0,
-              "BitsRequired": 8
-            }
-          },
-          "AssetSettings": {
-            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
-            "SmoothingAlgorithm": 1,
-            "ExtrapolationErrorTolerance": 0.25,
-            "_ExtrapolationCorrectionFrames": 6,
-            "ExtrapolationMaxFrames": 9,
-            "SnapMagnitude": 10.0
-          }
-        },
-        {
           "Name": "Color",
           "Enabled": true,
-          "Expanded": true,
           "ReplicationMode": 1,
           "Priority": 1,
           "PropertyType": {
@@ -1500,119 +1278,6 @@
         {
           "Name": "Name",
           "Enabled": true,
-          "Expanded": true,
-          "ReplicationMode": 1,
-          "Priority": 1,
-          "PropertyType": {
-            "$type": "Bolt.Compiler.PropertyTypeString, bolt.compiler",
-            "MaxLength": 1
-          },
-          "AssetSettings": {
-            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
-            "ExtrapolationErrorTolerance": 0.25,
-            "_ExtrapolationCorrectionFrames": 6,
-            "ExtrapolationMaxFrames": 9,
-            "SnapMagnitude": 10.0
-          }
-        }
-      ],
-      "PacketMaxBits": 512,
-      "PacketMaxProperties": 16,
-      "InitialPositionCompression": {
-        "Compression": [
-          {
-            "MinValue": -1024,
-            "MaxValue": 1024,
-            "Accuracy": 0.01,
-            "Pack": 100.0,
-            "Read": 0.01,
-            "Shift": 1024.0,
-            "BitsRequired": 18
-          },
-          {
-            "MinValue": -1024,
-            "MaxValue": 1024,
-            "Accuracy": 0.01,
-            "Pack": 100.0,
-            "Read": 0.01,
-            "Shift": 1024.0,
-            "BitsRequired": 18
-          },
-          {
-            "MinValue": -1024,
-            "MaxValue": 1024,
-            "Accuracy": 0.01,
-            "Pack": 100.0,
-            "Read": 0.01,
-            "Shift": 1024.0,
-            "BitsRequired": 18
-          }
-        ]
-      },
-      "InitialRotationCompression": {
-        "EulerCompression": [
-          {
-            "MaxValue": 360,
-            "Accuracy": 1.0,
-            "Pack": 1.0,
-            "Read": 1.0,
-            "BitsRequired": 9
-          },
-          {
-            "MaxValue": 360,
-            "Accuracy": 1.0,
-            "Pack": 1.0,
-            "Read": 1.0,
-            "BitsRequired": 9
-          },
-          {
-            "MaxValue": 360,
-            "Accuracy": 1.0,
-            "Pack": 1.0,
-            "Read": 1.0,
-            "BitsRequired": 9
-          }
-        ],
-        "QuaternionCompression": {
-          "MinValue": -1,
-          "MaxValue": 1,
-          "Accuracy": 0.01,
-          "Pack": 100.0,
-          "Read": 0.01,
-          "Shift": 1.0,
-          "BitsRequired": 8
-        }
-      },
-      "Name": "BomberState",
-      "Guid": "eb8f2fbb-ac7b-49fe-ab6e-cd3235bb5c6e",
-      "Groups": [
-        "samples"
-      ]
-    },
-    {
-      "$type": "Bolt.Compiler.StateDefinition, bolt.compiler",
-      "Properties": [
-        {
-          "Name": "Color",
-          "Enabled": true,
-          "Expanded": true,
-          "ReplicationMode": 1,
-          "Priority": 1,
-          "PropertyType": {
-            "$type": "Bolt.Compiler.PropertyTypeColor, bolt.compiler"
-          },
-          "AssetSettings": {
-            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
-            "ExtrapolationErrorTolerance": 0.25,
-            "_ExtrapolationCorrectionFrames": 6,
-            "ExtrapolationMaxFrames": 9,
-            "SnapMagnitude": 10.0
-          }
-        },
-        {
-          "Name": "Name",
-          "Enabled": true,
-          "Expanded": true,
           "ReplicationMode": 1,
           "Priority": 1,
           "PropertyType": {
@@ -1630,11 +1295,27 @@
         {
           "Name": "Ready",
           "Enabled": true,
-          "Expanded": true,
           "ReplicationMode": 1,
           "Priority": 1,
           "PropertyType": {
             "$type": "Bolt.Compiler.PropertyTypeBool, bolt.compiler"
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
+            "ExtrapolationErrorTolerance": 0.25,
+            "_ExtrapolationCorrectionFrames": 6,
+            "ExtrapolationMaxFrames": 9,
+            "SnapMagnitude": 10.0
+          }
+        },
+        {
+          "Name": "Weapon",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeObject, bolt.compiler",
+            "StructGuid": "b0b61666-381d-47cb-be96-62ee2f895852"
           },
           "AssetSettings": {
             "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
@@ -1776,7 +1457,6 @@
         {
           "Name": "Time",
           "Enabled": true,
-          "Expanded": true,
           "ReplicationMode": 1,
           "Priority": 1,
           "PropertyType": {
@@ -1788,7 +1468,8 @@
           }
         }
       ],
-      "Name": "LobbyCountdown",
+      "GlobalSenders": 3,
+      "Name": "LobbyCountdownEvent",
       "Guid": "aaf1dcec-7cca-4b38-a9a9-f6140d8ee0c7",
       "Groups": [
         "samples"
@@ -1797,166 +1478,10 @@
     {
       "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
       "Properties": [],
-      "Name": "LobbyPlayerKick",
+      "EntitySenders": 3,
+      "GlobalSenders": 1,
+      "Name": "LobbyPlayerKickEvent",
       "Guid": "a812faeb-a700-4c06-b2e7-2f3d3864b084",
-      "Groups": [
-        "samples"
-      ]
-    },
-    {
-      "$type": "Bolt.Compiler.StateDefinition, bolt.compiler",
-      "Properties": [
-        {
-          "Name": "Transform",
-          "Enabled": true,
-          "Expanded": true,
-          "ReplicationMode": 1,
-          "Priority": 1,
-          "PropertyType": {
-            "$type": "Bolt.Compiler.PropertyTypeTransform, bolt.compiler",
-            "PositionSelection": 14,
-            "RotationSelection": 14,
-            "PositionCompression": [
-              {
-                "MinValue": -1024,
-                "MaxValue": 1024,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "Shift": 1024.0,
-                "BitsRequired": 18
-              },
-              {
-                "MinValue": -1024,
-                "MaxValue": 1024,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "Shift": 1024.0,
-                "BitsRequired": 18
-              },
-              {
-                "MinValue": -1024,
-                "MaxValue": 1024,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "Shift": 1024.0,
-                "BitsRequired": 18
-              }
-            ],
-            "RotationCompression": [
-              {
-                "MaxValue": 360,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "BitsRequired": 16
-              },
-              {
-                "MaxValue": 360,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "BitsRequired": 16
-              },
-              {
-                "MaxValue": 360,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "BitsRequired": 16
-              }
-            ],
-            "RotationCompressionQuaternion": {
-              "MinValue": -1,
-              "MaxValue": 1,
-              "Accuracy": 0.01,
-              "Pack": 100.0,
-              "Read": 0.01,
-              "Shift": 1.0,
-              "BitsRequired": 8
-            }
-          },
-          "AssetSettings": {
-            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
-            "SmoothingAlgorithm": 1,
-            "ExtrapolationErrorTolerance": 0.25,
-            "_ExtrapolationCorrectionFrames": 6,
-            "ExtrapolationMaxFrames": 9,
-            "SnapMagnitude": 10.0
-          }
-        }
-      ],
-      "PacketMaxBits": 512,
-      "PacketMaxProperties": 16,
-      "InitialPositionCompression": {
-        "Compression": [
-          {
-            "MinValue": -1024,
-            "MaxValue": 1024,
-            "Accuracy": 0.01,
-            "Pack": 100.0,
-            "Read": 0.01,
-            "Shift": 1024.0,
-            "BitsRequired": 18
-          },
-          {
-            "MinValue": -1024,
-            "MaxValue": 1024,
-            "Accuracy": 0.01,
-            "Pack": 100.0,
-            "Read": 0.01,
-            "Shift": 1024.0,
-            "BitsRequired": 18
-          },
-          {
-            "MinValue": -1024,
-            "MaxValue": 1024,
-            "Accuracy": 0.01,
-            "Pack": 100.0,
-            "Read": 0.01,
-            "Shift": 1024.0,
-            "BitsRequired": 18
-          }
-        ]
-      },
-      "InitialRotationCompression": {
-        "EulerCompression": [
-          {
-            "MaxValue": 360,
-            "Accuracy": 1.0,
-            "Pack": 1.0,
-            "Read": 1.0,
-            "BitsRequired": 9
-          },
-          {
-            "MaxValue": 360,
-            "Accuracy": 1.0,
-            "Pack": 1.0,
-            "Read": 1.0,
-            "BitsRequired": 9
-          },
-          {
-            "MaxValue": 360,
-            "Accuracy": 1.0,
-            "Pack": 1.0,
-            "Read": 1.0,
-            "BitsRequired": 9
-          }
-        ],
-        "QuaternionCompression": {
-          "MinValue": -1,
-          "MaxValue": 1,
-          "Accuracy": 0.01,
-          "Pack": 100.0,
-          "Read": 0.01,
-          "Shift": 1.0,
-          "BitsRequired": 8
-        }
-      },
-      "Name": "BombState",
-      "Guid": "8c762c44-ad19-4715-bd5f-db4ffcf9e93c",
       "Groups": [
         "samples"
       ]
@@ -1964,23 +1489,6 @@
     {
       "$type": "Bolt.Compiler.ObjectDefinition, bolt.compiler",
       "Properties": [
-        {
-          "Name": "WeaponType",
-          "Enabled": true,
-          "ReplicationMode": 1,
-          "Priority": 1,
-          "PropertyType": {
-            "$type": "Bolt.Compiler.PropertyTypeInteger, bolt.compiler",
-            "MaxValue": 255
-          },
-          "AssetSettings": {
-            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
-            "ExtrapolationErrorTolerance": 0.25,
-            "_ExtrapolationCorrectionFrames": 6,
-            "ExtrapolationMaxFrames": 9,
-            "SnapMagnitude": 10.0
-          }
-        },
         {
           "Name": "WeaponStockId",
           "Enabled": true,
@@ -2033,7 +1541,41 @@
           }
         },
         {
-          "Name": "WeaponAmmo",
+          "Name": "AmmoLeftInClip",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeInteger, bolt.compiler",
+            "MaxValue": 255
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
+            "ExtrapolationErrorTolerance": 0.25,
+            "_ExtrapolationCorrectionFrames": 6,
+            "ExtrapolationMaxFrames": 9,
+            "SnapMagnitude": 10.0
+          }
+        },
+        {
+          "Name": "MaxAmmoPerClip",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeInteger, bolt.compiler",
+            "MaxValue": 255
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
+            "ExtrapolationErrorTolerance": 0.25,
+            "_ExtrapolationCorrectionFrames": 6,
+            "ExtrapolationMaxFrames": 9,
+            "SnapMagnitude": 10.0
+          }
+        },
+        {
+          "Name": "AmmoLeftInStock",
           "Enabled": true,
           "ReplicationMode": 1,
           "Priority": 1,
@@ -2082,469 +1624,11 @@
       ]
     },
     {
-      "$type": "Bolt.Compiler.StateDefinition, bolt.compiler",
-      "Properties": [
-        {
-          "Name": "AngularSpeed",
-          "Enabled": true,
-          "Expanded": true,
-          "Priority": 1,
-          "PropertyType": {
-            "$type": "Bolt.Compiler.PropertyTypeFloat, bolt.compiler",
-            "Compression": {
-              "MinValue": -2048,
-              "MaxValue": 2048,
-              "Accuracy": 0.01,
-              "Pack": 100.0,
-              "Read": 0.01,
-              "Shift": 2048.0,
-              "BitsRequired": 19
-            }
-          },
-          "AssetSettings": {
-            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
-            "ExtrapolationErrorTolerance": 0.25,
-            "_ExtrapolationCorrectionFrames": 6,
-            "ExtrapolationMaxFrames": 9,
-            "MecanimMode": 1,
-            "MecanimDirection": 1,
-            "MecanimDamping": 0.1,
-            "SnapMagnitude": 10.0
-          }
-        },
-        {
-          "Name": "Speed",
-          "Enabled": true,
-          "Priority": 1,
-          "PropertyType": {
-            "$type": "Bolt.Compiler.PropertyTypeFloat, bolt.compiler",
-            "Compression": {
-              "MinValue": -2048,
-              "MaxValue": 2048,
-              "Accuracy": 0.01,
-              "Pack": 100.0,
-              "Read": 0.01,
-              "Shift": 2048.0,
-              "BitsRequired": 19
-            }
-          },
-          "AssetSettings": {
-            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
-            "ExtrapolationErrorTolerance": 0.25,
-            "_ExtrapolationCorrectionFrames": 6,
-            "ExtrapolationMaxFrames": 9,
-            "MecanimMode": 1,
-            "MecanimDirection": 1,
-            "MecanimDamping": 0.1,
-            "SnapMagnitude": 10.0
-          }
-        },
-        {
-          "Name": "Shot",
-          "Enabled": true,
-          "ReplicationMode": 3,
-          "Priority": 1,
-          "PropertyType": {
-            "$type": "Bolt.Compiler.PropertyTypeFloat, bolt.compiler",
-            "Compression": {
-              "MinValue": -2048,
-              "MaxValue": 2048,
-              "Accuracy": 0.01,
-              "Pack": 100.0,
-              "Read": 0.01,
-              "Shift": 2048.0,
-              "BitsRequired": 19
-            }
-          },
-          "AssetSettings": {
-            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
-            "ExtrapolationErrorTolerance": 0.25,
-            "_ExtrapolationCorrectionFrames": 6,
-            "ExtrapolationMaxFrames": 9,
-            "MecanimMode": 1,
-            "SnapMagnitude": 10.0
-          }
-        },
-        {
-          "Name": "PlayerInSight",
-          "Enabled": true,
-          "Priority": 1,
-          "PropertyType": {
-            "$type": "Bolt.Compiler.PropertyTypeBool, bolt.compiler"
-          },
-          "AssetSettings": {
-            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
-            "ExtrapolationErrorTolerance": 0.25,
-            "_ExtrapolationCorrectionFrames": 6,
-            "ExtrapolationMaxFrames": 9,
-            "MecanimMode": 1,
-            "MecanimDirection": 1,
-            "SnapMagnitude": 10.0
-          }
-        },
-        {
-          "Name": "AimWeight",
-          "Enabled": true,
-          "ReplicationMode": 3,
-          "Priority": 1,
-          "PropertyType": {
-            "$type": "Bolt.Compiler.PropertyTypeFloat, bolt.compiler",
-            "Compression": {
-              "MinValue": -2048,
-              "MaxValue": 2048,
-              "Accuracy": 0.01,
-              "Pack": 100.0,
-              "Read": 0.01,
-              "Shift": 2048.0,
-              "BitsRequired": 19
-            }
-          },
-          "AssetSettings": {
-            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
-            "ExtrapolationErrorTolerance": 0.25,
-            "_ExtrapolationCorrectionFrames": 6,
-            "ExtrapolationMaxFrames": 9,
-            "MecanimMode": 1,
-            "SnapMagnitude": 10.0
-          }
-        },
-        {
-          "Name": "Transform",
-          "Enabled": true,
-          "Expanded": true,
-          "ReplicationMode": 1,
-          "Priority": 1,
-          "PropertyType": {
-            "$type": "Bolt.Compiler.PropertyTypeTransform, bolt.compiler",
-            "PositionSelection": 14,
-            "RotationSelection": 14,
-            "PositionCompression": [
-              {
-                "MinValue": -1024,
-                "MaxValue": 1024,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "Shift": 1024.0,
-                "BitsRequired": 18
-              },
-              {
-                "MinValue": -1024,
-                "MaxValue": 1024,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "Shift": 1024.0,
-                "BitsRequired": 18
-              },
-              {
-                "MinValue": -1024,
-                "MaxValue": 1024,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "Shift": 1024.0,
-                "BitsRequired": 18
-              }
-            ],
-            "RotationCompression": [
-              {
-                "MaxValue": 360,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "BitsRequired": 16
-              },
-              {
-                "MaxValue": 360,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "BitsRequired": 16
-              },
-              {
-                "MaxValue": 360,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "BitsRequired": 16
-              }
-            ],
-            "RotationCompressionQuaternion": {
-              "MinValue": -1,
-              "MaxValue": 1,
-              "Accuracy": 0.01,
-              "Pack": 100.0,
-              "Read": 0.01,
-              "Shift": 1.0,
-              "BitsRequired": 8
-            }
-          },
-          "AssetSettings": {
-            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
-            "SmoothingAlgorithm": 1,
-            "ExtrapolationErrorTolerance": 0.25,
-            "_ExtrapolationCorrectionFrames": 6,
-            "ExtrapolationMaxFrames": 9,
-            "SnapMagnitude": 10.0
-          }
-        }
-      ],
-      "PacketMaxBits": 512,
-      "PacketMaxProperties": 16,
-      "InitialPositionCompression": {
-        "Compression": [
-          {
-            "MinValue": -1024,
-            "MaxValue": 1024,
-            "Accuracy": 0.01,
-            "Pack": 100.0,
-            "Read": 0.01,
-            "Shift": 1024.0,
-            "BitsRequired": 18
-          },
-          {
-            "MinValue": -1024,
-            "MaxValue": 1024,
-            "Accuracy": 0.01,
-            "Pack": 100.0,
-            "Read": 0.01,
-            "Shift": 1024.0,
-            "BitsRequired": 18
-          },
-          {
-            "MinValue": -1024,
-            "MaxValue": 1024,
-            "Accuracy": 0.01,
-            "Pack": 100.0,
-            "Read": 0.01,
-            "Shift": 1024.0,
-            "BitsRequired": 18
-          }
-        ]
-      },
-      "InitialRotationCompression": {
-        "EulerCompression": [
-          {
-            "MaxValue": 360,
-            "Accuracy": 1.0,
-            "Pack": 1.0,
-            "Read": 1.0,
-            "BitsRequired": 9
-          },
-          {
-            "MaxValue": 360,
-            "Accuracy": 1.0,
-            "Pack": 1.0,
-            "Read": 1.0,
-            "BitsRequired": 9
-          },
-          {
-            "MaxValue": 360,
-            "Accuracy": 1.0,
-            "Pack": 1.0,
-            "Read": 1.0,
-            "BitsRequired": 9
-          }
-        ],
-        "QuaternionCompression": {
-          "MinValue": -1,
-          "MaxValue": 1,
-          "Accuracy": 0.01,
-          "Pack": 100.0,
-          "Read": 0.01,
-          "Shift": 1.0,
-          "BitsRequired": 8
-        }
-      },
-      "Name": "RobotState",
-      "Guid": "7ddcbc07-e016-4665-b829-9555b0968c83",
-      "Groups": [
-        "samples"
-      ]
-    },
-    {
-      "$type": "Bolt.Compiler.StateDefinition, bolt.compiler",
-      "Properties": [
-        {
-          "Name": "Transform",
-          "Enabled": true,
-          "Expanded": true,
-          "ReplicationMode": 1,
-          "Priority": 1,
-          "PropertyType": {
-            "$type": "Bolt.Compiler.PropertyTypeTransform, bolt.compiler",
-            "PositionSelection": 14,
-            "RotationSelection": 14,
-            "Space": 1,
-            "PositionCompression": [
-              {
-                "MinValue": -1024,
-                "MaxValue": 1024,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "Shift": 1024.0,
-                "BitsRequired": 18
-              },
-              {
-                "MinValue": -1024,
-                "MaxValue": 1024,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "Shift": 1024.0,
-                "BitsRequired": 18
-              },
-              {
-                "MinValue": -1024,
-                "MaxValue": 1024,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "Shift": 1024.0,
-                "BitsRequired": 18
-              }
-            ],
-            "RotationCompression": [
-              {
-                "MaxValue": 360,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "BitsRequired": 16
-              },
-              {
-                "MaxValue": 360,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "BitsRequired": 16
-              },
-              {
-                "MaxValue": 360,
-                "Accuracy": 0.01,
-                "Pack": 100.0,
-                "Read": 0.01,
-                "BitsRequired": 16
-              }
-            ],
-            "RotationCompressionQuaternion": {
-              "MinValue": -1,
-              "MaxValue": 1,
-              "Accuracy": 0.01,
-              "Pack": 100.0,
-              "Read": 0.01,
-              "Shift": 1.0,
-              "BitsRequired": 8
-            }
-          },
-          "AssetSettings": {
-            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
-            "ExtrapolationErrorTolerance": 0.25,
-            "_ExtrapolationCorrectionFrames": 6,
-            "ExtrapolationMaxFrames": 9,
-            "SnapMagnitude": 10.0
-          }
-        },
-        {
-          "Name": "Color",
-          "Enabled": true,
-          "Expanded": true,
-          "ReplicationMode": 1,
-          "Priority": 1,
-          "PropertyType": {
-            "$type": "Bolt.Compiler.PropertyTypeColor, bolt.compiler"
-          },
-          "AssetSettings": {
-            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
-            "ExtrapolationErrorTolerance": 0.25,
-            "_ExtrapolationCorrectionFrames": 6,
-            "ExtrapolationMaxFrames": 9,
-            "SnapMagnitude": 10.0
-          }
-        }
-      ],
-      "PacketMaxBits": 512,
-      "PacketMaxProperties": 16,
-      "InitialPositionCompression": {
-        "Compression": [
-          {
-            "MinValue": -1024,
-            "MaxValue": 1024,
-            "Accuracy": 0.01,
-            "Pack": 100.0,
-            "Read": 0.01,
-            "Shift": 1024.0,
-            "BitsRequired": 18
-          },
-          {
-            "MinValue": -1024,
-            "MaxValue": 1024,
-            "Accuracy": 0.01,
-            "Pack": 100.0,
-            "Read": 0.01,
-            "Shift": 1024.0,
-            "BitsRequired": 18
-          },
-          {
-            "MinValue": -1024,
-            "MaxValue": 1024,
-            "Accuracy": 0.01,
-            "Pack": 100.0,
-            "Read": 0.01,
-            "Shift": 1024.0,
-            "BitsRequired": 18
-          }
-        ]
-      },
-      "InitialRotationCompression": {
-        "EulerCompression": [
-          {
-            "MaxValue": 360,
-            "Accuracy": 1.0,
-            "Pack": 1.0,
-            "Read": 1.0,
-            "BitsRequired": 9
-          },
-          {
-            "MaxValue": 360,
-            "Accuracy": 1.0,
-            "Pack": 1.0,
-            "Read": 1.0,
-            "BitsRequired": 9
-          },
-          {
-            "MaxValue": 360,
-            "Accuracy": 1.0,
-            "Pack": 1.0,
-            "Read": 1.0,
-            "BitsRequired": 9
-          }
-        ],
-        "QuaternionCompression": {
-          "MinValue": -1,
-          "MaxValue": 1,
-          "Accuracy": 0.01,
-          "Pack": 100.0,
-          "Read": 0.01,
-          "Shift": 1.0,
-          "BitsRequired": 8
-        }
-      },
-      "Name": "InteractiveState",
-      "Guid": "d69cf8b1-fd2e-4a93-b940-82a4dcaacb05",
-      "Groups": [
-        "samples"
-      ]
-    },
-    {
       "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
       "Properties": [
         {
           "Name": "Shooter",
           "Enabled": true,
-          "Expanded": true,
           "ReplicationMode": 1,
           "Priority": 1,
           "PropertyType": {
@@ -2553,11 +1637,95 @@
           "AssetSettings": {
             "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
           }
+        },
+        {
+          "Name": "Point",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeVector, bolt.compiler",
+            "Selection": 14,
+            "Compression": [
+              {
+                "MinValue": -1024,
+                "MaxValue": 1024,
+                "Accuracy": 0.01,
+                "Pack": 100.0,
+                "Read": 0.01,
+                "Shift": 1024.0,
+                "BitsRequired": 18
+              },
+              {
+                "MinValue": -1024,
+                "MaxValue": 1024,
+                "Accuracy": 0.01,
+                "Pack": 100.0,
+                "Read": 0.01,
+                "Shift": 1024.0,
+                "BitsRequired": 18
+              },
+              {
+                "MinValue": -1024,
+                "MaxValue": 1024,
+                "Accuracy": 0.01,
+                "Pack": 100.0,
+                "Read": 0.01,
+                "Shift": 1024.0,
+                "BitsRequired": 18
+              }
+            ]
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        },
+        {
+          "Name": "Forward",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeVector, bolt.compiler",
+            "Selection": 14,
+            "Compression": [
+              {
+                "MinValue": -1024,
+                "MaxValue": 1024,
+                "Accuracy": 0.01,
+                "Pack": 100.0,
+                "Read": 0.01,
+                "Shift": 1024.0,
+                "BitsRequired": 18
+              },
+              {
+                "MinValue": -1024,
+                "MaxValue": 1024,
+                "Accuracy": 0.01,
+                "Pack": 100.0,
+                "Read": 0.01,
+                "Shift": 1024.0,
+                "BitsRequired": 18
+              },
+              {
+                "MinValue": -1024,
+                "MaxValue": 1024,
+                "Accuracy": 0.01,
+                "Pack": 100.0,
+                "Read": 0.01,
+                "Shift": 1024.0,
+                "BitsRequired": 18
+              }
+            ]
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
         }
       ],
       "EntitySenders": 1,
       "GlobalSenders": 3,
-      "Name": "WeaponFireEvent",
+      "Name": "WeaponFireEffectEvent",
       "Guid": "124e9afb-484f-41c6-a36b-7adf073b69a6",
       "Groups": [
         "samples"
@@ -2648,7 +1816,7 @@
           }
         },
         {
-          "Name": "EnemyId",
+          "Name": "Health",
           "Enabled": true,
           "ReplicationMode": 1,
           "Priority": 1,
@@ -2666,7 +1834,24 @@
           }
         },
         {
-          "Name": "Health",
+          "Name": "Dead",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeBool, bolt.compiler"
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
+            "ExtrapolationErrorTolerance": 0.25,
+            "_ExtrapolationCorrectionFrames": 6,
+            "ExtrapolationMaxFrames": 9,
+            "MecanimDirection": 1,
+            "SnapMagnitude": 10.0
+          }
+        },
+        {
+          "Name": "EnemyTemplateId",
           "Enabled": true,
           "ReplicationMode": 1,
           "Priority": 1,
@@ -2681,6 +1866,113 @@
             "ExtrapolationMaxFrames": 9,
             "MecanimDirection": 1,
             "SnapMagnitude": 10.0
+          }
+        },
+        {
+          "Name": "WeaponTemplateId",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeInteger, bolt.compiler",
+            "MaxValue": 255
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
+            "ExtrapolationErrorTolerance": 0.25,
+            "_ExtrapolationCorrectionFrames": 6,
+            "ExtrapolationMaxFrames": 9,
+            "SnapMagnitude": 10.0
+          }
+        },
+        {
+          "Name": "UpperBodyNormal",
+          "Enabled": true,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeVector, bolt.compiler",
+            "Selection": 14,
+            "Compression": [
+              {
+                "MinValue": -1024,
+                "MaxValue": 1024,
+                "Accuracy": 0.01,
+                "Pack": 100.0,
+                "Read": 0.01,
+                "Shift": 1024.0,
+                "BitsRequired": 18
+              },
+              {
+                "MinValue": -1024,
+                "MaxValue": 1024,
+                "Accuracy": 0.01,
+                "Pack": 100.0,
+                "Read": 0.01,
+                "Shift": 1024.0,
+                "BitsRequired": 18
+              },
+              {
+                "MinValue": -1024,
+                "MaxValue": 1024,
+                "Accuracy": 0.01,
+                "Pack": 100.0,
+                "Read": 0.01,
+                "Shift": 1024.0,
+                "BitsRequired": 18
+              }
+            ]
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
+            "ExtrapolationErrorTolerance": 0.25,
+            "_ExtrapolationCorrectionFrames": 6,
+            "ExtrapolationMaxFrames": 9,
+            "SnapMagnitude": 1.0
+          }
+        },
+        {
+          "Name": "LowerBodyNormal",
+          "Enabled": true,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeVector, bolt.compiler",
+            "Selection": 14,
+            "Compression": [
+              {
+                "MinValue": -1024,
+                "MaxValue": 1024,
+                "Accuracy": 0.01,
+                "Pack": 100.0,
+                "Read": 0.01,
+                "Shift": 1024.0,
+                "BitsRequired": 18
+              },
+              {
+                "MinValue": -1024,
+                "MaxValue": 1024,
+                "Accuracy": 0.01,
+                "Pack": 100.0,
+                "Read": 0.01,
+                "Shift": 1024.0,
+                "BitsRequired": 18
+              },
+              {
+                "MinValue": -1024,
+                "MaxValue": 1024,
+                "Accuracy": 0.01,
+                "Pack": 100.0,
+                "Read": 0.01,
+                "Shift": 1024.0,
+                "BitsRequired": 18
+              }
+            ]
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
+            "ExtrapolationErrorTolerance": 0.25,
+            "_ExtrapolationCorrectionFrames": 6,
+            "ExtrapolationMaxFrames": 9,
+            "SnapMagnitude": 1.0
           }
         }
       ],
@@ -2763,7 +2055,18 @@
         {
           "Name": "Target",
           "Enabled": true,
-          "Expanded": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeEntity, bolt.compiler"
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        },
+        {
+          "Name": "Shooter",
+          "Enabled": true,
           "ReplicationMode": 1,
           "Priority": 1,
           "PropertyType": {
@@ -2790,6 +2093,636 @@
       "EntitySenders": 3,
       "Name": "TakeDamageEvent",
       "Guid": "41f11799-1ce9-4463-8895-c19d210cdcde",
+      "Groups": [
+        "samples"
+      ]
+    },
+    {
+      "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
+      "Properties": [
+        {
+          "Name": "Target",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeEntity, bolt.compiler"
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        },
+        {
+          "Name": "Heal",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeInteger, bolt.compiler",
+            "MaxValue": 255
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        }
+      ],
+      "EntitySenders": 3,
+      "Name": "HealEvent",
+      "Guid": "8db0d1e6-ac7e-4193-9e80-c1aee0857124",
+      "Groups": [
+        "samples"
+      ]
+    },
+    {
+      "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
+      "Properties": [
+        {
+          "Name": "Begin",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeBool, bolt.compiler"
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        },
+        {
+          "Name": "Shooter",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeEntity, bolt.compiler"
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        },
+        {
+          "Name": "Target",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeEntity, bolt.compiler"
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        }
+      ],
+      "EntitySenders": 1,
+      "GlobalSenders": 3,
+      "Name": "WeaponSupportBeginFireEffectEvent",
+      "Guid": "c4c332b9-8384-4773-99b3-265c30a5db33",
+      "Groups": [
+        "samples"
+      ]
+    },
+    {
+      "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
+      "Properties": [
+        {
+          "Name": "DeadEntity",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeEntity, bolt.compiler"
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        },
+        {
+          "Name": "KillerEntity",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeEntity, bolt.compiler"
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        },
+        {
+          "Name": "WeaponPartItemTemplateDropId",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeInteger, bolt.compiler",
+            "MaxValue": 255
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        }
+      ],
+      "EntitySenders": 3,
+      "Name": "EntityDiedEvent",
+      "Guid": "5d01da93-433b-4c63-af3b-3fa1d53867b2",
+      "Groups": [
+        "samples"
+      ]
+    },
+    {
+      "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
+      "Properties": [
+        {
+          "Name": "RevivedEntity",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeEntity, bolt.compiler"
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        }
+      ],
+      "EntitySenders": 3,
+      "Name": "EntityRevivedEvent",
+      "Guid": "54417df6-b65b-4859-915e-3e95a51d02ba",
+      "Groups": [
+        "samples"
+      ]
+    },
+    {
+      "$type": "Bolt.Compiler.StateDefinition, bolt.compiler",
+      "Properties": [
+        {
+          "Name": "SpawnCooldown",
+          "Enabled": true,
+          "Expanded": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeFloat, bolt.compiler",
+            "Compression": {
+              "MinValue": -2048,
+              "MaxValue": 2048,
+              "Accuracy": 0.01,
+              "Pack": 100.0,
+              "Read": 0.01,
+              "Shift": 2048.0,
+              "BitsRequired": 19
+            }
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyStateSettings, bolt.compiler",
+            "ExtrapolationErrorTolerance": 0.25,
+            "_ExtrapolationCorrectionFrames": 6,
+            "ExtrapolationMaxFrames": 9,
+            "SnapMagnitude": 10.0
+          }
+        }
+      ],
+      "PacketMaxBits": 512,
+      "PacketMaxProperties": 16,
+      "InitialPositionCompression": {
+        "Compression": [
+          {
+            "MinValue": -1024,
+            "MaxValue": 1024,
+            "Accuracy": 0.01,
+            "Pack": 100.0,
+            "Read": 0.01,
+            "Shift": 1024.0,
+            "BitsRequired": 18
+          },
+          {
+            "MinValue": -1024,
+            "MaxValue": 1024,
+            "Accuracy": 0.01,
+            "Pack": 100.0,
+            "Read": 0.01,
+            "Shift": 1024.0,
+            "BitsRequired": 18
+          },
+          {
+            "MinValue": -1024,
+            "MaxValue": 1024,
+            "Accuracy": 0.01,
+            "Pack": 100.0,
+            "Read": 0.01,
+            "Shift": 1024.0,
+            "BitsRequired": 18
+          }
+        ]
+      },
+      "InitialRotationCompression": {
+        "EulerCompression": [
+          {
+            "MaxValue": 360,
+            "Accuracy": 1.0,
+            "Pack": 1.0,
+            "Read": 1.0,
+            "BitsRequired": 9
+          },
+          {
+            "MaxValue": 360,
+            "Accuracy": 1.0,
+            "Pack": 1.0,
+            "Read": 1.0,
+            "BitsRequired": 9
+          },
+          {
+            "MaxValue": 360,
+            "Accuracy": 1.0,
+            "Pack": 1.0,
+            "Read": 1.0,
+            "BitsRequired": 9
+          }
+        ],
+        "QuaternionCompression": {
+          "MinValue": -1,
+          "MaxValue": 1,
+          "Accuracy": 0.01,
+          "Pack": 100.0,
+          "Read": 0.01,
+          "Shift": 1.0,
+          "BitsRequired": 8
+        }
+      },
+      "Name": "InteractableState",
+      "Guid": "9a972725-4147-42d3-9ca7-ead84c1cdeeb",
+      "Groups": [
+        "samples"
+      ]
+    },
+    {
+      "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
+      "Properties": [],
+      "GlobalSenders": 3,
+      "Name": "LobbyMatchStartEvent",
+      "Guid": "8165738c-4841-40f0-b6e0-69baff984bce",
+      "Groups": [
+        "samples"
+      ]
+    },
+    {
+      "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
+      "Properties": [
+        {
+          "Name": "IsFading",
+          "Enabled": true,
+          "Expanded": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeBool, bolt.compiler"
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        }
+      ],
+      "Name": "InteractableInteractEvent",
+      "Guid": "911ddab6-24b4-44ea-ac41-900d06c544f7",
+      "Groups": [
+        "samples"
+      ]
+    },
+    {
+      "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
+      "Properties": [
+        {
+          "Name": "AmountOfClips",
+          "Enabled": true,
+          "Expanded": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeInteger, bolt.compiler",
+            "MaxValue": 255
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        },
+        {
+          "Name": "Target",
+          "Enabled": true,
+          "Expanded": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeEntity, bolt.compiler"
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        }
+      ],
+      "Name": "RefillAmmoEvent",
+      "Guid": "fef9431e-0160-4b7f-958f-2e6417327576",
+      "Groups": [
+        "samples"
+      ]
+    },
+    {
+      "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
+      "Properties": [
+        {
+          "Name": "Time",
+          "Enabled": true,
+          "Expanded": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeInteger, bolt.compiler",
+            "MaxValue": 255
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        }
+      ],
+      "EntitySenders": 3,
+      "GlobalSenders": 1,
+      "Name": "WaveCountdownEvent",
+      "Guid": "1c7d9b48-dcd4-457d-8786-499e356d116a",
+      "Groups": [
+        "samples"
+      ]
+    },
+    {
+      "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
+      "Properties": [
+        {
+          "Name": "WaveNumber",
+          "Enabled": true,
+          "Expanded": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeInteger, bolt.compiler",
+            "MaxValue": 255
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        }
+      ],
+      "EntitySenders": 3,
+      "GlobalSenders": 1,
+      "Name": "WaveEndEvent",
+      "Guid": "11fec1c7-c14f-4e0a-9899-3e589cc6f24e",
+      "Groups": [
+        "samples"
+      ]
+    },
+    {
+      "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
+      "Properties": [
+        {
+          "Name": "WaveNumber",
+          "Enabled": true,
+          "Expanded": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeInteger, bolt.compiler",
+            "MaxValue": 255
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        },
+        {
+          "Name": "EnemyCount",
+          "Enabled": true,
+          "Expanded": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeInteger, bolt.compiler",
+            "MaxValue": 255
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        }
+      ],
+      "EntitySenders": 3,
+      "GlobalSenders": 1,
+      "Name": "WaveStartEvent",
+      "Guid": "9bcda058-da82-495e-8fee-4e5ed9bdd8cf",
+      "Groups": [
+        "samples"
+      ]
+    },
+    {
+      "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
+      "Properties": [
+        {
+          "Name": "Entity",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeEntity, bolt.compiler"
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        },
+        {
+          "Name": "Active",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeBool, bolt.compiler"
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        },
+        {
+          "Name": "Position",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeVector, bolt.compiler",
+            "Selection": 14,
+            "Compression": [
+              {
+                "MinValue": -1024,
+                "MaxValue": 1024,
+                "Accuracy": 0.01,
+                "Pack": 100.0,
+                "Read": 0.01,
+                "Shift": 1024.0,
+                "BitsRequired": 18
+              },
+              {
+                "MinValue": -1024,
+                "MaxValue": 1024,
+                "Accuracy": 0.01,
+                "Pack": 100.0,
+                "Read": 0.01,
+                "Shift": 1024.0,
+                "BitsRequired": 18
+              },
+              {
+                "MinValue": -1024,
+                "MaxValue": 1024,
+                "Accuracy": 0.01,
+                "Pack": 100.0,
+                "Read": 0.01,
+                "Shift": 1024.0,
+                "BitsRequired": 18
+              }
+            ]
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        }
+      ],
+      "EntitySenders": 3,
+      "Name": "SetEntityActiveEvent",
+      "Guid": "bbb4829c-c398-423d-aa50-b36f7923800e",
+      "Groups": [
+        "samples"
+      ]
+    },
+    {
+      "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
+      "Properties": [
+        {
+          "Name": "Progress",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeFloat, bolt.compiler",
+            "Compression": {
+              "MinValue": -2048,
+              "MaxValue": 2048,
+              "Accuracy": 0.01,
+              "Pack": 100.0,
+              "Read": 0.01,
+              "Shift": 2048.0,
+              "BitsRequired": 19
+            }
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        }
+      ],
+      "EntitySenders": 3,
+      "GlobalSenders": 1,
+      "Name": "WaveProgressEvent",
+      "Guid": "94e13050-d565-466a-bcab-9b1091854701",
+      "Groups": [
+        "samples"
+      ]
+    },
+    {
+      "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
+      "Properties": [
+        {
+          "Name": "Message",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeString, bolt.compiler",
+            "MaxLength": 1,
+            "Encoding": 1
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        }
+      ],
+      "EntitySenders": 3,
+      "Name": "GameLogMessageEvent",
+      "Guid": "1598d589-642c-4aae-af2f-04d0793d2693",
+      "Groups": [
+        "samples"
+      ]
+    },
+    {
+      "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
+      "Properties": [
+        {
+          "Name": "Wave",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeInteger, bolt.compiler",
+            "MaxValue": 255
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        }
+      ],
+      "EntitySenders": 3,
+      "GlobalSenders": 1,
+      "Name": "WaveNumberEvent",
+      "Guid": "07344aa5-29db-4f9a-951a-85e3363f4f5e",
+      "Groups": [
+        "samples"
+      ]
+    },
+    {
+      "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
+      "Properties": [
+        {
+          "Name": "Killer",
+          "Enabled": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeEntity, bolt.compiler"
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        }
+      ],
+      "EntitySenders": 3,
+      "GlobalSenders": 1,
+      "Name": "PlayerKilledEnemyEvent",
+      "Guid": "233cd1f6-3d3f-45f5-9df2-71033f87d5f5",
+      "Groups": [
+        "samples"
+      ]
+    },
+    {
+      "$type": "Bolt.Compiler.EventDefinition, bolt.compiler",
+      "Properties": [
+        {
+          "Name": "EffectID",
+          "Enabled": true,
+          "Expanded": true,
+          "ReplicationMode": 1,
+          "Priority": 1,
+          "PropertyType": {
+            "$type": "Bolt.Compiler.PropertyTypeInteger, bolt.compiler",
+            "MaxValue": 255
+          },
+          "AssetSettings": {
+            "$type": "Bolt.Compiler.PropertyEventSettings, bolt.compiler"
+          }
+        }
+      ],
+      "EntitySenders": 1,
+      "GlobalSenders": 3,
+      "Name": "EntityEffectEvent",
+      "Guid": "df90b584-2743-45ec-93fa-f8ab68e3efd7",
       "Groups": [
         "samples"
       ]

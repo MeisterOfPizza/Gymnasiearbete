@@ -13,29 +13,29 @@ TagManager:
   - UI
   - 
   - 
+  - UIBackground
   - 
   - 
   - 
   - 
   - 
+  - Interactable
+  - Interactable Search
+  - 
+  - Weapon Part
+  - Player Drop
   - 
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Player Projectile
+  - Enemy Projectile
   - 
   - Player
   - Enemy
-  - 
-  - 
-  - 
-  - 
+  - Enemy VFX
+  - Target Search
+  - PostProcessing
   - 
   m_SortingLayers:
   - name: Default

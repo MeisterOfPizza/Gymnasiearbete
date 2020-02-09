@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65d5839542b61aa42accf6aa3096f64a, type: 3}
+  m_Name: Grunt
+  m_EditorClassIdentifier: 
+  templateId: 0
+  name: Grunt
+  health: 100
+  movementSpeed: 3.5
+  targetSearchFrequency: 3
+  instantTurn: 0
+  turnSpeed: 10
+  possibleWeaponTemplates:
+  - {fileID: 11400000, guid: 96ff3ba563cd2194aba42b1036123d3e, type: 2}
+  - {fileID: 11400000, guid: 3caec7d7845a44d4cb49c680152f68ef, type: 2}
+  - {fileID: 11400000, guid: b92b093200da4af40ba848ee4f97f35a, type: 2}
+  - {fileID: 11400000, guid: c7d1fe4055b4f2248acf07ac86dd63d5, type: 2}
+  weaponPartItemDrops:
+  - weaponPartItemTemplate: {fileID: 11400000, guid: 3f0548e4041ceeb46bd5739d01208f9e,
+      type: 2}
+    dropChance: 0.01
+  - weaponPartItemTemplate: {fileID: 11400000, guid: a7eae9e1ae0b66448a07059d943c9fa8,
+      type: 2}
+    dropChance: 0.025
+  - weaponPartItemTemplate: {fileID: 11400000, guid: 8d33b67937661b648a9ab390a28a72ea,
+      type: 2}
+    dropChance: 0.05
+  - weaponPartItemTemplate: {fileID: 11400000, guid: a5095136b4a9916449049ab4b78ee0e9,
+      type: 2}
+    dropChance: 0.1
+  - weaponPartItemTemplate: {fileID: 11400000, guid: 5aa2041720e15f645a3bba135864dcc9,
+      type: 2}
+    dropChance: 0.35
+  enemyPrefab: {fileID: 866174922270184751, guid: ae49712810f17c64492dda8ed985e9fe,
+    type: 3}

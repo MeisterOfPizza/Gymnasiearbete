@@ -1,10 +1,28 @@
-﻿namespace ArenaShooter.Entities
+﻿using System;
+using UnityEngine;
+
+namespace ArenaShooter.Entities
 {
 
-    interface IEntity : IDamagable
+    enum EntityTeam : byte
+    {
+        Player,
+        Enemy
+    }
+
+    interface IEntity : IDamagable, IHealable
     {
 
-        BoltEntity entity { get; set; }
+        Action OnDeathCallback   { get; set; }
+        Action OnReviveCallback  { get; set; }
+        Action OnDestroyCallback { get; set; }
+
+        EntityTeam EntityTeam         { get; }
+        Vector3    BodyOriginPosition { get; }
+        Vector3    HeadOriginPosition { get; }
+        BoltEntity entity             { get; set; }
+
+        GameObject gameObject { get; }
 
     }
 
