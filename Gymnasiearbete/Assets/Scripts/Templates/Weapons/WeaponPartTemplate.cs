@@ -113,6 +113,7 @@ defaultTemplate = OUTPUT_TYPE + TEMPLATE_PART
 
         public static string GetStatTypeValueFormatted(StatType statType, float value, string color)
         {
+            // Skip MaxAngleOffset as that should be hard coded.
             switch (statType)
             {
                 case StatType.Range:
@@ -138,7 +139,7 @@ defaultTemplate = OUTPUT_TYPE + TEMPLATE_PART
                 case StatType.BurstShots:
                     return $"Burst Shots: <color={color}>{value}</color>";
                 case StatType.Mobility:
-                    return $"Mobility: <color={color}>{value}</color>";
+                    return $"Mobility: <color={color}>{value.ToString("F1")}</color>";
                 case StatType.Accuracy:
                     return $"Accuracy: <color={color}>{value.ToString("P0")}</color>";
                 case StatType.FiringMode:
