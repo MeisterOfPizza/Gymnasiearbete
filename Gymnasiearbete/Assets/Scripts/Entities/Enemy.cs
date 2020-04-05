@@ -36,6 +36,10 @@ namespace ArenaShooter.Entities
         [Space]
         [SerializeField] private GameObject selfDestructionEffectPrefab;
 
+        [Space]
+        [SerializeField] private AudioSource walkingSound;
+        [SerializeField] private AudioSource deathSound;
+
         #endregion
 
         #region IEntity
@@ -301,6 +305,10 @@ namespace ArenaShooter.Entities
             if (entity.IsOwner && !state.Dead)
             {
                 CheckForTargets();
+                if (aiAgent.Velocity.sqrMagnitude > 0.05f && !walkingSound.isPlaying)
+                {
+                    walkingSound.PlayOneShot(enemyTemplate.WalkingSound, 0.5f);
+                }
             }
         }
 
@@ -365,6 +373,7 @@ namespace ArenaShooter.Entities
 
         public override void Die(EntityDiedEvent @event)
         {
+            deathSound.PlayOneShot(enemyTemplate.GetDeathSound(), 0.5f);
             base.Die(@event);
 
             uiEnemyGameStats.gameObject.SetActive(false);

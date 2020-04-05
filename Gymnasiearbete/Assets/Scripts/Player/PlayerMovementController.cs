@@ -63,6 +63,7 @@ namespace ArenaShooter.Player
             SetColor(playerColor);
 
             humanoidBody.SetUpperBodyAsController(transform.forward);
+            
         }
 
         // Start

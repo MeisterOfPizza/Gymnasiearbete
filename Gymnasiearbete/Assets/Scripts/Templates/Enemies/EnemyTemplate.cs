@@ -36,6 +36,10 @@ namespace ArenaShooter.Templates.Enemies
         [Header("Prefabs")]
         [SerializeField] private GameObject enemyPrefab;
 
+        [Header("Audio")]
+        [SerializeField] private AudioClip walkingSound;
+        [SerializeField] private AudioClip[] deathSounds;
+
         #endregion
 
         #region Enums
@@ -135,6 +139,16 @@ namespace ArenaShooter.Templates.Enemies
                 return enemyPrefab;
             }
         }
+        
+        public AudioClip WalkingSound
+        {
+            get
+            {
+                return walkingSound;
+            }
+        }
+
+      
 
         #endregion
 
@@ -166,6 +180,11 @@ namespace ArenaShooter.Templates.Enemies
             {
                 Debug.LogError(string.Format(@"EnemyTemplate ""{0}"" (custom name ""{1}"") does not have a valid EnemyWeaponTemplate. This will cause errors during runtime.", base.name, this.name));
             }
+        }
+
+        public AudioClip GetDeathSound()
+        {
+            return deathSounds[Random.Range(0,deathSounds.Length)];
         }
 
         #endregion
