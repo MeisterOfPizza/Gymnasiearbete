@@ -16,7 +16,7 @@ MonoBehaviour:
   name: Default Healing Barrel
   description: 
   outputType: 3
-  weaponPartPrefab: {fileID: 4397034097026080610, guid: 610761267e037b147b3658e1d989010f,
+  weaponPartPrefab: {fileID: 6800402469952484484, guid: 7895c01a152ffa746bafea620e227488,
     type: 3}
   range: 5
   maxDistance: 10

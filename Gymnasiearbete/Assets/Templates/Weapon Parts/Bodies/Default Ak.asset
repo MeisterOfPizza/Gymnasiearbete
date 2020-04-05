@@ -16,7 +16,7 @@ MonoBehaviour:
   name: Default Ak
   description: 
   outputType: 0
-  weaponPartPrefab: {fileID: 945334509661296513, guid: 772abd546b47d6d4d8d2c4242cfa877f,
+  weaponPartPrefab: {fileID: 328613873537083544, guid: ab8e24c9612b72a4ba4f557789f76f6f,
     type: 3}
   damage: 10
   maxAmmoPerClip: 30

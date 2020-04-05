@@ -16,7 +16,7 @@ MonoBehaviour:
   name: Default Arcthrower
   description: 
   outputType: 2
-  weaponPartPrefab: {fileID: 945334509661296513, guid: 772abd546b47d6d4d8d2c4242cfa877f,
+  weaponPartPrefab: {fileID: 4550685419690787319, guid: f57956acd404f0a45a1054e76d38b64b,
     type: 3}
   damage: 25
   maxAmmoPerClip: 5

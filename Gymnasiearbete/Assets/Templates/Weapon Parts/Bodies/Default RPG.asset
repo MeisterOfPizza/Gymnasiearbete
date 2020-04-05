@@ -16,7 +16,7 @@ MonoBehaviour:
   name: Default RPG
   description: 
   outputType: 1
-  weaponPartPrefab: {fileID: 945334509661296513, guid: 772abd546b47d6d4d8d2c4242cfa877f,
+  weaponPartPrefab: {fileID: 6693327857238368783, guid: 13598eb836e16024ab04a64624c883b6,
     type: 3}
   damage: 95
   maxAmmoPerClip: 2

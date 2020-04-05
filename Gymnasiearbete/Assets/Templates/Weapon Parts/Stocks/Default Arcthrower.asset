@@ -16,7 +16,8 @@ MonoBehaviour:
   name: Default Arcthrower
   description: 
   outputType: 2
-  weaponPartPrefab: {fileID: 8537350361406474543, guid: 61f825f9bc3ae2e479122fc579ac42fc,
+  weaponPartPrefab: {fileID: 3914670479795032229, guid: a26979b8f06472a44ab543104993ed17,
     type: 3}
   mobility: 0
   accuracy: 1
+  maxAngleOffset: 5

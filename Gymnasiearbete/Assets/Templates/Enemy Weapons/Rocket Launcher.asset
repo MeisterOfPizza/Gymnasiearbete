@@ -15,6 +15,7 @@ MonoBehaviour:
   templateId: 1
   mobility: 0
   accuracy: 0.9
+  maxAngleOffset: 5
   damage: 5
   maxAmmoPerClip: 10
   ammoPerFire: 1
@@ -29,4 +30,5 @@ MonoBehaviour:
   outputType: 1
   firePrefab: {fileID: 3848188618349009631, guid: c97a6795a0351784f82084dd1ff7e328,
     type: 3}
-  modelPrefab: {fileID: 0}
+  modelPrefab: {fileID: -927199367670048503, guid: 4c2e757b13f6fe54aa60214e0d3d580f,
+    type: 3}

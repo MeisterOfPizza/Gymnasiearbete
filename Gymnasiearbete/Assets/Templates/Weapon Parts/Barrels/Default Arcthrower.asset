@@ -16,7 +16,7 @@ MonoBehaviour:
   name: Default Arcthrower
   description: 
   outputType: 2
-  weaponPartPrefab: {fileID: 4397034097026080610, guid: 610761267e037b147b3658e1d989010f,
+  weaponPartPrefab: {fileID: 1091533239223065640, guid: 9d544311a3463b24498e95fddf85f083,
     type: 3}
   range: 3
   maxDistance: 10
