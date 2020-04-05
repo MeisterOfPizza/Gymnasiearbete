@@ -379,9 +379,12 @@ namespace ArenaShooter.Entities
             // First check if the killed isn't null (in-case they left the game) and check if the killer entity is a player.
             if (entity.IsOwner && @event.KillerEntity != null && @event.KillerEntity.TryFindState(out IPlayerState playerState))
             {
-                PlayerKilledEnemyEvent playerKilledEnemyEvent = PlayerKilledEnemyEvent.Create(GlobalTargets.Everyone);
-                playerKilledEnemyEvent.Killer = @event.KillerEntity;
-                playerKilledEnemyEvent.Send();
+                using (playerState)
+                {
+                    PlayerKilledEnemyEvent playerKilledEnemyEvent = PlayerKilledEnemyEvent.Create(GlobalTargets.Everyone);
+                    playerKilledEnemyEvent.Killer                 = @event.KillerEntity;
+                    playerKilledEnemyEvent.Send();
+                }
             }
 
             // Despawn the enemy:

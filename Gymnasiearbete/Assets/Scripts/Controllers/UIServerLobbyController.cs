@@ -163,11 +163,6 @@ namespace ArenaShooter.Controllers
             }
         }
 
-        public void UpdateLoadout(Loadout loadout)
-        {
-
-        }
-
         #endregion
 
         #region Helpers
