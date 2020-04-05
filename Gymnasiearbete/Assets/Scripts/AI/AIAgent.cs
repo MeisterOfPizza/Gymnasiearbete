@@ -22,6 +22,12 @@ namespace ArenaShooter.AI
 
         #endregion
 
+        #region public properties
+
+        public Vector3 Velocity { get { return agent.velocity; } }
+
+        #endregion
+
         #region Private variables
 
         private IAIAgentBehaviour agentEntity;

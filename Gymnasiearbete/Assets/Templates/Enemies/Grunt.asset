@@ -42,3 +42,7 @@ MonoBehaviour:
     dropChance: 0.35
   enemyPrefab: {fileID: 866174922270184751, guid: ae49712810f17c64492dda8ed985e9fe,
     type: 3}
+  walkingSound: {fileID: 8300000, guid: 355bafdf61d96fd4c955821918f0853f, type: 3}
+  deathSounds:
+  - {fileID: 8300000, guid: f083113742905874a8d995f7ee3adf9d, type: 3}
+  - {fileID: 8300000, guid: e8f862bfa4c2e2245a00a68e8d8c863e, type: 3}

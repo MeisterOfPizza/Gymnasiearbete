@@ -1866,6 +1866,7 @@ GameObject:
   - component: {fileID: 422022058}
   - component: {fileID: 422022057}
   - component: {fileID: 422022067}
+  - component: {fileID: 422022068}
   m_Layer: 0
   m_Name: Controllers
   m_TagString: Untagged
@@ -2051,6 +2052,94 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf1e2e286953ff047914d8d4e96fb9b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &422022068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 422022056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 219efad2b29daa14195ad07e6438df8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - mixer: {fileID: 24100000, guid: d149360c430cb4e4797d653c8e671bac, type: 2}
+    name: music
+    loopable: 1
+    audioClip: {fileID: 8300000, guid: b84272231cb0465439ab29adc6162769, type: 3}
+    audioSource: {fileID: 0}
+  - mixer: {fileID: 24100000, guid: d149360c430cb4e4797d653c8e671bac, type: 2}
+    name: raycast
+    loopable: 0
+    audioClip: {fileID: 8300000, guid: 7425c9f84997a044fa3d42e6e22e3f92, type: 3}
+    audioSource: {fileID: 0}
+  - mixer: {fileID: 24100000, guid: d149360c430cb4e4797d653c8e671bac, type: 2}
+    name: medic
+    loopable: 0
+    audioClip: {fileID: 8300000, guid: 453c0011e06a8f44490e6e94120bb0fe, type: 3}
+    audioSource: {fileID: 0}
+  - mixer: {fileID: 24100000, guid: d149360c430cb4e4797d653c8e671bac, type: 2}
+    name: rpg
+    loopable: 0
+    audioClip: {fileID: 8300000, guid: 71971de8edce6414f94919f7c720c71b, type: 3}
+    audioSource: {fileID: 0}
+  - mixer: {fileID: 24100000, guid: d149360c430cb4e4797d653c8e671bac, type: 2}
+    name: electric
+    loopable: 0
+    audioClip: {fileID: 8300000, guid: 2fa2adcec2d9674408216694f286fc13, type: 3}
+    audioSource: {fileID: 0}
+  - mixer: {fileID: 24100000, guid: d149360c430cb4e4797d653c8e671bac, type: 2}
+    name: out of ammo
+    loopable: 0
+    audioClip: {fileID: 8300000, guid: 277a5337bbcf4f646aba7f19c6407eee, type: 3}
+    audioSource: {fileID: 0}
+  - mixer: {fileID: 24100000, guid: d149360c430cb4e4797d653c8e671bac, type: 2}
+    name: item pick up
+    loopable: 0
+    audioClip: {fileID: 8300000, guid: 8d5909de2c0f1544ba8aec61a8892cfc, type: 3}
+    audioSource: {fileID: 0}
+  - mixer: {fileID: 24100000, guid: d149360c430cb4e4797d653c8e671bac, type: 2}
+    name: item pick up
+    loopable: 0
+    audioClip: {fileID: 8300000, guid: 8d5909de2c0f1544ba8aec61a8892cfc, type: 3}
+    audioSource: {fileID: 0}
+  - mixer: {fileID: 24100000, guid: d149360c430cb4e4797d653c8e671bac, type: 2}
+    name: item pick up
+    loopable: 0
+    audioClip: {fileID: 8300000, guid: 8d5909de2c0f1544ba8aec61a8892cfc, type: 3}
+    audioSource: {fileID: 0}
+  - mixer: {fileID: 24100000, guid: d149360c430cb4e4797d653c8e671bac, type: 2}
+    name: item pick up
+    loopable: 0
+    audioClip: {fileID: 8300000, guid: 8d5909de2c0f1544ba8aec61a8892cfc, type: 3}
+    audioSource: {fileID: 0}
+  - mixer: {fileID: 24100000, guid: d149360c430cb4e4797d653c8e671bac, type: 2}
+    name: item pick up
+    loopable: 0
+    audioClip: {fileID: 8300000, guid: 8d5909de2c0f1544ba8aec61a8892cfc, type: 3}
+    audioSource: {fileID: 0}
+  - mixer: {fileID: 24100000, guid: d149360c430cb4e4797d653c8e671bac, type: 2}
+    name: item pick up
+    loopable: 0
+    audioClip: {fileID: 8300000, guid: 8d5909de2c0f1544ba8aec61a8892cfc, type: 3}
+    audioSource: {fileID: 0}
+  - mixer: {fileID: 24100000, guid: d149360c430cb4e4797d653c8e671bac, type: 2}
+    name: item pick up
+    loopable: 0
+    audioClip: {fileID: 8300000, guid: 8d5909de2c0f1544ba8aec61a8892cfc, type: 3}
+    audioSource: {fileID: 0}
+  - mixer: {fileID: 24100000, guid: d149360c430cb4e4797d653c8e671bac, type: 2}
+    name: item pick up
+    loopable: 0
+    audioClip: {fileID: 8300000, guid: 8d5909de2c0f1544ba8aec61a8892cfc, type: 3}
+    audioSource: {fileID: 0}
+  - mixer: {fileID: 24100000, guid: d149360c430cb4e4797d653c8e671bac, type: 2}
+    name: item pick up
+    loopable: 0
+    audioClip: {fileID: 8300000, guid: 8d5909de2c0f1544ba8aec61a8892cfc, type: 3}
+    audioSource: {fileID: 0}
 --- !u!1 &429320839
 GameObject:
   m_ObjectHideFlags: 0

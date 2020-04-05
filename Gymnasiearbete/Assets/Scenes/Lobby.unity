@@ -7316,6 +7316,7 @@ GameObject:
   - component: {fileID: 708207827}
   - component: {fileID: 708207829}
   - component: {fileID: 708207830}
+  - component: {fileID: 708207831}
   m_Layer: 0
   m_Name: Controllers
   m_TagString: Untagged
@@ -7389,6 +7390,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13e2de5ba8c22784a88c07710151bc35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &708207831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708207826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 219efad2b29daa14195ad07e6438df8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - mixer: {fileID: 24100000, guid: d149360c430cb4e4797d653c8e671bac, type: 2}
+    name: music
+    loopable: 1
+    audioClip: {fileID: 8300000, guid: 73f36cf7d562fd542b0771f80eaf3490, type: 3}
+    audioSource: {fileID: 0}
 --- !u!1 &712272250
 GameObject:
   m_ObjectHideFlags: 0
