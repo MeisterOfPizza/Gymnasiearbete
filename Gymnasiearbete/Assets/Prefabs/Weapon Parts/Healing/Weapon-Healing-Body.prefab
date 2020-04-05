@@ -99,7 +99,7 @@ MonoBehaviour:
   highlightMaterialNames: []
   changableMaterialNames: []
   beginConnectPoint: {x: 0, y: 0, z: 0.023}
-  endConnectPoint: {x: 0, y: 0, z: -0.591}
+  endConnectPoint: {x: 0, y: 0, z: -0.521}
 --- !u!65 &603024407220536023
 BoxCollider:
   m_ObjectHideFlags: 0

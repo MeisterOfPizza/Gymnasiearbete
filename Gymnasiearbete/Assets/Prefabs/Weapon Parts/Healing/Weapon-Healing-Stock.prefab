@@ -97,7 +97,7 @@ MonoBehaviour:
   collider: {fileID: 2323006337451764305}
   highlightMaterialNames: []
   changableMaterialNames: []
-  beginConnectPoint: {x: 0, y: 0, z: -0.591}
+  beginConnectPoint: {x: 0, y: 0, z: -0.521}
   endConnectPoint: {x: 0, y: 0, z: 0}
 --- !u!65 &2323006337451764305
 BoxCollider:
